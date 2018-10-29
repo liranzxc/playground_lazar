@@ -11,5 +11,7 @@ public class Application {
 
 		System.err.println("AVIV LAZAR SHOLET");
 		System.err.println("SHAY is noob aviv = best");
+		System.err.println("SHAY is noob aviv = best");
+
 	}
 }
