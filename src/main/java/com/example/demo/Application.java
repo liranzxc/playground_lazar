@@ -10,5 +10,7 @@ public class Application {
 		SpringApplication.run(Application.class, args);
 		System.err.println("Liran nachman");
 		System.out.println("hello ");
+		System.out.println("aviv ");
+
 	}
 }
