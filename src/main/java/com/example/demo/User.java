@@ -1,7 +1,7 @@
 package com.example.demo;
 
 public class User {
-	
+	protected enum types{PLAYER, MANAGER};
 	private String email;
 
 	public User() {

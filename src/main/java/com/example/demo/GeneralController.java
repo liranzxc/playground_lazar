@@ -50,7 +50,7 @@ public class GeneralController {
 	{
 		if(user != null)
 		{
-			/// add user to DB 
+			//TODO add user to DB 
 			// AddUser(user);
 			return ResponseEntity.ok(Collections.singletonMap("Status", 200));
 		}
