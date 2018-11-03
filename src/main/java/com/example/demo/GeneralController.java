@@ -39,6 +39,41 @@ public class GeneralController {
 //	}
 //	
 
+	// 1. output: an array of all objects that exist in the system
+	// TODO: change return from String to ElementEntity[]
+	@RequestMapping(path = { "/viewObjects" }, 
+			method = RequestMethod.GET,
+			produces = MediaType.TEXT_HTML_VALUE)
+	public String ViewObjects() {
+		return "<h1> View Objects ! <h1>";  // <h1> for big letters
+	}
+	
+	// 2. output: User' Info
+	// TODO: email will not be String type, but Email type  
+	@RequestMapping(path = { "/viewMyInfo/{email}" },
+			method = RequestMethod.GET,
+			produces = MediaType.TEXT_HTML_VALUE)
+	public String ViewMyInfo(@PathVariable("email") String email) {
+		String returnValue = "View Info of: " + email;
+		return bigLettersHTML(returnValue);
+	}
+	
+	// input: text
+	// output: the text with big letters in HTML
+	private String bigLettersHTML(String text) {
+		return "<h1> " + text + " <h1>";
+	}
+	
+	// 3. input: none
+	// output: none
+	// for test: return String
+	// TODO: update to real registration
+	@RequestMapping(path = { "/register" },
+			method = RequestMethod.GET,
+			produces = MediaType.TEXT_HTML_VALUE)
+	public String RegisterGet() {
+		return bigLettersHTML("Start Registration");
+	}
 	
 	// 4. register method post , input from json body ,user data .
 	// get status code 
