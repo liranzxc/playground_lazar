@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.example.demo.classes.NewUserForm;
 
-@RestController
+
 @RequestMapping(path = "/general")
 public class GeneralController {
 
