@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.example.demo.classes.User;
+import com.example.demo.classes.NewUserForm;
 
 @RestController
 @RequestMapping(path = "/general")
@@ -83,7 +83,7 @@ public class GeneralController {
 			method = RequestMethod.POST, 
 			consumes = MediaType.APPLICATION_JSON_VALUE,
 			produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<Map<String, Integer>> RegisterPost(@RequestBody User user)
+	public ResponseEntity<Map<String, Integer>> RegisterPost(@RequestBody NewUserForm user)
 	{
 		if(user != null)
 		{
@@ -142,7 +142,7 @@ public class GeneralController {
 			method = RequestMethod.POST, 
 			consumes = MediaType.APPLICATION_JSON_VALUE,
 			produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<Map<String, Integer>> LoginPost(@RequestBody User user)
+	public ResponseEntity<Map<String, Integer>> LoginPost(@RequestBody NewUserForm user)
 	{
 		if(user != null)
 		{
