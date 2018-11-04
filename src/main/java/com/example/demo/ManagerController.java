@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.example.demo.classes.Element;
+import com.example.demo.classes.ElementTO;
 
 @RestController
 @RequestMapping(path="/manager")
@@ -22,7 +22,7 @@ public class ManagerController {
 	@RequestMapping(path = { "/remove/{element-id}" },
 			method = RequestMethod.POST, 
 			produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<Map<String, Integer>> RegisterPost(@RequestBody Element user)
+	public ResponseEntity<Map<String, Integer>> RegisterPost(@RequestBody ElementTO user)
 	{
 		if(user != null)
 		{
