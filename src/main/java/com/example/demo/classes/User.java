@@ -1,4 +1,4 @@
-package com.example.demo;
+package com.example.demo.classes;
 
 public class User {
 	protected enum types{PLAYER, MANAGER};
