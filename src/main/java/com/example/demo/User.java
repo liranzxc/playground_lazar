@@ -2,22 +2,22 @@ package com.example.demo;
 
 public class User {
 	protected enum types{PLAYER, MANAGER};
-	private String email;
+	private Email email;
 
 	public User() {
 		super();
 	}
 
-	public User(String email) {
+	public User(Email email) {
 		super();
 		this.email = email;
 	}
 
 	public String getEmail() {
-		return email;
+		return email.getEmailAsString();
 	}
 
-	public void setEmail(String email) {
+	public void setEmail(Email email) {
 		this.email = email;
 	}
 }

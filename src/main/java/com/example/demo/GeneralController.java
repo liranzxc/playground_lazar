@@ -39,13 +39,19 @@ public class GeneralController {
 //	}
 //	
 
+	
+	
+	
+	
+	
+	
 	// 1. output: an array of all objects that exist in the system
 	// TODO: change return from String to ElementEntity[]
 	@RequestMapping(path = { "/viewObjects" }, 
 			method = RequestMethod.GET,
 			produces = MediaType.TEXT_HTML_VALUE)
 	public String ViewObjects() {
-		return "<h1> View Objects ! <h1>";  // <h1> for big letters
+		return bigLettersHTML("View Objects !"); 
 	}
 	
 	// 2. output: User' Info
@@ -58,12 +64,6 @@ public class GeneralController {
 		return bigLettersHTML(returnValue);
 	}
 	
-	// input: text
-	// output: the text with big letters in HTML
-	private String bigLettersHTML(String text) {
-		return "<h1> " + text + " <h1>";
-	}
-	
 	// 3. input: none
 	// output: none
 	// for test: return String
@@ -73,6 +73,12 @@ public class GeneralController {
 			produces = MediaType.TEXT_HTML_VALUE)
 	public String RegisterGet() {
 		return bigLettersHTML("Start Registration");
+	}
+	
+	// input: text
+	// output: the text with big letters in HTML
+	private String bigLettersHTML(String text) {
+		return "<h1> " + text + " <h1>";
 	}
 	
 	// 4. register method post , input from json body ,user data .
@@ -162,6 +168,11 @@ public class GeneralController {
 					body(Collections.singletonMap("status", 501));
 		}
 	}
+	
+	
+	
+	
+	
 	
 	
 }
