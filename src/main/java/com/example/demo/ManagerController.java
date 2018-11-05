@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.example.demo.classes.ElementTO;
 
-@RestController
+
 @RequestMapping(path="/manager")
 public class ManagerController {
 

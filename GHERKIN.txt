@@ -1,0 +1,180 @@
+
+/////////////////////////
+// NEW GHERKIN VERSION //
+/////////////////////////
+
+// Feature 1: Create user
+// Scenario: successful creation of user
+Given the server is up,
+When I POST /playground/users
+	with headers:
+		Accept: application/json
+		Content-Type: application/json
+Then the response is: “Create Users success” 
+
+
+
+// Feature 2: Confirm
+// Scenario: Successful confirmation of the user
+
+Given the server is up,
+When I GET /playground/users/confirm with:
+	{ 
+		"playground":"playground_lazar",
+		"email":"demo@gmail.com",
+		"code": any reasonable code from digits 
+	}
+	with headers:
+		Content-Type: application/json
+Then the response is: "Successful Confirmation"
+	
+	
+	
+// Feature 3: Login
+// Scenario: Successful login of the user
+
+Given the server is up,
+When I GET /playground/users/login with:
+	{ 
+		"playground":"playground_lazar",
+		"email":"demo@gmail.com"
+	}
+	with headers:
+		Content-Type: application/json
+Then the response is: "Successful Login"
+
+
+
+// Feature 4: Update playground and email
+// Scenario: Update success
+
+Given the server is up,
+When I PUT /playground/users with:
+	{ 
+		"playground":"playground_lazar",
+		"email":"demo@gmail.com"
+	}
+	with headers:
+		Accept: application/json
+Then the response is: "Update Success"
+
+
+
+// Feature 5: Add New Element
+// Scenario: Addition success
+
+Given the server is up,
+When I POST /playground/elements with:
+	{ 
+		"userPlayground":"playground_lazar",
+		"email":"demo@gmail.com"
+	}
+	with headers:
+		Accept: application/json
+		Content-Type: application/json
+Then the response is: "Addition Success"
+
+
+
+// Feature 6: Update Element playground
+// Scenario: Update success
+
+Given the server is up,
+When I PUT /playground/elements with:
+	{ 
+		"userPlayground":"playground_lazar",
+		"email":"demo@gmail.com"
+		"playground":"playground_other"
+		"id":any reasonable id
+	}
+	with headers:
+		Accept: application/json
+Then the response is: "Update Element' playground success"
+
+
+
+// Feature 7: Get Element
+// Scenario: Get element success
+
+Given the server is up,
+When I GET /playground/elements with:
+	{ 
+		"userPlayground":"playground_lazar",
+		"email":"demo@gmail.com"
+		"playground":"playground_other"
+		"id":any reasonable id
+	}
+	with headers:
+		Accept: application/json
+Then the response is: "Get Element success"
+
+
+
+// Feature 8: Get all user' elements
+// Scenario: get all success
+
+Given the server is up,
+When I GET /playground/elements/{userPlayground}/{email}/all with:
+	{ 
+		"userPlayground":"playground_lazar",
+		"email":"demo@gmail.com"
+	}
+	with headers:
+		Content-Type: application/json
+Then the response is: "Get All Elements success"
+
+
+
+
+// Feature 9: Get all elements in near to point
+// Scenario: get success
+
+Given the server is up,
+When I GET /playground/elements/{userPlayground}/{email}/near with:
+	{ 
+		"userPlayground":"playground_lazar",
+		"email":"demo@gmail.com"
+		"x": any real number
+		"y": any real number
+		"distance": any number bigger than 0
+	}
+	with headers:
+		Content-Type: application/json
+Then the response is: "Get all elements in
+					distance {distance} from point ({x},{y}) success"
+					
+
+				
+// Feature 10: Search Element
+// Scenario: Search success
+
+Given the server is up,
+When I GET /playground/elements/{userPlayground}/{email}/search with:
+	{ 
+		"userPlayground":"playground_lazar",
+		"email":"demo@gmail.com"
+		"attributeName": any name
+		"value": any number bigger than 0
+	}
+	with headers:
+		Content-Type: application/json
+Then the response is: "Search success"
+
+
+
+// Feature 11: Create Activity
+// Scenario: successful creation of activity
+
+Given the server is up,
+When I GET /playground/activities with:
+	{ 
+		"userPlayground":"playground_lazar",
+		"email":"demo@gmail.com"
+	}
+	with headers:
+		Accept: application/json
+		Content-Type: application/json
+Then the response is: "Create Activity success"				
+
+
+

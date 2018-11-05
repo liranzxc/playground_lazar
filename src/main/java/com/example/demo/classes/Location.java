@@ -1,24 +1,19 @@
 package com.example.demo.classes;
 
-public class location {
+public class Location {
 	
 	private double x ;
 	private double y;
 	
-	
-	public location(double x, double y) {
+	public Location(double x, double y) {
 		super();
 		this.x = x;
 		this.y = y;
 	}
 
-
-
-	public location() {
+	public Location() {
 		super();
 	}
-	
-	
 	
 	public double getX() {
 		return x;
@@ -32,6 +27,4 @@ public class location {
 	public void setY(double y) {
 		this.y = y;
 	}
-	
-
 }
