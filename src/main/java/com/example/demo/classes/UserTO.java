@@ -1,14 +1,14 @@
 package com.example.demo.classes;
 
-public class UserTo {
+public class UserTO {
 	
 	private String email;
 	private String playground;
 	private String username;
 	private String avatar;
 	private String role;
-	private Long points;
-	public UserTo(String email, String playground, String username, String avatar, String role, Long points) {
+	private Long points = 0l; // new user always starts with 0 points
+	public UserTO(String email, String playground, String username, String avatar, String role, Long points) {
 		super();
 		this.email = email;
 		this.playground = playground;
@@ -17,7 +17,17 @@ public class UserTo {
 		this.role = role;
 		this.points = points;
 	}
-	public UserTo() {
+	//Constructor which get a NewUserForm and creates a new user from the details.
+	public UserTO(NewUserForm userForm) {
+		super();
+		this.setUsername(userForm.getUsername());
+		this.setPlayground(playground);
+		this.setEmail(userForm.getEmail());
+		this.setAvatar(userForm.getAvatar());
+		this.setRole(userForm.getRole());
+	}
+	
+	public UserTO() {
 		super();
 	}
 	public String getEmail() {

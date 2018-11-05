@@ -13,7 +13,7 @@ import com.example.demo.classes.ElementTO;
 
 @RestController
 @RequestMapping(path ="/playground/elements")
-public class elementsController {
+public class ElementsController {
 
 	@RequestMapping(path = { "/{userPlayerground}/{email}" }, 
 			method = RequestMethod.POST,

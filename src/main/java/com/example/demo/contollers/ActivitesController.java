@@ -11,7 +11,7 @@ import com.example.demo.classes.ActivityTO;
 
 @RestController
 @RequestMapping("playground/activites")
-public class activitesController {
+public class ActivitesController {
 
 	// activites controller
 
