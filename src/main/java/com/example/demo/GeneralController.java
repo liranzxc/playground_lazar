@@ -15,7 +15,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-@RestController
+import com.example.demo.classes.NewUserForm;
+
+
 @RequestMapping(path = "/general")
 public class GeneralController {
 
@@ -87,7 +89,7 @@ public class GeneralController {
 			method = RequestMethod.POST, 
 			consumes = MediaType.APPLICATION_JSON_VALUE,
 			produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<Map<String, Integer>> RegisterPost(@RequestBody User user)
+	public ResponseEntity<Map<String, Integer>> RegisterPost(@RequestBody NewUserForm user)
 	{
 		if(user != null)
 		{
@@ -97,7 +99,7 @@ public class GeneralController {
 		}
 		else
 		{
-			return ResponseEntity.status(HttpStatus.BAD_GATEWAY).body(Collections.singletonMap("Status", 500));
+			return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Collections.singletonMap("Status", 500));
 
 		}
 	}
@@ -146,7 +148,7 @@ public class GeneralController {
 			method = RequestMethod.POST, 
 			consumes = MediaType.APPLICATION_JSON_VALUE,
 			produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<Map<String, Integer>> LoginPost(@RequestBody User user)
+	public ResponseEntity<Map<String, Integer>> LoginPost(@RequestBody NewUserForm user)
 	{
 		if(user != null)
 		{
