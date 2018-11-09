@@ -2,6 +2,7 @@ package com.example.demo.classes;
 
 import java.util.Date;
 import java.util.Map;
+import java.util.TreeMap;
 
 public class ElementTO {
 
@@ -52,6 +53,11 @@ public class ElementTO {
 	}
 		
 		
+//	public ElementTO(String string, int i, Location location2, String string2, Date date, Date date2, String string3,
+//			TreeMap<String, Object> treeMap, String string4, String string5) {
+//		// TODO Auto-generated constructor stub
+//	}
+
 	public String getPlayground() {
 		return playground;
 	}

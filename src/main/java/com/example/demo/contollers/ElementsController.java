@@ -1,6 +1,7 @@
 package com.example.demo.contollers;
 
 import java.util.Date;
+import java.util.TreeMap;
 
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -10,11 +11,18 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.demo.classes.ElementTO;
+import com.example.demo.classes.Location;
 
 @RestController
 @RequestMapping(path = "/playground/elements")
 public class ElementsController {
+	
+	public static final ElementTO DEMO_ELEMENT_TO = 
+			new ElementTO("playground_lazar", "1", new Location(0, 0), "Demo", new Date("12.03.18"), null, "TEST", new TreeMap<String,Object>(), "playGround", "demp777@gmail.com");
 
+	/*
+	 * Feature 5:
+	 */
 	@RequestMapping(
 			path = {"/{userPlayerground}/{email}" }, 
 			method = RequestMethod.POST, 
@@ -35,6 +43,9 @@ public class ElementsController {
 		return element;
 	}
 
+	/*
+	 * Feature 6:
+	 */
 	@RequestMapping(
 			path = {"/{userPlayerground}/{email}/{playground}/{id}" }, 
 			method = RequestMethod.PUT, 
@@ -52,12 +63,17 @@ public class ElementsController {
 		// TODO do some valid checks on new element and update dataBase with new element
 	}
 
+	/*
+	 * Feature 7:
+	 */
 	@RequestMapping(
 			path = {"/{userPlayerground}/{email}/{playground}/{id}" }, 
 			method = RequestMethod.GET, 
 			produces = MediaType.APPLICATION_JSON_VALUE)
-	public ElementTO getElement(@PathVariable("userPlayerground") String userPlayground,
-			@PathVariable("email") String email, @PathVariable("playground") String playground,
+	public ElementTO getElement(
+			@PathVariable("userPlayerground") String userPlayground,
+			@PathVariable("email") String email, 
+			@PathVariable("playground") String playground,
 			@PathVariable("id") String id) throws Exception {
 
 		System.out.println("ups: " + userPlayground + " email: " + email + " pg: " + playground + " id: " + id);
@@ -88,6 +104,59 @@ public class ElementsController {
 			}
 		}
 		return false;
+	}
+	
+	/*
+	 * Feature 8:
+	 */
+	@RequestMapping(
+			path = { "/{userPlayground}/{email}/all" },
+			method = RequestMethod.GET,
+			produces = MediaType.APPLICATION_JSON_VALUE)
+	public ElementTO[] getAllElements(
+			@PathVariable("userPlayerground") String userPlayground,
+			@PathVariable("email") String email) {
+		
+		ElementTO[] allElements = new ElementTO[1];
+		allElements[0] = DEMO_ELEMENT_TO;
+		return allElements;
+	}
+	
+	/*
+	 * Feature 9:
+	 */
+	@RequestMapping(
+			path = { "/{userPlayground}/{email}/near/{x}/{y}/{distance}" },
+			method = RequestMethod.GET,
+			produces = MediaType.APPLICATION_JSON_VALUE)
+	public ElementTO[] getAllElementsNearToPlayaer(
+			@PathVariable("userPlayerground") String userPlayground,
+			@PathVariable("email") String email,
+			@PathVariable("x") double x,
+			@PathVariable("y") double y,
+			@PathVariable("distance") double distance) {
+		
+		ElementTO[] allElements = new ElementTO[1];
+		allElements[0] = DEMO_ELEMENT_TO;
+		return allElements;
+	}
+	
+	/*
+	 * Feature 10:
+	 */
+	@RequestMapping(
+			path = { "/{userPlayground}/{email}/search/{attributeName}/{value}" },
+			method = RequestMethod.GET,
+			produces = MediaType.APPLICATION_JSON_VALUE)
+	public ElementTO[] searchAllElementswithSameAttributeAndValue(
+			@PathVariable("userPlayerground") String userPlayground,
+			@PathVariable("email") String email,
+			@PathVariable("attributeName") String attributeName,
+			@PathVariable("value") double value) {
+		
+		ElementTO[] allElements = new ElementTO[1];
+		allElements[0] = DEMO_ELEMENT_TO;
+		return allElements;
 	}
 
 }
