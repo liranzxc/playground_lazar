@@ -10,13 +10,13 @@ When I POST /playground/users
 	with headers:
 		Accept: application/json
 		Content-Type: application/json
-Then the response is: 
+Then the response is: 
 	{
-		"email": my email,
+		"email": any string,
 		"playground":"playground_lazar",
-		"username": my user name,
-		"avatar": my avatar,
-		"role": my role,
+		"username": any string,
+		"avatar": any string,
+		"role": any string,
 		"points":"0"
 	}
 
@@ -27,20 +27,20 @@ Then the response is:
 
 Given the server is up,
 When I GET /playground/users/confirm with:
-	{ 
+	{ 
 		"playground":"playground_lazar",
 		"email":"demo@gmail.com",
-		"code": any reasonable code from digits 
+		"code": any reasonable code from digits 
 	}
 	with headers:
 		Content-Type: application/json
-Then the response is: 
+Then the response is: 
 	{
-		"email": my email,
+		"email": "demo@gmail.com",		
 		"playground":"playground_lazar",
-		"username": my user name,
-		"avatar": my avatar,
-		"role": my role,
+		"username": any string,
+		"avatar": any string,
+		"role": any string,
 		"points":"0"
 	}
 	
@@ -50,19 +50,19 @@ Then the response is:
 
 Given the server is up,
 When I GET /playground/users/login with:
-	{ 
+	{ 
 		"playground":"playground_lazar",
 		"email":"demo@gmail.com"
 	}
 	with headers:
 		Content-Type: application/json
-Then the response is: 
+Then the response is: 
 	{
-		"email": my email,
+		"email":"demo@gmail.com",
 		"playground":"playground_lazar",
-		"username": my user name,
-		"avatar": my avatar,
-		"role": my role,
+		"username": any string,
+		"avatar": any string,
+		"role": any string,
 		"points": any number equals or higher than 0
 	}
 
@@ -73,7 +73,7 @@ Then the response is:
 
 Given the server is up,
 When I PUT /playground/users with:
-	{ 
+	{ 
 		"playground":"playground_lazar",
 		"email":"demo@gmail.com"
 	}
@@ -88,25 +88,27 @@ Then the response is: status <> 200
 
 Given the server is up,
 When I POST /playground/elements with:
-	{ 
+	{ 
 		"userPlayground":"playground_lazar",
 		"email":"demo@gmail.com"
 	}
 	with headers:
 		Accept: application/json
 		Content-Type: application/json
-Then the response is: 
+Then the response is: 
 	{
 		"playground":"playground_lazar",
 		"id": any reasonable number higher than 0
 		"location":
-			"x":"0"
+			"x":"0",
 			"y":"0"
-		"name": any reasonable name
-		"username": any reasonable name,
-		"avatar": anything,
-		"role": any legal role,
-		"points": any reasonable number higher than 0 or equal
+		"name": any reasonable name,
+		"creationDate": any reasonable date
+		"exirationDate": any reasonable date or null
+		"type": any string
+		"attributes": any array of strings ...any size between 0-5
+		"creatorPlayground":"playground_lazar"
+		"creatorEmail": any string
 	}
 
 
@@ -116,7 +118,7 @@ Then the response is:
 
 Given the server is up,
 When I PUT /playground/elements with:
-	{ 
+	{ 
 		"userPlayground":"playground_lazar",
 		"email":"demo@gmail.com"
 		"playground":"playground_other"
@@ -133,7 +135,7 @@ Then the response is: status <> 200
 
 Given the server is up,
 When I GET /playground/elements with:
-	{ 
+	{ 
 		"userPlayground":"playground_lazar",
 		"email":"demo@gmail.com"
 		"playground":"playground_other"
@@ -141,18 +143,20 @@ When I GET /playground/elements with:
 	}
 	with headers:
 		Accept: application/json
-Then the response is: 
-	{
+Then the response is: 
+{
 		"playground":"playground_lazar",
 		"id": any reasonable number higher than 0
 		"location":
-			"x": any number
-			"y": any number
-		"name": any reasonable name
-		"username": any reasonable name,
-		"avatar": anything,
-		"role": any legal role,
-		"points": any reasonable number higher than 0 or equal
+			"x":"0",
+			"y":"0"
+		"name": any reasonable name,
+		"creationDate": any reasonable date
+		"exirationDate": any reasonable date or null
+		"type": any string
+		"attributes": any array of strings ...any size between 0-5
+		"creatorPlayground":"playground_lazar"
+		"creatorEmail": any string
 	}
 
 
@@ -162,24 +166,26 @@ Then the response is:
 
 Given the server is up,
 When I GET /playground/elements/{userPlayground}/{email}/all with:
-	{ 
+	{ 
 		"userPlayground":"playground_lazar",
-		"email":"demo@gmail.com"
+		"email": any string
 	}
 	with headers:
 		Content-Type: application/json
-Then the response is: 
+Then the response is: 
 	{
 		"playground":"playground_lazar",
 		"id": any reasonable number higher than 0
 		"location":
-			"x": any number
-			"y": any number
-		"name": any reasonable name
-		"username": any reasonable name,
-		"avatar": anything,
-		"role": any legal role,
-		"points": any reasonable number higher than 0 or equal
+			"x":"0",
+			"y":"0"
+		"name": any reasonable name,
+		"creationDate": any reasonable date
+		"exirationDate": any reasonable date or null
+		"type": any string
+		"attributes": any array of strings ...any size between 0-5
+		"creatorPlayground":"playground_lazar"
+		"creatorEmail": any string
 	}...any size between 0-10
 
 
@@ -189,27 +195,29 @@ Then the response is:
 
 Given the server is up,
 When I GET /playground/elements/{userPlayground}/{email}/near with:
-	{ 
+	{ 
 		"userPlayground":"playground_lazar",
 		"email":"demo@gmail.com"
-		"x": any real number
-		"y": any real number
+		"x": any number
+		"y": any number
 		"distance": any number bigger than 0
 	}
 	with headers:
 		Content-Type: application/json
-Then the response is: 
+Then the response is: 
 	{
 		"playground":"playground_lazar",
 		"id": any reasonable number higher than 0
 		"location":
-			"x": any number
-			"y": any number
-		"name": any reasonable name
-		"username": any reasonable name,
-		"avatar": anything,
-		"role": any legal role,
-		"points": any reasonable number higher than 0 or equal
+			"x":"0",
+			"y":"0"
+		"name": any reasonable name,
+		"creationDate": any reasonable date
+		"exirationDate": any reasonable date or null
+		"type": any string
+		"attributes": any array of strings ...any size between 0-5
+		"creatorPlayground":"playground_lazar"
+		"creatorEmail": any string
 	}...any size between 0-10
 					
 
@@ -219,7 +227,7 @@ Then the response is:
 
 Given the server is up,
 When I GET /playground/elements/{userPlayground}/{email}/search with:
-	{ 
+	{ 
 		"userPlayground":"playground_lazar",
 		"email":"demo@gmail.com"
 		"attributeName": any name
@@ -227,18 +235,21 @@ When I GET /playground/elements/{userPlayground}/{email}/search with:
 	}
 	with headers:
 		Content-Type: application/json
-Then the response is: 
+Then the response is: 
+Then the response is: 
 	{
 		"playground":"playground_lazar",
 		"id": any reasonable number higher than 0
 		"location":
-			"x": any number
-			"y": any number
-		"name": any reasonable name
-		"username": any reasonable name,
-		"avatar": anything,
-		"role": any legal role,
-		"points": any reasonable number higher than 0 or equal
+			"x":"0",
+			"y":"0"
+		"name": any reasonable name,
+		"creationDate": any reasonable date
+		"exirationDate": any reasonable date or null
+		"type": any string
+		"attributes": any array of strings ...any size between 0-5
+		"creatorPlayground":"playground_lazar"
+		"creatorEmail": any string
 	}...any size between 0-10
 
 
@@ -248,17 +259,18 @@ Then the response is:
 
 Given the server is up,
 When I GET /playground/activities with:
-	{ 
+	{ 
 		"userPlayground":"playground_lazar",
 		"email":"demo@gmail.com"
 	}
 	with headers:
 		Accept: application/json
 		Content-Type: application/json
-Then the response is:  
+Then the response is:  
 	{
 		"object":??????
 	}				
+
 
 
 
