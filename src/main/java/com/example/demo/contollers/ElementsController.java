@@ -1,6 +1,8 @@
 package com.example.demo.contollers;
 
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.TreeMap;
 
 import org.springframework.http.MediaType;
@@ -17,8 +19,10 @@ import com.example.demo.classes.Location;
 @RequestMapping(path = "/playground/elements")
 public class ElementsController {
 	
-	public static final ElementTO DEMO_ELEMENT_TO = 
-			new ElementTO("playground_lazar", "1", new Location(0, 0), "Demo", new Date("12.03.18"), null, "TEST", new TreeMap<String,Object>(), "playGround", "demp777@gmail.com");
+	//TODO this public static final is giving an error when uploading server 
+	//Test element
+	//public static final ElementTO DEMO_ELEMENT_TO = 
+	//		new ElementTO("playground_lazar", "1", new Location(0, 0), "Demo", new Date("12.03.18"), null, "TEST", new TreeMap<String,Object>(), "playGround", "demp777@gmail.com");
 
 	/*
 	 * Feature 5:
@@ -29,16 +33,24 @@ public class ElementsController {
 			consumes = MediaType.APPLICATION_JSON_VALUE, 
 			produces = MediaType.APPLICATION_JSON_VALUE)
 	public ElementTO createElement(@RequestBody ElementTO element,
-			@PathVariable(name = "userPlayground", required = true) String userPlayground,
+			@PathVariable(name = "userPlayerground", required = true) String userPlayground,
 			@PathVariable(name = "email", required = true) String email) throws Exception {
 
-		if (!verifiedEmail(element.getCreatorEmail())) {
+		
+		if (!verifiedEmail(email)) {
+			System.err.println("create element throwing Exception");
 			throw new Exception(); // TODO maybe changed exception thrown
 		}
 
-		element.setCreationDate(new Date()); // TODO check if new Date gives now
-		element.setExpireDate(null);// is null ok to represent never?
-		// TODO maybe set more stuffs
+		//TODO there is a mistake here (need to check Gherkin)
+		element.setCreationDate(new Date());
+		element.setPlayground(userPlayground);
+		element.setCreatorPlayground(userPlayground);
+		element.setCreatorEmail(email);
+		element.setLocation(new Location(0, 0));
+		element.setName("Shay");
+		element.setType("TEST");
+		element.setAttributes(new HashMap<String, Object>());
 
 		return element;
 	}
@@ -76,16 +88,13 @@ public class ElementsController {
 			@PathVariable("playground") String playground,
 			@PathVariable("id") String id) throws Exception {
 
-		System.out.println("ups: " + userPlayground + " email: " + email + " pg: " + playground + " id: " + id);
-
-		System.out.println("enterd get method");
 		// TODO extract element from data bases
-		ElementTO eto = new ElementTO("TEST", "TEST", null, "TEST", null, null, "TEST", null, "TEST", "TEST");
+		ElementTO eto = new ElementTO();
 
 		// TODO throw exception if element hasn't been found in dataBase
-		// if(eto == null){
-		// throw new Exception(); //TODO maybe changed exception thrown
-		// }
+		if(eto == null){
+			throw new Exception(); //TODO maybe changed exception thrown
+		}
 		return eto;
 	}
 
@@ -118,7 +127,7 @@ public class ElementsController {
 			@PathVariable("email") String email) {
 		
 		ElementTO[] allElements = new ElementTO[1];
-		allElements[0] = DEMO_ELEMENT_TO;
+		allElements[0] = new ElementTO();
 		return allElements;
 	}
 	
@@ -136,8 +145,9 @@ public class ElementsController {
 			@PathVariable("y") double y,
 			@PathVariable("distance") double distance) {
 		
+		//TODO extract all elements within x,y block of area from the dataBase
 		ElementTO[] allElements = new ElementTO[1];
-		allElements[0] = DEMO_ELEMENT_TO;
+		allElements[0] = new ElementTO();
 		return allElements;
 	}
 	
@@ -148,14 +158,15 @@ public class ElementsController {
 			path = { "/{userPlayground}/{email}/search/{attributeName}/{value}" },
 			method = RequestMethod.GET,
 			produces = MediaType.APPLICATION_JSON_VALUE)
-	public ElementTO[] searchAllElementswithSameAttributeAndValue(
+	public ElementTO[] searchAllElementsWithSameAttributeAndValue(
 			@PathVariable("userPlayerground") String userPlayground,
 			@PathVariable("email") String email,
 			@PathVariable("attributeName") String attributeName,
 			@PathVariable("value") double value) {
 		
+		//TODO extract all elements with the attribute given with the corresponding value from the dataBase
 		ElementTO[] allElements = new ElementTO[1];
-		allElements[0] = DEMO_ELEMENT_TO;
+		allElements[0] = new ElementTO();
 		return allElements;
 	}
 

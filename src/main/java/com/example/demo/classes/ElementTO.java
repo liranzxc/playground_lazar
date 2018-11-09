@@ -8,16 +8,7 @@ public class ElementTO {
 
 	private static int ID = 0;
 		
-		
-	/*
-	 * ------------------------------- READ -----------------------
-	 * user shouldn't be able to add an id, creationDate, expireDate and maybe more of the privates
-	 * should we have regular setters for those methods as we don't want jackson to have the 
-     * ability to alter them.
-	 * 
-	 *-------------------------------- READ -----------------------
-	 */
-
+	
 	private String playground;
 	private String id;
 	private Location location;
