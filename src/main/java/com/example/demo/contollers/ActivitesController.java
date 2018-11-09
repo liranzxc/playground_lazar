@@ -17,7 +17,9 @@ public class ActivitesController {
 
 	// 11. go to some activity and do something and return object
 
-	@RequestMapping(path = "/{userPlayground}/{email}", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
+	@RequestMapping(path = "/{userPlayground}/{email}", 
+			method = RequestMethod.POST, 
+			consumes = MediaType.APPLICATION_JSON_VALUE)
 	public Object GoToActivity(@RequestBody ActivityTO activity,
 			@PathVariable(name = "userPlayground") String userPlayground, @PathVariable(name = "email") String email) {
 		

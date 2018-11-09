@@ -10,7 +10,15 @@ When I POST /playground/users
 	with headers:
 		Accept: application/json
 		Content-Type: application/json
-Then the response is: “Create Users success” 
+Then the response is: 
+	{
+		"email": my email,
+		"playground":"playground_lazar",
+		"username": my user name,
+		"avatar": my avatar,
+		"role": my role,
+		"points":"0"
+	}
 
 
 
@@ -26,8 +34,15 @@ When I GET /playground/users/confirm with:
 	}
 	with headers:
 		Content-Type: application/json
-Then the response is: "Successful Confirmation"
-	
+Then the response is: 
+	{
+		"email": my email,
+		"playground":"playground_lazar",
+		"username": my user name,
+		"avatar": my avatar,
+		"role": my role,
+		"points":"0"
+	}
 	
 	
 // Feature 3: Login
@@ -41,7 +56,15 @@ When I GET /playground/users/login with:
 	}
 	with headers:
 		Content-Type: application/json
-Then the response is: "Successful Login"
+Then the response is: 
+	{
+		"email": my email,
+		"playground":"playground_lazar",
+		"username": my user name,
+		"avatar": my avatar,
+		"role": my role,
+		"points": any number equals or higher than 0
+	}
 
 
 
@@ -56,7 +79,7 @@ When I PUT /playground/users with:
 	}
 	with headers:
 		Accept: application/json
-Then the response is: "Update Success"
+Then the response is: status <> 200
 
 
 
@@ -72,7 +95,19 @@ When I POST /playground/elements with:
 	with headers:
 		Accept: application/json
 		Content-Type: application/json
-Then the response is: "Addition Success"
+Then the response is: 
+	{
+		"playground":"playground_lazar",
+		"id": any reasonable number higher than 0
+		"location":
+			"x":"0"
+			"y":"0"
+		"name": any reasonable name
+		"username": any reasonable name,
+		"avatar": anything,
+		"role": any legal role,
+		"points": any reasonable number higher than 0 or equal
+	}
 
 
 
@@ -89,7 +124,7 @@ When I PUT /playground/elements with:
 	}
 	with headers:
 		Accept: application/json
-Then the response is: "Update Element' playground success"
+Then the response is: status <> 200
 
 
 
@@ -106,7 +141,19 @@ When I GET /playground/elements with:
 	}
 	with headers:
 		Accept: application/json
-Then the response is: "Get Element success"
+Then the response is: 
+	{
+		"playground":"playground_lazar",
+		"id": any reasonable number higher than 0
+		"location":
+			"x": any number
+			"y": any number
+		"name": any reasonable name
+		"username": any reasonable name,
+		"avatar": anything,
+		"role": any legal role,
+		"points": any reasonable number higher than 0 or equal
+	}
 
 
 
@@ -121,8 +168,19 @@ When I GET /playground/elements/{userPlayground}/{email}/all with:
 	}
 	with headers:
 		Content-Type: application/json
-Then the response is: "Get All Elements success"
-
+Then the response is: 
+	{
+		"playground":"playground_lazar",
+		"id": any reasonable number higher than 0
+		"location":
+			"x": any number
+			"y": any number
+		"name": any reasonable name
+		"username": any reasonable name,
+		"avatar": anything,
+		"role": any legal role,
+		"points": any reasonable number higher than 0 or equal
+	}...any size between 0-10
 
 
 
@@ -140,8 +198,19 @@ When I GET /playground/elements/{userPlayground}/{email}/near with:
 	}
 	with headers:
 		Content-Type: application/json
-Then the response is: "Get all elements in
-					distance {distance} from point ({x},{y}) success"
+Then the response is: 
+	{
+		"playground":"playground_lazar",
+		"id": any reasonable number higher than 0
+		"location":
+			"x": any number
+			"y": any number
+		"name": any reasonable name
+		"username": any reasonable name,
+		"avatar": anything,
+		"role": any legal role,
+		"points": any reasonable number higher than 0 or equal
+	}...any size between 0-10
 					
 
 				
@@ -158,7 +227,19 @@ When I GET /playground/elements/{userPlayground}/{email}/search with:
 	}
 	with headers:
 		Content-Type: application/json
-Then the response is: "Search success"
+Then the response is: 
+	{
+		"playground":"playground_lazar",
+		"id": any reasonable number higher than 0
+		"location":
+			"x": any number
+			"y": any number
+		"name": any reasonable name
+		"username": any reasonable name,
+		"avatar": anything,
+		"role": any legal role,
+		"points": any reasonable number higher than 0 or equal
+	}...any size between 0-10
 
 
 
@@ -174,7 +255,10 @@ When I GET /playground/activities with:
 	with headers:
 		Accept: application/json
 		Content-Type: application/json
-Then the response is: "Create Activity success"				
+Then the response is:  
+	{
+		"object":??????
+	}				
 
 
 
