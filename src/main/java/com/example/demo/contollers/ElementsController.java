@@ -63,7 +63,7 @@ public class ElementsController {
 			method = RequestMethod.PUT, 
 			consumes = MediaType.APPLICATION_JSON_VALUE)
 	public void updateElement(@RequestBody ElementTO element,
-			@PathVariable(name = "userPlayground", required = true) String userPlayground,
+			@PathVariable(name = "userPlayerground", required = true) String userPlayground,
 			@PathVariable(name = "email", required = true) String email,
 			@PathVariable(name = "playground", required = true) String playground,
 			@PathVariable(name = "id", required = true) String id) throws Exception {
@@ -88,14 +88,24 @@ public class ElementsController {
 			@PathVariable("playground") String playground,
 			@PathVariable("id") String id) throws Exception {
 
+		System.out.println("get start");
 		// TODO extract element from data bases
-		ElementTO eto = new ElementTO();
+		ElementTO element = new ElementTO();
+		element.setCreationDate(new Date());
+		element.setPlayground(userPlayground);
+		element.setCreatorPlayground(userPlayground);
+		element.setCreatorEmail(email);
+		element.setLocation(new Location(0, 0));
+		element.setName("Shay");
+		element.setType("TEST");
+		element.setAttributes(new HashMap<String, Object>());
 
-		// TODO throw exception if element hasn't been found in dataBase
-		if(eto == null){
-			throw new Exception(); //TODO maybe changed exception thrown
-		}
-		return eto;
+// 		//TODO throw exception if element hasn't been found in dataBase
+//		if(element == null){
+//			throw new Exception(); //TODO maybe changed exception thrown
+//		}
+		
+		return element;
 	}
 
 	// this method checks if there is a '@' in the name and there is something
