@@ -21,7 +21,8 @@ public class ActivitesController {
 			method = RequestMethod.POST, 
 			consumes = MediaType.APPLICATION_JSON_VALUE)
 	public Object GoToActivity(@RequestBody ActivityTO activity,
-			@PathVariable(name = "userPlayground") String userPlayground, @PathVariable(name = "email") String email) {
+			@PathVariable(name = "userPlayground") String userPlayground, 
+			@PathVariable(name = "email") String email) {
 		
 		
 		// just return activity for testing - Checked !

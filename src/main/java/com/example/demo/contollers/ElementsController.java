@@ -1,5 +1,6 @@
 package com.example.demo.contollers;
 
+import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -28,12 +29,12 @@ public class ElementsController {
 	 * Feature 5:
 	 */
 	@RequestMapping(
-			path = {"/{userPlayerground}/{email}" }, 
+			path = {"/{userPlayground}/{email}" }, 
 			method = RequestMethod.POST, 
 			consumes = MediaType.APPLICATION_JSON_VALUE, 
 			produces = MediaType.APPLICATION_JSON_VALUE)
 	public ElementTO createElement(@RequestBody ElementTO element,
-			@PathVariable(name = "userPlayerground", required = true) String userPlayground,
+			@PathVariable(name = "userPlayground", required = true) String userPlayground,
 			@PathVariable(name = "email", required = true) String email) throws Exception {
 
 		
@@ -59,11 +60,11 @@ public class ElementsController {
 	 * Feature 6:
 	 */
 	@RequestMapping(
-			path = {"/{userPlayerground}/{email}/{playground}/{id}" }, 
+			path = {"/{userPlayground}/{email}/{playground}/{id}" }, 
 			method = RequestMethod.PUT, 
 			consumes = MediaType.APPLICATION_JSON_VALUE)
 	public void updateElement(@RequestBody ElementTO element,
-			@PathVariable(name = "userPlayerground", required = true) String userPlayground,
+			@PathVariable(name = "userPlayground", required = true) String userPlayground,
 			@PathVariable(name = "email", required = true) String email,
 			@PathVariable(name = "playground", required = true) String playground,
 			@PathVariable(name = "id", required = true) String id) throws Exception {
@@ -79,11 +80,11 @@ public class ElementsController {
 	 * Feature 7:
 	 */
 	@RequestMapping(
-			path = {"/{userPlayerground}/{email}/{playground}/{id}" }, 
+			path = {"/{userPlayground}/{email}/{playground}/{id}" }, 
 			method = RequestMethod.GET, 
 			produces = MediaType.APPLICATION_JSON_VALUE)
 	public ElementTO getElement(
-			@PathVariable("userPlayerground") String userPlayground,
+			@PathVariable("userPlayground") String userPlayground,
 			@PathVariable("email") String email, 
 			@PathVariable("playground") String playground,
 			@PathVariable("id") String id) throws Exception {
@@ -133,11 +134,22 @@ public class ElementsController {
 			method = RequestMethod.GET,
 			produces = MediaType.APPLICATION_JSON_VALUE)
 	public ElementTO[] getAllElements(
-			@PathVariable("userPlayerground") String userPlayground,
+			@PathVariable("userPlayground") String userPlayground,
 			@PathVariable("email") String email) {
 		
 		ElementTO[] allElements = new ElementTO[1];
-		allElements[0] = new ElementTO();
+		ElementTO element = new ElementTO();
+		
+		element.setCreationDate(new Date());
+		element.setPlayground(userPlayground);
+		element.setCreatorPlayground(userPlayground);
+		element.setCreatorEmail(email);
+		element.setLocation(new Location(0, 0));
+		element.setName("get_All_Elements_TEST");
+		element.setType("TEST");
+		
+		allElements[0] = element;
+		
 		return allElements;
 	}
 	
@@ -149,17 +161,28 @@ public class ElementsController {
 			method = RequestMethod.GET,
 			produces = MediaType.APPLICATION_JSON_VALUE)
 	public ElementTO[] getAllElementsNearToPlayaer(
-			@PathVariable("userPlayerground") String userPlayground,
+			@PathVariable("userPlayground") String userPlayground,
 			@PathVariable("email") String email,
 			@PathVariable("x") double x,
 			@PathVariable("y") double y,
 			@PathVariable("distance") double distance) {
 		
-		//TODO extract all elements within x,y block of area from the dataBase
 		ElementTO[] allElements = new ElementTO[1];
-		allElements[0] = new ElementTO();
+		ElementTO element = new ElementTO();
+		
+		element.setCreationDate(new Date());
+		element.setPlayground(userPlayground);
+		element.setCreatorPlayground(userPlayground);
+		element.setCreatorEmail(email);
+		element.setLocation(new Location(0, 0));
+		element.setName("get_All_Elements_Near_To_Playaer_TEST");
+		element.setType("TEST");
+		
+		allElements[0] = element;
+		
 		return allElements;
 	}
+	
 	
 	/*
 	 * Feature 10:
@@ -169,14 +192,23 @@ public class ElementsController {
 			method = RequestMethod.GET,
 			produces = MediaType.APPLICATION_JSON_VALUE)
 	public ElementTO[] searchAllElementsWithSameAttributeAndValue(
-			@PathVariable("userPlayerground") String userPlayground,
+			@PathVariable("userPlayground") String userPlayground,
 			@PathVariable("email") String email,
 			@PathVariable("attributeName") String attributeName,
 			@PathVariable("value") double value) {
 		
-		//TODO extract all elements with the attribute given with the corresponding value from the dataBase
 		ElementTO[] allElements = new ElementTO[1];
-		allElements[0] = new ElementTO();
+		ElementTO element = new ElementTO();
+		element.setCreationDate(new Date());
+		element.setPlayground(userPlayground);
+		element.setCreatorPlayground(userPlayground);
+		element.setCreatorEmail(email);
+		element.setLocation(new Location(0, 0));
+		element.setName("search_All_Elements_With_Same_Attribute_And_Value_TEST");
+		element.setType("TEST");
+		
+		allElements[0] = element;
+				
 		return allElements;
 	}
 
