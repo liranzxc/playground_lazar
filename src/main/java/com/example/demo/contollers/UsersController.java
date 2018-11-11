@@ -27,7 +27,8 @@ public class UsersController {
 	}
 	
 	//2. Validate code
-	@RequestMapping(value="/confirm/{playground}/{email}/{code}", method=RequestMethod.GET)
+	@RequestMapping(value="/confirm/{playground}/{email}/{code}", method=RequestMethod.GET
+			,produces=MediaType.APPLICATION_JSON_VALUE)
 	public UserTO validateCode(
 			@PathVariable("playground") String playground, 
 			@PathVariable("email") String email, 
