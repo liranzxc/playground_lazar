@@ -1,4 +1,4 @@
-package com.example.demo;
+package com.example.demo.garbage;
 
 import java.util.Collections;
 import java.util.Map;

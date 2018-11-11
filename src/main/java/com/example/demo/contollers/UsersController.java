@@ -20,7 +20,7 @@ public class UsersController {
 	// user controller
 	
 	//1. Register a new user. //TODO require testing!!!!
-	@RequestMapping(value="", method=RequestMethod.POST)
+	@RequestMapping(value="/", method=RequestMethod.POST)
 	public UserTO registerFromForm(@RequestBody NewUserForm userForm) {
 		UserTO user = new UserTO(userForm);
 		return user;
