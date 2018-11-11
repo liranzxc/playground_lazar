@@ -33,10 +33,10 @@ public class UsersController {
 			@PathVariable("email") String email, 
 			@PathVariable("code") String code) {
 				if (code.equals(TEST_CODE)) {
-					return new UserTO("GOOD CODE", "TEST", "TEST", "TEST", "TEST", null); //currently a TEST user.
+					return new UserTO("GOOD CODE", "TEST", "TEST", "TEST", "TEST", new Long(0)); //currently a TEST user.
 				}
 				else
-					return new UserTO("WRONG CODE", "WRONG CODE", "WRONG CODE", "WRONG CODE", "WRONG CODE", null); //Maybe throw an exception, currently returning a "wrong" TEST user
+					return new UserTO("WRONG CODE", "WRONG CODE", "WRONG CODE", "WRONG CODE", "WRONG CODE", new Long(0)); //Maybe throw an exception, currently returning a "wrong" TEST user
 			//TODO in the future we should search for the relevant user in the database and return it.
 	}
 	
@@ -45,7 +45,7 @@ public class UsersController {
 	public UserTO logIn
 	(@PathVariable("playground") String playground,
 	 @PathVariable("email") String email) {
-		return new UserTO("TEST", "TEST", "TEST", "TEST", "TEST", null);
+		return new UserTO(email, "TEST", "TEST", "TEST", "TEST", new Long(1));
 	}
 		//the returned user should be searched in the database.
 	
@@ -55,7 +55,8 @@ public class UsersController {
 	(@PathVariable(name="email") String email, 
 	@PathVariable(name="playground") String playground)
 	{
-		// find user by playground and email in DB and update him !
+		//TODO find user by playground and email in DB and update him !
+		//throw exception if not found
 	}
 	
 }

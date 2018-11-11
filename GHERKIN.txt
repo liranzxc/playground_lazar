@@ -254,8 +254,8 @@ Then the response is: 
 
 
 
-// Feature 11: Create Activity
-// Scenario: successful creation of activity
+// Feature 11: Use Activity
+// Scenario: successful use of activity
 
 Given the server is up,
 When I GET /playground/activities with:
@@ -268,7 +268,7 @@ When I GET /playground/activities with:
 		Content-Type: application/json
 Then the response is:  
 	{
-		"object":null
+		"object": empty Object
 	}				
 
 
