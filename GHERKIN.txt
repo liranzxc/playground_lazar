@@ -29,14 +29,14 @@ Given the server is up,
 When I GET /playground/users/confirm with:
 	{ 
 		"playground":"playground_lazar",
-		"email":"demo@gmail.com",
+		"email": any string,
 		"code": any reasonable code from digits 
 	}
 	with headers:
 		Content-Type: application/json
 Then the response is: 
 	{
-		"email": "demo@gmail.com",		
+		"email": any string,		
 		"playground":"playground_lazar",
 		"username": any string,
 		"avatar": any string,
@@ -52,13 +52,13 @@ Given the server is up,
 When I GET /playground/users/login with:
 	{ 
 		"playground":"playground_lazar",
-		"email":"demo@gmail.com"
+		"email": any string
 	}
 	with headers:
 		Content-Type: application/json
 Then the response is: 
 	{
-		"email":"demo@gmail.com",
+		"email":any string,
 		"playground":"playground_lazar",
 		"username": any string,
 		"avatar": any string,
@@ -261,14 +261,14 @@ Given the server is up,
 When I GET /playground/activities with:
 	{ 
 		"userPlayground":"playground_lazar",
-		"email":"demo@gmail.com"
+		"email": any string
 	}
 	with headers:
 		Accept: application/json
 		Content-Type: application/json
 Then the response is:  
 	{
-		"object":??????
+		"object":null
 	}				
 
 

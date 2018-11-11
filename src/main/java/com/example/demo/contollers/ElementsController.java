@@ -43,7 +43,6 @@ public class ElementsController {
 			throw new Exception(); // TODO maybe changed exception thrown
 		}
 
-		//TODO there is a mistake here (need to check Gherkin)
 		element.setCreationDate(new Date());
 		element.setPlayground(userPlayground);
 		element.setCreatorPlayground(userPlayground);
@@ -89,7 +88,6 @@ public class ElementsController {
 			@PathVariable("playground") String playground,
 			@PathVariable("id") String id) throws Exception {
 
-		System.out.println("get start");
 		// TODO extract element from data bases
 		ElementTO element = new ElementTO();
 		element.setCreationDate(new Date());
