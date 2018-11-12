@@ -8,8 +8,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.example.demo.classes.UserTo;
-import com.example.demo.classes.UserEntity;
+import com.example.demo.classes.EntityClasses.UserEntity;
+import com.example.demo.classes.ToClasses.UserTo;
 
 @RestController
 @RequestMapping("playground/users")

@@ -14,6 +14,7 @@ import org.springframework.web.client.RestTemplate;
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
 public class ElementTest {
 
+	
 	@LocalServerPort
 	private int port;
 	private String url;

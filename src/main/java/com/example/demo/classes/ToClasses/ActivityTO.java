@@ -1,4 +1,4 @@
-package com.example.demo.classes;
+package com.example.demo.classes.ToClasses;
 
 import java.util.Map;
 
@@ -13,6 +13,7 @@ public class ActivityTO {
 		private String type;
 		private String playerPlayground;
 		private String playerEmail;
+		
 		public ActivityTO() {
 			super();
 		}

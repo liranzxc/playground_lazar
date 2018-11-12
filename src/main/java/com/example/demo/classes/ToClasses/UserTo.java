@@ -1,6 +1,8 @@
-package com.example.demo.classes;
+package com.example.demo.classes.ToClasses;
 
 import org.springframework.stereotype.Component;
+
+import com.example.demo.classes.EntityClasses.UserEntity;
 
 @Component
 public class UserTo {
