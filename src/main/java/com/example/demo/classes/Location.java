@@ -1,5 +1,8 @@
 package com.example.demo.classes;
 
+import org.springframework.stereotype.Component;
+
+@Component
 public class Location {
 	
 	private double x ;

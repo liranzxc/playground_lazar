@@ -4,6 +4,9 @@ import java.util.Date;
 import java.util.Map;
 import java.util.TreeMap;
 
+import org.springframework.stereotype.Component;
+
+@Component
 public class ElementTO {
 
 	private static int ID = 0;

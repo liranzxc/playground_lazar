@@ -8,8 +8,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.example.demo.classes.NewUserForm;
-import com.example.demo.classes.UserTO;
+import com.example.demo.classes.UserTo;
+import com.example.demo.classes.UserEntity;
 
 @RestController
 @RequestMapping("playground/users")
@@ -21,8 +21,8 @@ public class UsersController {
 	
 	//1. Register a new user. //TODO require testing!!!!
 	@RequestMapping(value="/", method=RequestMethod.POST)
-	public UserTO registerFromForm(@RequestBody NewUserForm userForm) {
-		UserTO user = new UserTO(userForm);
+	public UserEntity registerFromForm(@RequestBody UserTo userForm) {
+		UserEntity user = new UserEntity(userForm);
 		return user;
 	}
 	
@@ -30,24 +30,24 @@ public class UsersController {
 	//2. Validate code
 	@RequestMapping(value="/confirm/{playground}/{email}/{code}", method=RequestMethod.GET
 			,produces=MediaType.APPLICATION_JSON_VALUE)
-	public UserTO validateCode(
+	public UserEntity validateCode(
 			@PathVariable("playground") String playground, 
 			@PathVariable("email") String email, 
 			@PathVariable("code") String code) {
 				if (code.equals(TEST_CODE)) {
-					return new UserTO("GOOD CODE", "TEST", "TEST", "TEST", "TEST", new Long(0)); //currently a TEST user.
+					return new UserEntity("GOOD CODE", "TEST", "TEST", "TEST", "TEST", new Long(0)); //currently a TEST user.
 				}
 				else
-					return new UserTO("WRONG CODE", "WRONG CODE", "WRONG CODE", "WRONG CODE", "WRONG CODE", new Long(0)); //Maybe throw an exception, currently returning a "wrong" TEST user
+					return new UserEntity("WRONG CODE", "WRONG CODE", "WRONG CODE", "WRONG CODE", "WRONG CODE", new Long(0)); //Maybe throw an exception, currently returning a "wrong" TEST user
 			//TODO in the future we should search for the relevant user in the database and return it.
 	}
 	
 	//3. Log in
 	@RequestMapping(value="/login/{playground}/{email}", method=RequestMethod.GET)
-	public UserTO logIn
+	public UserEntity logIn
 	(@PathVariable("playground") String playground,
 	 @PathVariable("email") String email) {
-		return new UserTO(email, "TEST", "TEST", "TEST", "TEST", new Long(1));
+		return new UserEntity(email, "TEST", "TEST", "TEST", "TEST", new Long(1));
 	}
 		//the returned user should be searched in the database.
 	
