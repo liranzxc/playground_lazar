@@ -19,10 +19,13 @@ public class UsersTest {
 	
 	RestTemplate rest = new RestTemplate();
 	
+	
 	@PostConstruct
 	public void init() {
 		
 		this.url = "http://localhost:"+port+"/playground/users";
 		System.err.println(this.url);
 	}
+	
+	
 }

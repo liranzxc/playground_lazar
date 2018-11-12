@@ -2,6 +2,7 @@ package com.example.demo.ElementTests;
 
 import javax.annotation.PostConstruct;
 
+import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
@@ -24,5 +25,12 @@ public class ElementTest {
 
 		this.url = "http://localhost:" + port + "/playground/elements";
 		System.err.println(this.url);
+	}
+	
+	
+	@Test
+	public void GoToSite()
+	{
+		
 	}
 }

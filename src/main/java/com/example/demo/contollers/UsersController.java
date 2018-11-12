@@ -26,6 +26,7 @@ public class UsersController {
 		return user;
 	}
 	
+	
 	//2. Validate code
 	@RequestMapping(value="/confirm/{playground}/{email}/{code}", method=RequestMethod.GET
 			,produces=MediaType.APPLICATION_JSON_VALUE)
