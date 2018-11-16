@@ -26,7 +26,7 @@ public class ActivitesController {
 		
 		
 		// just return activity for testing - Checked !
-		return new Object();
+		return activity;
 
 	}
 
