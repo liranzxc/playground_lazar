@@ -1,7 +1,11 @@
 
-/////////////////////////
-// NEW GHERKIN VERSION //
-/////////////////////////
+
+
+// Feature 0: system initialization
+// Scenario: Test Server Is Booting Correctly
+Given nothing
+When The Server starts up
+Then no error occurs
 
 // Feature 1: Create user
 // Scenario: successful creation of user
@@ -13,7 +17,7 @@ When I POST /playground/users
 Then the response is: 
 	{
 		"email": any string,
-		"playground":"playground_lazar",
+		"playground": any string,
 		"username": any string,
 		"avatar": any string,
 		"role": any string,
@@ -226,6 +230,9 @@ Then the response is: 
 // Scenario: Search success
 
 Given the server is up,
+	and the data base contains [
+		{Attribute}  // TODO
+	]
 When I GET /playground/elements/{userPlayground}/{email}/search with:
 	{ 
 		"userPlayground":"playground_lazar",

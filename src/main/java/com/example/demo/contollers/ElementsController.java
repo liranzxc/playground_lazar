@@ -1,10 +1,16 @@
 package com.example.demo.contollers;
 
+import java.text.Collator;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.TreeMap;
+import java.util.stream.Collectors;
+
+import javax.lang.model.util.Elements;
 
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -15,6 +21,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.example.demo.classes.Location;
 import com.example.demo.classes.ToClasses.ElementTO;
+import com.fasterxml.jackson.databind.ser.std.ArraySerializerBase;
 
 @RestController
 @RequestMapping(path = "/playground/elements")
@@ -135,20 +142,7 @@ public class ElementsController {
 			@PathVariable("userPlayground") String userPlayground,
 			@PathVariable("email") String email) {
 		
-		ElementTO[] allElements = new ElementTO[1];
-		ElementTO element = new ElementTO();
-		
-		element.setCreationDate(new Date());
-		element.setPlayground(userPlayground);
-		element.setCreatorPlayground(userPlayground);
-		element.setCreatorEmail(email);
-		element.setLocation(new Location(0, 0));
-		element.setName("get_All_Elements_TEST");
-		element.setType("TEST");
-		
-		allElements[0] = element;
-		
-		return allElements;
+		return createRandomArrayOfElementTO();
 	}
 	
 	/*
@@ -165,23 +159,20 @@ public class ElementsController {
 			@PathVariable("y") double y,
 			@PathVariable("distance") double distance) {
 		
-		ElementTO[] allElements = new ElementTO[1];
-		ElementTO element = new ElementTO();
+		ElementTO[] elementsTO = createRandomArrayOfElementTO();
 		
-		element.setCreationDate(new Date());
-		element.setPlayground(userPlayground);
-		element.setCreatorPlayground(userPlayground);
-		element.setCreatorEmail(email);
-		element.setLocation(new Location(0, 0));
-		element.setName("get_All_Elements_Near_To_Playaer_TEST");
-		element.setType("TEST");
-		
-		allElements[0] = element;
-		
-		return allElements;
+		return (ElementTO[]) Arrays.asList(elementsTO).stream()
+			.filter(e -> getDistanceBetween(e.getLocation(), new Location(x, y)) 
+					<= distance)
+			.toArray();
 	}
 	
 	
+	private double getDistanceBetween(Location l1, Location l2) {
+		return Math.sqrt(Math.pow(l1.getX() - l2.getX(), 2)
+				+ Math.pow(l1.getY() - l2.getY(), 2));
+	}
+
 	/*
 	 * Feature 10:
 	 */
@@ -195,19 +186,60 @@ public class ElementsController {
 			@PathVariable("attributeName") String attributeName,
 			@PathVariable("value") double value) {
 		
-		ElementTO[] allElements = new ElementTO[1];
-		ElementTO element = new ElementTO();
-		element.setCreationDate(new Date());
-		element.setPlayground(userPlayground);
-		element.setCreatorPlayground(userPlayground);
-		element.setCreatorEmail(email);
-		element.setLocation(new Location(0, 0));
-		element.setName("search_All_Elements_With_Same_Attribute_And_Value_TEST");
-		element.setType("TEST");
 		
-		allElements[0] = element;
-				
-		return allElements;
+		ElementTO[] elementsDataBase = createRandomArrayOfElementTO();
+		// TODO: ask eyal	
+		//return allElements;
+		return null;
+	}
+	
+	
+	private ElementTO[] createRandomArrayOfElementTO() {
+		ArrayList<ElementTO> elementsTO = new ArrayList<>();
+		
+		// create attributes:
+		Map<String, Object> attributesMap1 = 
+				new HashMap<>();
+		attributesMap1.put("1", new Object());
+		attributesMap1.put("2", new Object());
+		attributesMap1.put("3", new Object());
+		
+		Map<String, Object> attributesMap2 = 
+				new HashMap<>();
+		attributesMap1.put("4", new Object());
+		attributesMap1.put("5", new Object());
+		attributesMap1.put("6", new Object());
+		attributesMap1.put("7", new Object());
+		
+		Map<String, Object> attributesMap3 = 
+				new HashMap<>();
+		attributesMap1.put("8", new Object());
+		attributesMap1.put("9", new Object());
+		
+		Map<String, Object> attributesMap4 = 
+				new HashMap<>();
+		attributesMap1.put("10", new Object());
+		attributesMap1.put("11", new Object());
+		
+		
+		// create Elements
+		ElementTO e1 = new ElementTO("P1", "123", 
+				new Location(1, 2), "Tirex", new Date(), null, "A", 
+				attributesMap1, "P2", "Demo.co.il");
+		ElementTO e2 = new ElementTO("P2", "1234", 
+				new Location(1, 2), "Polo", new Date(), null, "B", 
+				attributesMap2, "P5", "Demo.co.il");
+		ElementTO e3 = new ElementTO("P3", "12345", 
+				new Location(1, 2), "Dindin", new Date(), null, "C", 
+				attributesMap3, "P3", "Demo.co.il");
+		ElementTO e4 = new ElementTO("P4", "1237", 
+				new Location(1, 2), "Riko", new Date(), null, "D", 
+				attributesMap4, "P4", "Demo.co.il");
+		
+		
+		elementsTO.addAll(Arrays.asList(e1, e2, e3, e4));
+		
+		return (ElementTO[]) elementsTO.toArray();
 	}
 
 }
