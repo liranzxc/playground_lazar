@@ -6,7 +6,6 @@ import com.example.demo.classes.EntityClasses.UserEntity;
 
 @Component
 public class UserTo {
-	//private enum types{PLAYER, MANAGER};
 	public UserTo(String username, String email, String avatar, String role) {
 		this.username = username;
 		this.email = email;

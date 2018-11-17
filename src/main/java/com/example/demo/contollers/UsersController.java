@@ -1,5 +1,10 @@
 package com.example.demo.contollers;
 
+import java.util.Arrays;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.stream.Collectors;
+
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -16,6 +21,25 @@ import com.example.demo.classes.ToClasses.UserTo;
 public class UsersController {
 	//FOR TEST ONLY!
 	private String TEST_CODE = "123";
+	private enum types{
+		
+		Player("player"),Manager("manger");
+		 // declaring private variable for getting values 
+	    private String action; 
+	  
+	    // getter method 
+	    public String getAction() 
+	    { 
+	        return this.action; 
+	    } 
+	  
+	    // enum constructor - cannot be public or protected 
+	    private types(String action) 
+	    { 
+	        this.action = action; 
+	    }
+	
+	};
 
 	// user controller
 	
@@ -52,13 +76,38 @@ public class UsersController {
 		//the returned user should be searched in the database.
 	
 	//4. update user by email and playground 
-	@RequestMapping(value="/{playground}/{email}" , method=RequestMethod.PUT)
+	@RequestMapping(value="/{playground}/{email}" , method=RequestMethod.PUT,consumes=MediaType.APPLICATION_JSON_VALUE)
 	public void UpdateUser_by_playground_by_email
 	(@PathVariable(name="email") String email, 
-	@PathVariable(name="playground") String playground)
+	@PathVariable(name="playground") String playground , @RequestBody UserTo userTo)
 	{
 		//TODO find user by playground and email in DB and update him !
 		//throw exception if not found
+		List<UserEntity> mydb = CreateUserDB();
+		
+		UserEntity user =  mydb.stream()
+				.filter(e-> e.getEmail().equals(email) && e.getPlayground().equals(playground))
+				.findFirst().get();
+		
+		
+		if(user!=null && mydb.remove(user))
+		{
+			user.setAvatar(userTo.getAvatar());
+			user.setEmail(userTo.getEmail());
+			user.setRole(userTo.getRole());
+			user.setUsername(userTo.getUsername());
+			
+			mydb.add(user);
+
+			System.out.println("User Update");
+
+		}
+
 	}
 	
+	public List<UserEntity> CreateUserDB()
+	{
+		return new LinkedList<UserEntity>(Arrays.asList(new UserEntity("lirannh@gmail.com", "play", "liran", "dog",types.Player.getAction() , new Long(0)),
+				new UserEntity("aviv@gmail.com", "player2", "aviv", "fish",types.Player.getAction() , new Long(0))));
+	}
 }
