@@ -5,12 +5,20 @@ import org.springframework.stereotype.Component;
 import com.example.demo.classes.EntityClasses.UserEntity;
 
 @Component
-public class UserTo {
-	public UserTo(String username, String email, String avatar, String role) {
+public class UserTO {
+
+	private String username;
+	private String email;
+	private String avatar;
+	private String role;
+	private String playground;
+	
+	public UserTO(String username, String email, String avatar, String role) {
 		this.username = username;
 		this.email = email;
 		this.avatar = avatar;
 		this.role = role;
+		this.playground = "playground_lazar";
 	}
 
 	public String getUsername() {
@@ -45,12 +53,16 @@ public class UserTo {
 		this.role = role;
 	}
 
-	private String username;
-	private String email;
-	private String avatar;
-	private String role;
+	public String getPlayground() {
+		return playground;
+	}
 
-	public UserTo() {
+	public void setPlayground(String playground) {
+		this.playground = playground;
+	}
+
+	
+	public UserTO() {
 		super();
 	}
 

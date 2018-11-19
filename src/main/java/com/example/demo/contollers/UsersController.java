@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.demo.classes.EntityClasses.UserEntity;
-import com.example.demo.classes.ToClasses.UserTo;
+import com.example.demo.classes.ToClasses.UserTO;
 
 @RestController
 @RequestMapping("playground/users")
@@ -42,10 +42,14 @@ public class UsersController {
 	};
 
 	// user controller
+
+	public String getTEST_CODE() {
+		return TEST_CODE;
+	}
 	
 	//1. Register a new user. //TODO require testing!!!!
 	@RequestMapping(value="/", method=RequestMethod.POST)
-	public UserEntity registerFromForm(@RequestBody UserTo userForm) {
+	public UserEntity registerFromForm(@RequestBody UserTO userForm) {
 		UserEntity user = new UserEntity(userForm);
 		return user;
 	}
@@ -59,7 +63,7 @@ public class UsersController {
 			@PathVariable("email") String email, 
 			@PathVariable("code") String code) {
 				if (code.equals(TEST_CODE)) {
-					return new UserEntity("GOOD CODE", "TEST", "TEST", "TEST", "TEST", new Long(0)); //currently a TEST user.
+					return new UserEntity("GOOD CODE", "playground_lazar", "TEST", "TEST", "TEST", new Long(0)); //currently a TEST user.
 				}
 				else
 					return new UserEntity("WRONG CODE", "WRONG CODE", "WRONG CODE", "WRONG CODE", "WRONG CODE", new Long(0)); //Maybe throw an exception, currently returning a "wrong" TEST user
@@ -79,7 +83,7 @@ public class UsersController {
 	@RequestMapping(value="/{playground}/{email}" , method=RequestMethod.PUT,consumes=MediaType.APPLICATION_JSON_VALUE)
 	public void UpdateUser_by_playground_by_email
 	(@PathVariable(name="email") String email, 
-	@PathVariable(name="playground") String playground , @RequestBody UserTo userTo)
+	@PathVariable(name="playground") String playground , @RequestBody UserTO userTo)
 	{
 		//TODO find user by playground and email in DB and update him !
 		//throw exception if not found

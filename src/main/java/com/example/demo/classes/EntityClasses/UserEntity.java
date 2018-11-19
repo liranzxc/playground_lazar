@@ -2,7 +2,7 @@ package com.example.demo.classes.EntityClasses;
 
 import org.springframework.stereotype.Component;
 
-import com.example.demo.classes.ToClasses.UserTo;
+import com.example.demo.classes.ToClasses.UserTO;
 
 @Component
 public class UserEntity {
@@ -23,7 +23,7 @@ public class UserEntity {
 		this.points = points;
 	}
 	//Constructor which get a NewUserForm and creates a new user from the details.
-	public UserEntity(UserTo userForm) {
+	public UserEntity(UserTO userForm) {
 		super();
 		this.setUsername(userForm.getUsername());
 		this.setPlayground(playground);
