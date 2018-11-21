@@ -10,6 +10,7 @@ import javax.annotation.PostConstruct;
 import org.springframework.stereotype.Service;
 
 import com.example.demo.classes.Location;
+import com.example.demo.classes.elementAlreadyExistException;
 import com.example.demo.classes.EntityClasses.ElementEntity;
 
 @Service
@@ -23,10 +24,10 @@ public class ElementServiceDummy implements IElementService {
 	}
 
 	@Override
-	public void addNewElement(ElementEntity et) {
+	public void addNewElement(ElementEntity et) throws elementAlreadyExistException {
 		String newElementKey = getKeyFromElementEntity(et);
 		if(this.entities.containsKey(newElementKey)) {
-			//TODO throw element already in database exception
+			throw new elementAlreadyExistException("entity already exist in database");
 		}
 		else {
 			this.entities.put(newElementKey, et);
@@ -104,6 +105,11 @@ public class ElementServiceDummy implements IElementService {
 	}
 	
 	
+	@Override
+	public void cleanup() {
+		this.entities.clear();
+	}
+	
 	private String getKeyFromElementEntity(ElementEntity et) {
 		return et.getPlayground() + et.getId();
 	}
@@ -122,5 +128,6 @@ public class ElementServiceDummy implements IElementService {
 		
 		return true;
 	}
+
 
 }

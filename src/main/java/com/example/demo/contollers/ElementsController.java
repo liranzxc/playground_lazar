@@ -6,7 +6,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
-
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -15,11 +15,16 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.demo.classes.Location;
+import com.example.demo.classes.UnvalidEmailException;
 import com.example.demo.classes.ToClasses.ElementTO;
+import com.example.demo.services.IElementService;
 
 @RestController
 @RequestMapping(path = "/playground/elements")
 public class ElementsController {
+	
+	@Autowired
+	private IElementService elementService;
 	
 	//TODO this public static final is giving an error when uploading server 
 	//Test element
@@ -36,14 +41,15 @@ public class ElementsController {
 			produces = MediaType.APPLICATION_JSON_VALUE)
 	public ElementTO createElement(@RequestBody ElementTO element,
 			@PathVariable(name = "userPlayground", required = true) String userPlayground,
-			@PathVariable(name = "email", required = true) String email) throws Exception {
+			@PathVariable(name = "email", required = true) String email) throws UnvalidEmailException {
 
 		
 		if (!verifiedEmail(email)) {
 			System.err.println("create element throwing Exception");
-			throw new Exception(); // TODO maybe changed exception thrown
+			throw new UnvalidEmailException("Illeagal email has been given");
 		}
 
+		
 		element.setCreationDate(new Date());
 		element.setPlayground(userPlayground);
 		element.setCreatorPlayground(userPlayground);
