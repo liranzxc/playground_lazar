@@ -10,9 +10,11 @@ import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.web.client.RestTemplate;
 
+import com.example.demo.classes.ToClasses.ElementTO;
+
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
-public class ElementTest {
+public class ElementTestAviv {
 
 	
 	@LocalServerPort
@@ -27,7 +29,7 @@ public class ElementTest {
 		this.url = "http://localhost:" + port + "/playground/elements";
 		System.err.println(this.url);
 	}
-	
+		
 	
 	@Test
 	public void GoToSite()
