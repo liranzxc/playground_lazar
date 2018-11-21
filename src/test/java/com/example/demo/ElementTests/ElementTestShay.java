@@ -30,6 +30,7 @@ public class ElementTestShay {
 	 *  - GET /playground/elements/{userPlayground}/{email}/{playground}/{id}   I/O:  --------- | ElementTO
 	 *  ====================================== READ ME =====================================================
 	 */
+	
 	@LocalServerPort
 	private int port;
 	private String url;
@@ -43,8 +44,17 @@ public class ElementTestShay {
 		System.err.println(this.url);
 	}
 		
+	public void createElement() {
+		
+	}
 	
+	public void updateElement() {
+		
+	}
 	
+	public void getSpecificElement() {
+		
+	}
 	
 	
 	@Test

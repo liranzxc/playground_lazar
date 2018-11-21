@@ -1,16 +1,11 @@
 package com.example.demo.contollers;
 
-import java.text.Collator;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.TreeMap;
-import java.util.stream.Collectors;
 
-import javax.lang.model.util.Elements;
 
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -21,7 +16,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.example.demo.classes.Location;
 import com.example.demo.classes.ToClasses.ElementTO;
-import com.fasterxml.jackson.databind.ser.std.ArraySerializerBase;
 
 @RestController
 @RequestMapping(path = "/playground/elements")
