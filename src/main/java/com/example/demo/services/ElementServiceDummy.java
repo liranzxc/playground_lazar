@@ -3,6 +3,7 @@ package com.example.demo.services;
 import java.util.Hashtable;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 
 import javax.annotation.PostConstruct;
@@ -20,7 +21,9 @@ public class ElementServiceDummy implements IElementService {
 	
 	@PostConstruct
 	public void init() {
-		this.entities = new Hashtable<>();
+		this.entities = new ConcurrentHashMap<>();
+		// maybe add details ?? 
+		
 	}
 
 	@Override
