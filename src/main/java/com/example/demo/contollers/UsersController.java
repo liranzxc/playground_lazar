@@ -15,12 +15,14 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.example.demo.classes.EntityClasses.UserEntity;
 import com.example.demo.classes.ToClasses.UserTO;
+import com.example.demo.services.IUserService;
 
 @RestController
 @RequestMapping("playground/users")
 public class UsersController {
 	//FOR TEST ONLY!
 	private String TEST_CODE = "123";
+	private IUserService userService;
 	private enum types{
 		
 		Player("player"),Manager("manger");

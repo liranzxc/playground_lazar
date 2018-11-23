@@ -19,6 +19,7 @@ import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
@@ -74,7 +75,8 @@ public class UsersTest {
 	@Test
 	public void TestNewUserForm() {
 		//When I POST /playground/users
-
+		UserTO testUser = new UserTO("name", "mail@something.com", "avatar.url", types.Player.getType());
+		UserEntity user = userController.registerFromForm(testUser);
 //		Then the response is: 
 //		{
 //			"email": any string,
