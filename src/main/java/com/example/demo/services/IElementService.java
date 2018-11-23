@@ -2,8 +2,8 @@ package com.example.demo.services;
 
 import java.util.List;
 
-import com.example.demo.classes.elementAlreadyExistException;
 import com.example.demo.classes.EntityClasses.ElementEntity;
+import com.example.demo.classes.exceptions.elementAlreadyExistException;
 
 public interface IElementService {
 

@@ -15,8 +15,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.demo.classes.Location;
-import com.example.demo.classes.UnvalidEmailException;
 import com.example.demo.classes.ToClasses.ElementTO;
+import com.example.demo.classes.exceptions.InvalidEmailException;
 import com.example.demo.services.IElementService;
 
 @RestController
@@ -41,12 +41,12 @@ public class ElementsController {
 			produces = MediaType.APPLICATION_JSON_VALUE)
 	public ElementTO createElement(@RequestBody ElementTO element,
 			@PathVariable(name = "userPlayground", required = true) String userPlayground,
-			@PathVariable(name = "email", required = true) String email) throws UnvalidEmailException {
+			@PathVariable(name = "email", required = true) String email) throws InvalidEmailException {
 
 		
 		if (!verifiedEmail(email)) {
 			System.err.println("create element throwing Exception");
-			throw new UnvalidEmailException("Illeagal email has been given");
+			throw new InvalidEmailException("Illeagal email has been given");
 		}
 
 		

@@ -1,4 +1,4 @@
-package com.example.demo.classes;
+package com.example.demo.classes.exceptions;
 
 public class elementAlreadyExistException extends Exception {
 

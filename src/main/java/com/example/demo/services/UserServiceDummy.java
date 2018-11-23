@@ -2,20 +2,26 @@ package com.example.demo.services;
 
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 
-import com.example.demo.classes.EntityClasses.UserEntity;
+import javax.annotation.PostConstruct;
 
+import org.springframework.stereotype.Service;
+
+import com.example.demo.classes.EntityClasses.UserEntity;
+import com.example.demo.classes.exceptions.UserNotFoundException;
+
+@Service
 public class UserServiceDummy implements IUserService{
 
-	private Map<String, UserEntity> allRegisteredUsers;
-	private Map<String, UserEntity> deletedUsers;
-
+	private Map<String, UserEntity> allRegisteredUsers = new ConcurrentHashMap<>();;
+	private Map<String, UserEntity> deletedUsers = new ConcurrentHashMap<>();
+	
 	
 	@Override
-	public void registerNewUser(UserEntity user) throws Exception {
+	public void registerNewUser(UserEntity user) throws Exception { //need to create new exception for already registered email
 		allRegisteredUsers.put(user.getEmail(), user);
-		
 	}
 
 	@Override
@@ -24,7 +30,7 @@ public class UserServiceDummy implements IUserService{
 	}
 
 	@Override
-	public UserEntity getUser(String email) throws Exception {
+	public UserEntity getUser(String email) throws UserNotFoundException {
 		return allRegisteredUsers.get(email);
 	}
 
