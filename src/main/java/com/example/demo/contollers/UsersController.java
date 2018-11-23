@@ -5,6 +5,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -15,12 +16,19 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.example.demo.classes.EntityClasses.UserEntity;
 import com.example.demo.classes.ToClasses.UserTO;
+import com.example.demo.classes.exceptions.InvalidCodeException;
+import com.example.demo.classes.exceptions.UserNotFoundException;
+import com.example.demo.services.IUserService;
 
 @RestController
 @RequestMapping("playground/users")
 public class UsersController {
 	//FOR TEST ONLY!
 	private String TEST_CODE = "123";
+	
+	@Autowired
+	private IUserService userService;
+	
 	private enum types{
 		
 		Player("player"),Manager("manger");
@@ -61,12 +69,12 @@ public class UsersController {
 	public UserEntity validateCode(
 			@PathVariable("playground") String playground, 
 			@PathVariable("email") String email, 
-			@PathVariable("code") String code) {
+			@PathVariable("code") String code) throws InvalidCodeException {
 				if (code.equals(TEST_CODE)) {
-					return new UserEntity("GOOD CODE", "playground_lazar", "TEST", "TEST", "TEST", new Long(0)); //currently a TEST user.
+					return new UserEntity("GOOD CODE", "playground_lazar", "TEST", "TEST", "TEST"); //currently a TEST user.
 				}
 				else
-					return new UserEntity("WRONG CODE", "WRONG CODE", "WRONG CODE", "WRONG CODE", "WRONG CODE", new Long(0)); //Maybe throw an exception, currently returning a "wrong" TEST user
+					throw new InvalidCodeException();
 			//TODO in the future we should search for the relevant user in the database and return it.
 	}
 	
@@ -74,8 +82,8 @@ public class UsersController {
 	@RequestMapping(value="/login/{playground}/{email}", method=RequestMethod.GET)
 	public UserEntity logIn
 	(@PathVariable("playground") String playground,
-	 @PathVariable("email") String email) {
-		return new UserEntity(email, "TEST", "TEST", "TEST", "TEST", new Long(1));
+	 @PathVariable("email") String email) throws Exception {
+		return userService.getUser(email);
 	}
 		//the returned user should be searched in the database.
 	
@@ -109,9 +117,13 @@ public class UsersController {
 
 	}
 	
+	public IUserService getService() {
+		return userService;
+	}
+	
 	public List<UserEntity> CreateUserDB()
 	{
-		return new LinkedList<UserEntity>(Arrays.asList(new UserEntity("lirannh@gmail.com", "play", "liran", "dog",types.Player.getAction() , new Long(0)),
-				new UserEntity("aviv@gmail.com", "player2", "aviv", "fish",types.Player.getAction() , new Long(0))));
+		return new LinkedList<UserEntity>(Arrays.asList(new UserEntity("lirannh@gmail.com", "play", "liran", "dog",types.Player.getAction()),
+				new UserEntity("aviv@gmail.com", "player2", "aviv", "fish",types.Player.getAction())));
 	}
 }

@@ -13,14 +13,13 @@ public class UserEntity {
 	private String avatar;
 	private String role;
 	private Long points = 0l; // new user always starts with 0 points
-	public UserEntity(String email, String playground, String username, String avatar, String role, Long points) {
+	public UserEntity(String email, String playground, String username, String avatar, String role) {
 		super();
 		this.email = email;
 		this.playground = playground;
 		this.username = username;
 		this.avatar = avatar;
 		this.role = role;
-		this.points = points;
 	}
 	//Constructor which get a NewUserForm and creates a new user from the details.
 	public UserEntity(UserTO userForm) {

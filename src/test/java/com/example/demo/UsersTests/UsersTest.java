@@ -9,6 +9,8 @@ import java.util.Map;
 
 import javax.annotation.PostConstruct;
 
+import org.junit.After;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +21,7 @@ import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
@@ -29,6 +32,8 @@ import com.example.demo.Application;
 import com.example.demo.classes.EntityClasses.UserEntity;
 import com.example.demo.classes.ToClasses.ActivityTO;
 import com.example.demo.classes.ToClasses.UserTO;
+import com.example.demo.classes.exceptions.InvalidCodeException;
+import com.example.demo.classes.exceptions.elementAlreadyExistException;
 import com.example.demo.contollers.UsersController;
 
 @RunWith(SpringRunner.class)
@@ -66,15 +71,25 @@ public class UsersTest {
 	@PostConstruct
 	public void init() {
 		this.url = "http://localhost:" + port + "/playground/users";
-		System.err.println(this.url);
 		this.code = userController.getTEST_CODE();
 	}
 
+	@Before
+	public void setup() {
+		//Do nothing
+	}
+
+	@After
+	public void teardown() {
+		this.userController.getService().cleanup();
+	}
+	
 	// 1. Test user registration
 	@Test
 	public void TestNewUserForm() {
 		//When I POST /playground/users
-
+		UserTO testUser = new UserTO("name", "mail@something.com", "avatar.url", types.Player.getType());
+		UserEntity user = userController.registerFromForm(testUser);
 //		Then the response is: 
 //		{
 //			"email": any string,
@@ -87,7 +102,7 @@ public class UsersTest {
 
 	}
 	
-	// 2. Test user confirmation
+	// 2.a Test user confirmation
 	@Test
 	public void TestUserConfirmationByCode() {
 //		When I GET /playground/users/confirm with:
@@ -98,11 +113,12 @@ public class UsersTest {
 //		}
 //		with headers:
 //			Content-Type: application/json
-		url = url + "/confirm/{playground}/{email}/{code}";
-		Map<String, String> map = new HashMap<String,String>();
-		map.put("playground", "playground_lazar");
-		map.put("email", "talisraeli.t@gmail.com" );
-		map.put("code",  code); //currently delivering the RIGHT code.
+
+		try {
+			UserEntity user = userController.validateCode("playground_lazar", "address@mail.end", code);
+		} catch (InvalidCodeException e) {
+			e.printStackTrace();
+		}
 		
 //		Then the response is: 
 //		{
@@ -113,14 +129,19 @@ public class UsersTest {
 //			"role": any string,
 //			"points":"0"
 //		}
-		UserTO user = rest.getForObject(url, UserTO.class, map);
-		assertThat(user.getPlayground(),equalTo("playground_lazar"));
 
+
+	}
+
+	// 2.b Test Code exception
+	@Test(expected=InvalidCodeException.class)
+	public void TestInvalidCodeThrowsException() throws InvalidCodeException {
+		UserEntity user = userController.validateCode("playground_lazar", "address@mail.end", "WrongCode");
 	}
 	
 	// 3. Test user log in successfully 
 	@Test
-	public void TestUserLoginSuccessfully() {
+	public void TestUserLoginSuccessfully() throws Exception {
 //		When I GET /playground/users/login with:
 //		{ 
 //			"playground":"playground_lazar",
@@ -128,10 +149,9 @@ public class UsersTest {
 //		}
 //		with headers:
 //			Content-Type: application/json
-		url = url + "/login/{playground}/{email}";
-		Map<String, String> map = new HashMap<String,String>();
-		map.put("playground", "playground_lazar");
-		map.put("email", "tal@gmail.com");
+		UserEntity user = new UserEntity("address@mail.end", "playground_lazar", "tal", "anAvatar", types.Manager.getType());
+		userController.getService().registerNewUser(user);
+		userController.logIn("playground_lazar", "address@mail.end");
 		
 //		Then the response is: 
 //		{
@@ -142,7 +162,6 @@ public class UsersTest {
 //			"role": any string,
 //			"points": any number equals or higher than 0
 //		}
-		UserTO user = rest.getForObject(url,  UserTO.class, map);
 
 	}
 	

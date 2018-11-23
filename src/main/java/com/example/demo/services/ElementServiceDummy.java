@@ -11,8 +11,8 @@ import javax.annotation.PostConstruct;
 import org.springframework.stereotype.Service;
 
 import com.example.demo.classes.Location;
-import com.example.demo.classes.elementAlreadyExistException;
 import com.example.demo.classes.EntityClasses.ElementEntity;
+import com.example.demo.classes.exceptions.elementAlreadyExistException;
 
 @Service
 public class ElementServiceDummy implements IElementService {

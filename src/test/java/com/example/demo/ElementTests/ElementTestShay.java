@@ -26,9 +26,9 @@ import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import com.example.demo.classes.Location;
-import com.example.demo.classes.elementAlreadyExistException;
 import com.example.demo.classes.EntityClasses.ElementEntity;
 import com.example.demo.classes.ToClasses.ElementTO;
+import com.example.demo.classes.exceptions.elementAlreadyExistException;
 import com.example.demo.services.ElementServiceDummy;
 import com.example.demo.services.IElementService;
 import com.fasterxml.jackson.core.JsonProcessingException;
