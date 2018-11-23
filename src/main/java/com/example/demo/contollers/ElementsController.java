@@ -16,12 +16,11 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.example.demo.classes.Location;
 
-import com.example.demo.classes.UnvalidEmailException;
-import com.example.demo.classes.elementAlreadyExistException;
+import com.example.demo.classes.exceptions.InvalidEmailException;
+import com.example.demo.classes.exceptions.elementAlreadyExistException;
 import com.example.demo.classes.EntityClasses.ElementEntity;
 
 import com.example.demo.classes.ToClasses.ElementTO;
-import com.example.demo.classes.exceptions.InvalidEmailException;
 import com.example.demo.services.IElementService;
 
 @RestController
@@ -46,7 +45,7 @@ public class ElementsController {
 			produces = MediaType.APPLICATION_JSON_VALUE)
 	public ElementTO createElement(@RequestBody ElementTO element,
 			@PathVariable(name = "userPlayground", required = true) String userPlayground,
-			@PathVariable(name = "email", required = true) String email) throws UnvalidEmailException, elementAlreadyExistException, InvalidEmailException, com.example.demo.classes.exceptions.elementAlreadyExistException {
+			@PathVariable(name = "email", required = true) String email) throws InvalidEmailException, elementAlreadyExistException, InvalidEmailException, com.example.demo.classes.exceptions.elementAlreadyExistException {
 			
 
 		
