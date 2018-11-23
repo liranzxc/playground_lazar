@@ -28,8 +28,11 @@ import org.springframework.test.context.junit4.SpringRunner;
 import com.example.demo.classes.Location;
 import com.example.demo.classes.elementAlreadyExistException;
 import com.example.demo.classes.EntityClasses.ElementEntity;
+import com.example.demo.classes.ToClasses.ElementTO;
 import com.example.demo.services.ElementServiceDummy;
 import com.example.demo.services.IElementService;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
@@ -52,6 +55,7 @@ public class ElementTestShay {
 	private String url;
 	
 	private RestTemplate restTemplate;
+	private ObjectMapper jsonMapper;
 	
 	@Autowired
 	private IElementService elementService;
@@ -60,17 +64,19 @@ public class ElementTestShay {
 	@PostConstruct
 	public void init() {
 		this.restTemplate = new RestTemplate();
+		this.jsonMapper = new ObjectMapper();
 		this.url = "http://localhost:" + port + "/playground/elements";
+		
 		System.err.println(this.url);
 		
-		this.demo_entity = new ElementEntity("lazar", "1", new Location(),
-											"demo", new Date(), null, "demo type", 
-											 null, "Shay", "ggwp@123.com");
 	}
 		
 	@Before
 	public void setup() {
-		//Do nothing
+
+		this.demo_entity = new ElementEntity("lazar", "1", new Location(),
+											"demo", new Date(), null, "demo type", 
+											 null, "Shay", "ggwp@123.com");
 	}
 
 	@After
@@ -80,14 +86,18 @@ public class ElementTestShay {
 
 	@Test
 	public void createElementSuccsefully() {
+		String usrPlayground = "lazar_playground";
+		String email = "demo@gmail.com";
+		ElementTO eto = new ElementTO(this.demo_entity);
+		
 		boolean success = false;
 		
 		//when
 		try {
-			this.elementService.addNewElement(demo_entity);
+			this.restTemplate.postForObject(this.url +  "/{userPlayground}/{email}", eto, ElementTO.class, usrPlayground, email);
 			success = true;
 		}
-		catch(elementAlreadyExistException e) {
+		catch(Exception e) {
 			// do nothing
 		}
 		
@@ -98,18 +108,37 @@ public class ElementTestShay {
 	@Test(expected=elementAlreadyExistException.class)
 	public void createElementWhenElementAlreadyExist() throws elementAlreadyExistException {
 		//given 
+		String userPlayground = "lazar_playground";
+		String email = "demo@gmail.com";
+		ElementTO eto = new ElementTO(demo_entity);
+		
+//		boolean dataEnterd = false;
+//		
+//		try {
+//			this.elementService.addNewElement(eto.ToEntity());
+//			dataEnterd = true;
+//		}
+//		catch(elementAlreadyExistException e) {
+//			//do nothing
+//		}
+//		
+//		if(dataEnterd) {
+//			this.restTemplate.postForObject(this.url +  "/{userPlayground}/{email}", eto, ElementTO.class, userPlayground, email);
+//		}
+//		
+		boolean dataEnterd = false;
+		
 		try {
-			this.elementService.addNewElement(demo_entity);
+			this.elementService.addNewElement(eto.ToEntity());
+			dataEnterd = true;
 		}
 		catch(elementAlreadyExistException e) {
-			System.err.println("error occur in test given didnt successed");
+			//do nothing
 		}
 		
-	
-		this.elementService.addNewElement(demo_entity);
-	
-		
-		
+		if(dataEnterd) {
+			this.elementService.addNewElement(eto.ToEntity());
+		}
 	}
 	
 	@Test

@@ -31,21 +31,21 @@ public class ElementEntity {
 	private String creatorPlayground;
 	private String creatorEmail;
 
-	public ElementEntity(ElementTO elementTO) {
-
-		ID++;
-		this.playground = elementTO.getPlayground();
-		this.id = ID + "";
-		this.location = elementTO.getLocation();
-		this.name = elementTO.getName();
-		this.creationDate = elementTO.getCreationDate();
-		this.expireDate = elementTO.getExpireDate();
-		this.type = elementTO.getType();
-		this.attributes = elementTO.getAttributes();
-		this.creatorPlayground = elementTO.getCreatorPlayground();
-		this.creatorEmail = elementTO.getCreatorEmail();
-
-	}
+//	public ElementEntity(ElementTO elementTO) {
+//
+//		ID++;
+//		this.playground = elementTO.getPlayground();
+//		this.id = ID + "";
+//		this.location = elementTO.getLocation();
+//		this.name = elementTO.getName();
+//		this.creationDate = elementTO.getCreationDate();
+//		this.expireDate = elementTO.getExpireDate();
+//		this.type = elementTO.getType();
+//		this.attributes = elementTO.getAttributes();
+//		this.creatorPlayground = elementTO.getCreatorPlayground();
+//		this.creatorEmail = elementTO.getCreatorEmail();
+//
+//	}
 
 	public ElementEntity(String playground, String id, Location location, String name, Date creationDate,
 			Date expireDate, String type, Map<String, Object> attributes, String creatorPlayground,
@@ -54,7 +54,7 @@ public class ElementEntity {
 		super();
 		ID++;
 		this.playground = playground;
-		this.id = ID + "";
+		this.id = id;
 		this.location = location;
 		this.name = name;
 		this.creationDate = creationDate;

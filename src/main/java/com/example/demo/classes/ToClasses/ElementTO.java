@@ -53,6 +53,20 @@ public class ElementTO {
 //		// TODO Auto-generated constructor stub
 //	}
 
+	public ElementTO(ElementEntity entity) {
+		
+		this.playground = entity.getPlayground();
+		this.id = entity.getId();
+		this.location = entity.getLocation();
+		this.name = entity.getName();
+		this.creationDate = entity.getCreationDate();
+		this.expireDate = entity.getExpireDate();
+		this.type = entity.getType();
+		this.attributes = entity.getAttributes();
+		this.creatorPlayground = entity.getCreatorPlayground();
+		this.creatorEmail = entity.getCreatorEmail();
+	}
+
 	public String getPlayground() {
 		return playground;
 	}
@@ -136,6 +150,9 @@ public class ElementTO {
 	// To Entity !!
 	public ElementEntity ToEntity()
 	{
-		return new ElementEntity(this);
+		return new ElementEntity
+				(this.playground, this.id, this.location, this.name, 
+				this.creationDate, this.expireDate, this.type, 
+				this.attributes, this.creatorPlayground, this.creatorEmail);
 	}
 }

@@ -16,6 +16,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.example.demo.classes.Location;
 import com.example.demo.classes.UnvalidEmailException;
+import com.example.demo.classes.elementAlreadyExistException;
+import com.example.demo.classes.EntityClasses.ElementEntity;
 import com.example.demo.classes.ToClasses.ElementTO;
 import com.example.demo.services.IElementService;
 
@@ -41,7 +43,7 @@ public class ElementsController {
 			produces = MediaType.APPLICATION_JSON_VALUE)
 	public ElementTO createElement(@RequestBody ElementTO element,
 			@PathVariable(name = "userPlayground", required = true) String userPlayground,
-			@PathVariable(name = "email", required = true) String email) throws UnvalidEmailException {
+			@PathVariable(name = "email", required = true) String email) throws UnvalidEmailException, elementAlreadyExistException {
 
 		
 		if (!verifiedEmail(email)) {
@@ -50,14 +52,8 @@ public class ElementsController {
 		}
 
 		
-		element.setCreationDate(new Date());
-		element.setPlayground(userPlayground);
-		element.setCreatorPlayground(userPlayground);
-		element.setCreatorEmail(email);
-		element.setLocation(new Location(0, 0));
-		element.setName("Shay");
-		element.setType("TEST");
-		element.setAttributes(new HashMap<String, Object>());
+
+		this.elementService.addNewElement(element.ToEntity());
 
 		return element;
 	}
@@ -78,6 +74,9 @@ public class ElementsController {
 		if (element == null) {
 			throw new Exception(); // TODO maybe changed exception thrown
 		}
+		
+		ElementEntity entity = element.ToEntity();
+		this.elementService.addNewElement(entity);
 
 		// TODO do some valid checks on new element and update dataBase with new element
 	}
