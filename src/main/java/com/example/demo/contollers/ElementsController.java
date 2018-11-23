@@ -17,7 +17,8 @@ import org.springframework.web.bind.annotation.RestController;
 import com.example.demo.classes.Location;
 
 import com.example.demo.classes.exceptions.InvalidEmailException;
-import com.example.demo.classes.exceptions.elementAlreadyExistException;
+import com.example.demo.classes.exceptions.ElementNotFoundException;
+import com.example.demo.classes.exceptions.ElementAlreadyExistException;
 import com.example.demo.classes.EntityClasses.ElementEntity;
 
 import com.example.demo.classes.ToClasses.ElementTO;
@@ -45,7 +46,7 @@ public class ElementsController {
 			produces = MediaType.APPLICATION_JSON_VALUE)
 	public ElementTO createElement(@RequestBody ElementTO element,
 			@PathVariable(name = "userPlayground", required = true) String userPlayground,
-			@PathVariable(name = "email", required = true) String email) throws InvalidEmailException, elementAlreadyExistException, InvalidEmailException, com.example.demo.classes.exceptions.elementAlreadyExistException {
+			@PathVariable(name = "email", required = true) String email) throws InvalidEmailException, ElementAlreadyExistException, InvalidEmailException, com.example.demo.classes.exceptions.ElementAlreadyExistException {
 			
 
 		
@@ -95,25 +96,9 @@ public class ElementsController {
 			@PathVariable("userPlayground") String userPlayground,
 			@PathVariable("email") String email, 
 			@PathVariable("playground") String playground,
-			@PathVariable("id") String id) throws Exception {
+			@PathVariable("id") String id) throws ElementNotFoundException {
 
-		// TODO extract element from data bases
-		ElementTO element = new ElementTO();
-		element.setCreationDate(new Date());
-		element.setPlayground(userPlayground);
-		element.setCreatorPlayground(userPlayground);
-		element.setCreatorEmail(email);
-		element.setLocation(new Location(0, 0));
-		element.setName("Shay");
-		element.setType("TEST");
-		element.setAttributes(new HashMap<String, Object>());
-
-// 		//TODO throw exception if element hasn't been found in dataBase
-//		if(element == null){
-//			throw new Exception(); //TODO maybe changed exception thrown
-//		}
-		
-		return element;
+		return new ElementTO(this.elementService.getElement(playground, id));
 	}
 
 	// this method checks if there is a '@' in the name and there is something

@@ -12,7 +12,8 @@ import org.springframework.stereotype.Service;
 
 import com.example.demo.classes.Location;
 import com.example.demo.classes.EntityClasses.ElementEntity;
-import com.example.demo.classes.exceptions.elementAlreadyExistException;
+import com.example.demo.classes.exceptions.ElementAlreadyExistException;
+import com.example.demo.classes.exceptions.ElementNotFoundException;
 
 @Service
 public class ElementServiceDummy implements IElementService {
@@ -27,10 +28,10 @@ public class ElementServiceDummy implements IElementService {
 	}
 
 	@Override
-	public void addNewElement(ElementEntity et) throws elementAlreadyExistException {
+	public void addNewElement(ElementEntity et) throws ElementAlreadyExistException {
 		String newElementKey = getKeyFromElementEntity(et);
 		if(this.entities.containsKey(newElementKey)) {
-			throw new elementAlreadyExistException("entity already exist in database");
+			throw new ElementAlreadyExistException("entity already exist in database");
 		}
 		else {
 			this.entities.put(newElementKey, et);
@@ -67,13 +68,13 @@ public class ElementServiceDummy implements IElementService {
 	}
 
 	@Override
-	public ElementEntity getElement(String playground, String id) throws Exception {
+	public ElementEntity getElement(String playground, String id) throws ElementNotFoundException {
 		String elementKey = playground + id;
 		if(this.entities.containsKey(elementKey)) {
 			return this.entities.get(elementKey);
 		}
 		else{
-			throw new Exception();//TODO throw not found exception
+			throw new ElementNotFoundException();//TODO throw not found exception
 		}
 	}
 	

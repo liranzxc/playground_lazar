@@ -33,7 +33,7 @@ import com.example.demo.classes.EntityClasses.UserEntity;
 import com.example.demo.classes.ToClasses.ActivityTO;
 import com.example.demo.classes.ToClasses.UserTO;
 import com.example.demo.classes.exceptions.InvalidCodeException;
-import com.example.demo.classes.exceptions.elementAlreadyExistException;
+import com.example.demo.classes.exceptions.ElementAlreadyExistException;
 import com.example.demo.contollers.UsersController;
 
 @RunWith(SpringRunner.class)

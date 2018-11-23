@@ -14,6 +14,7 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.boot.web.server.LocalServerPort;
+import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 
 import org.junit.Test;
@@ -26,7 +27,8 @@ import org.springframework.test.context.junit4.SpringRunner;
 import com.example.demo.classes.Location;
 import com.example.demo.classes.EntityClasses.ElementEntity;
 import com.example.demo.classes.ToClasses.ElementTO;
-import com.example.demo.classes.exceptions.elementAlreadyExistException;
+import com.example.demo.classes.exceptions.ElementAlreadyExistException;
+import com.example.demo.classes.exceptions.ElementNotFoundException;
 import com.example.demo.services.ElementServiceDummy;
 import com.example.demo.services.IElementService;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -104,39 +106,49 @@ public class ElementTestShay {
 		assertTrue(success);
 	}
 
-	@Test(expected = elementAlreadyExistException.class)
-	public void createElementWhenElementAlreadyExist() throws elementAlreadyExistException {
+	@Test(expected = ElementAlreadyExistException.class)
+	public void createElementWhenElementAlreadyExist() throws ElementAlreadyExistException {
 		// given
-		String userPlayground = "lazar_playground";
-		String email = "demo@gmail.com";
 		ElementTO eto = new ElementTO(demo_entity);
+		this.elementService.addNewElement(eto.ToEntity());
 
-//		
-		boolean dataEnterd = false;
+		//when
+		//TODO understand why when using postForObject another exception is thrown
+		this.elementService.addNewElement(eto.ToEntity());
 
-		try {
-			this.elementService.addNewElement(eto.ToEntity());
-			dataEnterd = true;
-		} catch (elementAlreadyExistException e) {
-			// do nothing
-			// its good
-		}
-
-		if (dataEnterd) {
-
-			this.elementService.addNewElement(eto.ToEntity());
-
-		}
 	}
 
 	@Test
 	public void updateElement() {
-
+	
 	}
 
 	@Test
-	public void getSpecificElement() {
+	public void getSpecificElementSuccess() throws ElementNotFoundException, ElementAlreadyExistException {
+		//given
+		ElementTO originalElementTO = new ElementTO(demo_entity);
+		String userPlayground = "lazar_playground";
+		String email = "demo@gmail.com";
+		String playground = originalElementTO.getPlayground();
+		String id = originalElementTO.getId();
 
+		this.elementService.addNewElement(originalElementTO.ToEntity());
+	
+
+		//when
+		ElementTO elementTOFromDB = this.restTemplate.getForObject(this.url + "/{userPlayground}/{email}/{playground}/{id}",
+																ElementTO.class, userPlayground, email, playground, id);
+		
+		//that
+		boolean success = true;
+		if(!elementTOFromDB.getId().equals(originalElementTO.getId())) {
+			success = false;
+		}
+		else if(!elementTOFromDB.getPlayground().equals(originalElementTO.getPlayground())) {
+			success = false;
+		}
+		
+		assertTrue(success);
 	}
 
 }

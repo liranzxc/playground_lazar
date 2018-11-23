@@ -1,25 +1,25 @@
 package com.example.demo.classes.exceptions;
 
-public class elementAlreadyExistException extends Exception {
+public class ElementAlreadyExistException extends Exception {
 
 	private static final long serialVersionUID = -3097663595431816686L;
 
-	public elementAlreadyExistException() {
+	public ElementAlreadyExistException() {
 		super();
 	}
 
 
-	public elementAlreadyExistException(String arg0, Throwable arg1) {
+	public ElementAlreadyExistException(String arg0, Throwable arg1) {
 		super(arg0, arg1);
 		// TODO Auto-generated constructor stub
 	}
 
-	public elementAlreadyExistException(String arg0) {
+	public ElementAlreadyExistException(String arg0) {
 		super(arg0);
 		// TODO Auto-generated constructor stub
 	}
 
-	public elementAlreadyExistException(Throwable arg0) {
+	public ElementAlreadyExistException(Throwable arg0) {
 		super(arg0);
 		// TODO Auto-generated constructor stub
 	}
