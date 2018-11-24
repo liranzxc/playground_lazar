@@ -5,6 +5,7 @@ import java.util.List;
 import com.example.demo.classes.EntityClasses.ElementEntity;
 import com.example.demo.classes.exceptions.ElementAlreadyExistException;
 import com.example.demo.classes.exceptions.ElementNotFoundException;
+import com.example.demo.classes.exceptions.InvalidAttributeNameException;
 
 public interface IElementService {
 
@@ -17,6 +18,8 @@ public interface IElementService {
 	public List<ElementEntity> getAllElements();
 	public List<ElementEntity> getAllElements(int size, int page);
 	public List<ElementEntity> getElementsNearBy(double x, double y, double distance);
+	public List<ElementEntity> getElementsByAttributeAndValue(String attribute, String value, int size, int page) throws InvalidAttributeNameException;
+	
 	public void cleanup();
 
 }

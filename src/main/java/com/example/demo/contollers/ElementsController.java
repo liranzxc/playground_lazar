@@ -210,90 +210,27 @@ public class ElementsController {
 			@PathVariable("value") String value
 			,@RequestParam(name="size", required=false, defaultValue="10") int size
 			,@RequestParam(name="page", required=false, defaultValue="0") int page) 
-					throws InvalidAttributeNameException {
+					throws InvalidAttributeNameException, InvalidEmailException {
 		
-		List<ElementEntity> allElementsList = elementService.getAllElements(size, page);
-		ArrayList<ElementEntity> filteredElements;
-		
-		switch (attributeName) {
-		// TODO: add cases that wasn't written
-		case "playground":
-			filteredElements = 
-				allElementsList
-					.stream()
-					.filter(
-							e -> e.getPlayground().equals(value))
-					.collect(Collectors.toCollection(ArrayList::new));
-			break;
-			
-		case "id":
-			filteredElements = 
-			allElementsList
-				.stream()
-				.filter(
-						e -> e.getId().equals(value))
-				.collect(Collectors.toCollection(ArrayList::new));
-			break;
-			
-//		case "location":
-//			// TODO: transfer value to location
-//			String[] loactionCordinatesAsStrings = value.split(",");
-//			double[] loactionCordinates = {Double.parseDouble(loactionCordinatesAsStrings[0]), 
-//					Double.parseDouble(loactionCordinatesAsStrings[1])};
-//			Location location = new Location(loactionCordinates[0], loactionCordinates[1]);
-//			return (ElementTO[]) allElementsList
-//					.stream()
-//					.filter(
-//							e -> e.getLocation().equals(location))  
-//					.toArray();
-		case "name":
-			filteredElements = 
-			allElementsList
-				.stream()
-				.filter(
-						e -> e.getName().equals(value))
-				.collect(Collectors.toCollection(ArrayList::new));
-			break;
-			
-		case "type":
-			filteredElements = 
-			allElementsList
-				.stream()
-				.filter(
-						e -> e.getType().equals(value))
-				.collect(Collectors.toCollection(ArrayList::new));
-			break;
-			
-		case "creatorPlayground":
-			filteredElements = 
-			allElementsList
-				.stream()
-				.filter(
-						e -> e.getCreatorPlayground().equals(value))
-				.collect(Collectors.toCollection(ArrayList::new));
-			break;
-			
-		case "creatorEmail":
-			filteredElements = 
-			allElementsList
-				.stream()
-				.filter(
-						e -> e.getCreatorEmail().equals(value))
-				.collect(Collectors.toCollection(ArrayList::new));
-			break;
-			
-		default:
-			throw new InvalidAttributeNameException("Attribute Name does not exist in Element");
+		if(!verifiedEmail(email)) {
+			throw new InvalidEmailException();
+		}
+		if(size < 1) {
+			size = 1;
+		}
+		else if(page < 0) {
+			page = 0;
 		}
 		
-		filteredElements.trimToSize();
+		List<ElementEntity> requiredEntities = this.elementService.getElementsByAttributeAndValue(attributeName, value, size, page);
 		
-		ElementTO[] filteredElementsArray = new ElementTO[filteredElements.size()];
-		for(int i = 0; i < filteredElements.size(); i++) {
-			filteredElementsArray[i] = new ElementTO(filteredElements.get(i));
+		ElementTO[] elements = new ElementTO[requiredEntities.size()]; 
+		for(int i = 0; i < requiredEntities.size(); i++)
+		{
+			elements[i] = new ElementTO(requiredEntities.get(i));
 		}
 		
-		return filteredElementsArray;
+		return elements;
 	}
 	
 	

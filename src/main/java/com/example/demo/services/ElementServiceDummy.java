@@ -13,6 +13,7 @@ import com.example.demo.classes.Location;
 import com.example.demo.classes.EntityClasses.ElementEntity;
 import com.example.demo.classes.exceptions.ElementAlreadyExistException;
 import com.example.demo.classes.exceptions.ElementNotFoundException;
+import com.example.demo.classes.exceptions.InvalidAttributeNameException;
 
 @Service
 public class ElementServiceDummy implements IElementService {
@@ -100,7 +101,7 @@ public class ElementServiceDummy implements IElementService {
 	@Override
 	public List<ElementEntity> getElementsNearBy(double x, double y, double distance) {
 		return this.entities
-			   .values() 
+				.values()
 			   .stream() 
 			   .filter(ee -> isNear(ee, x, y, distance))
 			   .collect(Collectors.toList());
@@ -110,7 +111,7 @@ public class ElementServiceDummy implements IElementService {
 	
 	@Override
 	public void cleanup() {
-		this.entities.clear();
+		this.entities.values().clear();
 	}
 	
 	private String getKeyFromElementEntity(ElementEntity et) {
@@ -142,5 +143,89 @@ public class ElementServiceDummy implements IElementService {
 				.collect(Collectors.toList());
 	}
 
-
+	@Override
+	public List<ElementEntity> getElementsByAttributeAndValue(String attribute, String value, int size, int page) throws InvalidAttributeNameException {
+		List<ElementEntity> filteredElements;
+		
+		switch (attribute) {
+		// TODO: add cases that wasn't written
+		case "playground":
+			filteredElements = 
+				this.entities
+					.values()
+					.stream()
+					.filter(e -> e.getPlayground().equals(value))
+					.collect(Collectors.toList());
+			break;
+			
+		case "id":
+			filteredElements = 
+			this.entities
+				.values()
+				.stream()
+				.filter(
+						e -> e.getId().equals(value))
+				.collect(Collectors.toList());
+			break;
+			
+//		case "location":
+//			// TODO: transfer value to location
+//			String[] loactionCordinatesAsStrings = value.split(",");
+//			double[] loactionCordinates = {Double.parseDouble(loactionCordinatesAsStrings[0]), 
+//					Double.parseDouble(loactionCordinatesAsStrings[1])};
+//			Location location = new Location(loactionCordinates[0], loactionCordinates[1]);
+//			return (ElementTO[]) allElementsList
+//					.stream()
+//					.filter(
+//							e -> e.getLocation().equals(location))  
+//					.toArray();
+		case "name":
+			filteredElements = 
+			this.entities
+				.values()
+				.stream()
+				.filter(
+						e -> e.getName().equals(value))
+				.collect(Collectors.toList());
+			break;
+			
+		case "type":
+			filteredElements = 
+			this.entities
+				.values()
+				.stream()
+				.filter(
+						e -> e.getType().equals(value))
+				.collect(Collectors.toList());
+			break;
+			
+		case "creatorPlayground":
+			filteredElements = 
+			this.entities
+				.values()
+				.stream()
+				.filter(
+						e -> e.getCreatorPlayground().equals(value))
+				.collect(Collectors.toList());
+			break;
+			
+		case "creatorEmail":
+			filteredElements = 
+			this.entities
+				.values()
+				.stream()
+				.filter(
+						e -> e.getCreatorEmail().equals(value))
+				.collect(Collectors.toList());
+			break;
+			
+		default:
+			throw new InvalidAttributeNameException("Attribute Name does not exist in Element");
+		}		
+		
+		return filteredElements.stream()
+						.skip(size*page)
+						.limit(size)
+						.collect(Collectors.toList());	
+	}
 }
