@@ -147,10 +147,10 @@ public class ElementTestShay {
 
 		this.elementService.addNewElement(originalElementTO.ToEntity());
 	
-
-		//when
-		ElementTO elementTOFromDB = this.restTemplate.getForObject(this.url + "/{userPlayground}/{email}/{playground}/{id}",
-																ElementTO.class, userPlayground, email, playground, id);
+		ElementTO elementTOFromDB;
+		elementTOFromDB = this.restTemplate.getForObject(this.url + "/{userPlayground}/{email}/{playground}/{id}",
+														ElementTO.class, userPlayground, email, playground, id);
+		
 		
 		//that
 		boolean success = true;

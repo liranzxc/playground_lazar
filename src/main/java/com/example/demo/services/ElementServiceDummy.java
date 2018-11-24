@@ -132,5 +132,15 @@ public class ElementServiceDummy implements IElementService {
 		return true;
 	}
 
+	@Override
+	public List<ElementEntity> getAllElements(int size, int page) {
+		return this.entities
+				.values()
+				.stream()
+				.skip(page * size)
+				.limit(size)
+				.collect(Collectors.toList());
+	}
+
 
 }

@@ -15,6 +15,7 @@ public interface IElementService {
 	public void deleteElement(String playground, String id) throws ElementNotFoundException;
 	
 	public List<ElementEntity> getAllElements();
+	public List<ElementEntity> getAllElements(int size, int page);
 	public List<ElementEntity> getElementsNearBy(double x, double y, double distance);
 	public void cleanup();
 

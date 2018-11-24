@@ -157,4 +157,12 @@ public class ElementTO {
 	}
 	
 	
+	public boolean equals(ElementTO elementTO) {
+		if(elementTO.id.equals(this.id)
+				&& elementTO.playground.equals(this.playground))
+			return true;
+		
+		return false;
+		
+	}
 }
