@@ -1,6 +1,5 @@
 package com.example.demo.services;
 
-import java.util.Hashtable;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -39,7 +38,7 @@ public class ElementServiceDummy implements IElementService {
 	}
 
 	@Override
-	public void updateElement(ElementEntity et) {
+	public void updateElement(ElementEntity et) throws ElementNotFoundException {
 		String updateElementKey = getKeyFromElementEntity(et);
 		if(this.entities.containsKey(updateElementKey)) {
 		
@@ -62,7 +61,7 @@ public class ElementServiceDummy implements IElementService {
 			this.entities.put(updateElementKey, dbElement);	
 		}
 		else {
-			//TODO throw exception element not found
+			throw new ElementNotFoundException("element isn't in the DateBase");
 		}
 		
 	}
@@ -74,18 +73,18 @@ public class ElementServiceDummy implements IElementService {
 			return this.entities.get(elementKey);
 		}
 		else{
-			throw new ElementNotFoundException();//TODO throw not found exception
+			throw new ElementNotFoundException();
 		}
 	}
 	
 	@Override
-	public void deleteElement(String playground, String id) throws Exception {
+	public void deleteElement(String playground, String id) throws ElementNotFoundException {
 		String elementKey = playground + id;
 		if(this.entities.containsKey(elementKey)) {
 			this.entities.remove(elementKey);
 		}
 		else{
-			throw new Exception();//TODO throw not found exception
+			throw new ElementNotFoundException();
 		}
 		
 	}

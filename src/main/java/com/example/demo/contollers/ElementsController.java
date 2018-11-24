@@ -73,16 +73,17 @@ public class ElementsController {
 			@PathVariable(name = "userPlayground", required = true) String userPlayground,
 			@PathVariable(name = "email", required = true) String email,
 			@PathVariable(name = "playground", required = true) String playground,
-			@PathVariable(name = "id", required = true) String id) throws Exception {
+			@PathVariable(name = "id", required = true) String id) throws NullPointerException, ElementNotFoundException {
 
 		if (element == null) {
-			throw new Exception(); // TODO maybe changed exception thrown
+			throw new NullPointerException("cant update element into nothing"); // TODO maybe changed exception thrown
 		}
+		element.setCreatorEmail(email);
+		element.setCreatorPlayground(userPlayground);
 		
 		ElementEntity entity = element.ToEntity();
-		this.elementService.addNewElement(entity);
+		this.elementService.updateElement(entity);
 
-		// TODO do some valid checks on new element and update dataBase with new element
 	}
 
 	/*

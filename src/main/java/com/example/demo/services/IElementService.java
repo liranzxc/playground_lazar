@@ -9,10 +9,10 @@ import com.example.demo.classes.exceptions.ElementNotFoundException;
 public interface IElementService {
 
 	public void addNewElement(ElementEntity et) throws ElementAlreadyExistException;
-	public void updateElement(ElementEntity et);
+	public void updateElement(ElementEntity et) throws ElementNotFoundException;
 	public ElementEntity getElement(String playground, String id) throws ElementNotFoundException;
 	
-	public void deleteElement(String playground, String id) throws Exception;
+	public void deleteElement(String playground, String id) throws ElementNotFoundException;
 	
 	public List<ElementEntity> getAllElements();
 	public List<ElementEntity> getElementsNearBy(double x, double y, double distance);

@@ -41,15 +41,14 @@ public class ElementTestShay {
 	private ElementEntity demo_entity;
 
 	/*
-	 * ====================================== READ ME
-	 * ===================================================== In this test class i
-	 * do: - POST /playground/elements/{userPlayground }/{email} I/O: ElementTO |
-	 * ElementTO - PUT
-	 * /playground/elements/{userPlayground}/{email}/{playground}/{id} I/O:
-	 * ElementTO | --------- - GET
-	 * /playground/elements/{userPlayground}/{email}/{playground}/{id} I/O:
-	 * --------- | ElementTO ====================================== READ ME
-	 * =====================================================
+	 * ====================================== READ ME ===================================================== 
+	 * 
+	 * In this test class i do: 
+	 * - POST /playground/elements/{userPlayground }/{email} 					I/O: ElementTO | ElementTO 
+	 * - PUT  /playground/elements/{userPlayground}/{email}/{playground}/{id} 	I/O: ElementTO | --------- 
+	 * - GET /playground/elements/{userPlayground}/{email}/{playground}/{id} 	I/O: --------- | ElementTO 
+	 * 
+	 * ====================================== READ ME  =====================================================
 	 */
 
 	@LocalServerPort
@@ -112,15 +111,29 @@ public class ElementTestShay {
 		ElementTO eto = new ElementTO(demo_entity);
 		this.elementService.addNewElement(eto.ToEntity());
 
-		//when
-		//TODO understand why when using postForObject another exception is thrown
+		//when		
+		
+		//TODO understand how to make postForObject throw ElementAlreadyExistException instead
+		//	of <org.springframework.web.client.HttpServerErrorException>
 		this.elementService.addNewElement(eto.ToEntity());
 
 	}
 
 	@Test
-	public void updateElement() {
-	
+	public void updateElementSuccessfully() throws ElementAlreadyExistException {
+		//given 
+		ElementTO eto = new ElementTO(demo_entity);
+		this.elementService.addNewElement(eto.ToEntity());
+		
+		String userPlayground = "lazar_2019";
+		String email = "demo@gmail.com";
+		String playground = eto.getPlayground();
+		String id = eto.getId();
+		
+		//when 
+		this.restTemplate.put(this.url + "/{userPlayground}/{email}/{playground}/{id}",
+								eto, userPlayground, email, playground, id);
+				
 	}
 
 	@Test
@@ -149,6 +162,26 @@ public class ElementTestShay {
 		}
 		
 		assertTrue(success);
+	}
+	
+	@Test(expected=ElementNotFoundException.class)
+	public void getSpecificElementFail() throws ElementNotFoundException {
+		//given element not in database (tearDown and setup take care of that)
+		
+		//TODO understand how to wrap resTemplate methods to throw my exception
+		//when 1
+	//	String userPlayground = "lazar_playground";
+	//	String email = "demo@gmail.com";
+	//	String playground = "lazar_playground";
+	//	String id = "1";		
+    //		
+    //	this.restTemplate.getForObject(this.url + "/{userPlayground}/{email}/{playground}/{id}",
+	//									ElementTO.class, userPlayground, email, playground, id);
+		
+		//when 2
+		String playground = "lazar_playground";
+		String id = "1";	
+		this.elementService.getElement(playground, id);
 	}
 
 }
