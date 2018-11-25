@@ -273,7 +273,7 @@ public class ElementTest {
 //				success = true;
 //			}
 			
-			this.elementService.getElementsNearBy(x, y, distance);
+			this.elementService.getAllElementsNearBy(x, y, distance);
 			
 //			assertTrue(success);		
 		}

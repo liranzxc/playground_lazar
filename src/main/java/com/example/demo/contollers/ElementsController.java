@@ -23,6 +23,8 @@ import org.springframework.web.bind.annotation.RestController;
 import com.example.demo.classes.Location;
 
 import com.example.demo.classes.exceptions.InvalidEmailException;
+import com.example.demo.classes.exceptions.InvalidPageRequestException;
+import com.example.demo.classes.exceptions.InvalidPageSizeRequestException;
 import com.example.demo.classes.exceptions.ElementNotFoundException;
 import com.example.demo.classes.exceptions.InvalidAttributeNameException;
 import com.example.demo.classes.exceptions.InvalidDistanceValueException;
@@ -210,19 +212,25 @@ public class ElementsController {
 			@PathVariable("value") String value
 			,@RequestParam(name="size", required=false, defaultValue="10") int size
 			,@RequestParam(name="page", required=false, defaultValue="0") int page) 
-					throws InvalidAttributeNameException, InvalidEmailException {
+					throws InvalidAttributeNameException
+					,InvalidEmailException
+					,InvalidPageSizeRequestException
+					,InvalidPageRequestException {
 		
 		if(!verifiedEmail(email)) {
 			throw new InvalidEmailException();
 		}
-		if(size < 1) {
-			size = 1;
+		if(size < 1) {  
+			throw new InvalidPageSizeRequestException("Size of a page must be at least 1");
 		}
-		else if(page < 0) {
-			page = 0;
+		else if(page < 0) {  
+			throw new InvalidPageRequestException("Page index must be at least 0");
 		}
 		
-		List<ElementEntity> requiredEntities = this.elementService.getElementsByAttributeAndValue(attributeName, value, size, page);
+		List<ElementEntity> requiredEntities = this.elementService
+				.getAllElementsByAttributeAndValue(attributeName, value)
+				.stream().skip(size * page).limit(size)
+				.collect(Collectors.toCollection(ArrayList::new));
 		
 		ElementTO[] elements = new ElementTO[requiredEntities.size()]; 
 		for(int i = 0; i < requiredEntities.size(); i++)
@@ -234,52 +242,4 @@ public class ElementsController {
 	}
 	
 	
-//	private ElementTO[] createRandomArrayOfElementTO() {
-//		ArrayList<ElementTO> elementsTO = new ArrayList<>();
-//		
-//		// create attributes:
-//		Map<String, Object> attributesMap1 = 
-//				new HashMap<>();
-//		attributesMap1.put("1", new Object());
-//		attributesMap1.put("2", new Object());
-//		attributesMap1.put("3", new Object());
-//		
-//		Map<String, Object> attributesMap2 = 
-//				new HashMap<>();
-//		attributesMap1.put("4", new Object());
-//		attributesMap1.put("5", new Object());
-//		attributesMap1.put("6", new Object());
-//		attributesMap1.put("7", new Object());
-//		
-//		Map<String, Object> attributesMap3 = 
-//				new HashMap<>();
-//		attributesMap1.put("8", new Object());
-//		attributesMap1.put("9", new Object());
-//		
-//		Map<String, Object> attributesMap4 = 
-//				new HashMap<>();
-//		attributesMap1.put("10", new Object());
-//		attributesMap1.put("11", new Object());
-//		
-//		
-//		// create Elements
-//		ElementTO e1 = new ElementTO("P1", "123", 
-//				new Location(1, 2), "Tirex", new Date(), null, "A", 
-//				attributesMap1, "P2", "Demo.co.il");
-//		ElementTO e2 = new ElementTO("P2", "1234", 
-//				new Location(1, 2), "Polo", new Date(), null, "B", 
-//				attributesMap2, "P5", "Demo.co.il");
-//		ElementTO e3 = new ElementTO("P3", "12345", 
-//				new Location(1, 2), "Dindin", new Date(), null, "C", 
-//				attributesMap3, "P3", "Demo.co.il");
-//		ElementTO e4 = new ElementTO("P4", "1237", 
-//				new Location(1, 2), "Riko", new Date(), null, "D", 
-//				attributesMap4, "P4", "Demo.co.il");
-//		
-//		
-//		elementsTO.addAll(Arrays.asList(e1, e2, e3, e4));
-//		
-//		return (ElementTO[]) elementsTO.toArray();
-//	}
-
 }

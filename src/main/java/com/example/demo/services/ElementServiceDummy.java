@@ -100,7 +100,7 @@ public class ElementServiceDummy implements IElementService {
 	}
 
 	@Override
-	public List<ElementEntity> getElementsNearBy(double x, double y, double distance) throws InvalidDistanceValueException {
+	public List<ElementEntity> getAllElementsNearBy(double x, double y, double distance) throws InvalidDistanceValueException {
 		if(distance < 0)
 			throw new InvalidDistanceValueException("Invalid distance value");
 		
@@ -148,7 +148,7 @@ public class ElementServiceDummy implements IElementService {
 	}
 
 	@Override
-	public List<ElementEntity> getElementsByAttributeAndValue(String attribute, String value, int size, int page) throws InvalidAttributeNameException {
+	public List<ElementEntity> getAllElementsByAttributeAndValue(String attribute, String value) throws InvalidAttributeNameException {
 		List<ElementEntity> filteredElements;
 		
 		switch (attribute) {
@@ -227,9 +227,10 @@ public class ElementServiceDummy implements IElementService {
 			throw new InvalidAttributeNameException("Attribute Name does not exist in Element");
 		}		
 		
-		return filteredElements.stream()
-						.skip(size*page)
-						.limit(size)
-						.collect(Collectors.toList());	
+		return filteredElements;
+//		return filteredElements.stream()
+//						.skip(size*page)
+//						.limit(size)
+//						.collect(Collectors.toList());	
 	}
 }
