@@ -35,6 +35,7 @@ import com.example.demo.classes.ToClasses.UserTO;
 import com.example.demo.classes.exceptions.InvalidCodeException;
 import com.example.demo.classes.exceptions.ElementAlreadyExistException;
 import com.example.demo.contollers.UsersController;
+import com.example.demo.services.UserServiceDummy;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
@@ -68,12 +69,13 @@ public class UsersTest {
 	
 
 	@Autowired
-	private UsersController userController = new UsersController();
+	private UserServiceDummy userServices;
 	
 	@PostConstruct
 	public void init() {
 		this.url = "http://localhost:" + port + "/playground/users";
-		this.code = userController.getTEST_CODE();
+		this.code ="123";
+
 		rest = new RestTemplate();
 	}
 
@@ -84,7 +86,7 @@ public class UsersTest {
 
 	@After
 	public void teardown() {
-		this.userController.getService().cleanup();
+		userServices.cleanup();
 	}
 	
 	// 2. Test user registration
@@ -100,6 +102,7 @@ public class UsersTest {
 	@Test
 	public void TestUserConfirmationByCode() {
 		//UserEntity user = userController.validateCode("playground_lazar", "address@mail.end", code);
+		this.code = "123";
 		UserTO user = this.rest.getForObject(this.url + "/confirm/{playground}/{email}/{code}",
 				UserTO.class, "playground_lazar", "address@mail.end", code);
 
@@ -108,7 +111,19 @@ public class UsersTest {
 	// 3.b Test Code exception
 	@Test(expected=InvalidCodeException.class)
 	public void TestInvalidCodeThrowsException() throws InvalidCodeException {
-		UserTO user = userController.validateCode("playground_lazar", "address@mail.end", "WrongCode");
+		
+		this.code = "222";
+		try
+		{
+			UserTO user = this.rest.getForObject(this.url + "/confirm/{playground}/{email}/{code}",
+					UserTO.class, "playground_lazar", "address@mail.end", code);
+		}
+		catch (Exception e) {
+			// TODO: handle exception
+			
+			throw new InvalidCodeException();
+		}
+	
 	}
 	
 	// 4. Test user log in successfully 
