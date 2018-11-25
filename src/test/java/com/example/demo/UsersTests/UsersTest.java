@@ -125,16 +125,13 @@ public class UsersTest {
 	// 5. Test update user
 	@Test
 	public void TestUpdateUserFromDB() {
-
-		url = url + "/{playground}/{email}";
-
 		Map<String, String> map = new HashMap<String, String>();
 		map.put("playground", "play");
 		map.put("email", "lirannh@gmail.com");
 
 		UserTO userto = new UserTO("liranzxc", "lirannh@gmail.com", "DOG", types.Manager.getType());
 
-		rest.put(url, userto, map);
+		rest.put(url + "/{playground}/{email}", userto, map);
 		
 		// put method return void , so how we can do Assert? 
 

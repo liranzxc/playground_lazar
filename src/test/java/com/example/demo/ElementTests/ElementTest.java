@@ -49,6 +49,10 @@ public class ElementTest {
 	 * - PUT  /playground/elements/{userPlayground}/{email}/{playground}/{id} 	I/O: ElementTO | --------- 
 	 * - GET /playground/elements/{userPlayground}/{email}/{playground}/{id} 	I/O: --------- | ElementTO 
 	 * 
+	 * 
+	 * - GET /{userPlayground}/{email}/all                                  	I/O: --------- | ElementTO 
+	 * - GET /{userPlayground}/{email}/near/{x}/{y}/{distance}              	I/O: --------- | ElementTO 
+	 * - GET /{userPlayground}/{email}/search/{attributeName}/{value} 	        I/O: --------- | ElementTO 
 	 * ====================================== READ ME  =====================================================
 	 */
 
