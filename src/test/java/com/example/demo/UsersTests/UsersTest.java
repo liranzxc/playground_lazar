@@ -178,6 +178,8 @@ public class UsersTest {
 		UserTO userto = new UserTO("liranzxc", "lirannh@gmail.com", "DOG", types.Manager.getType());
 
 		rest.put(url, userto, map);
+		
+		// put method return void , so how we can do Assert? 
 
 	}
 
