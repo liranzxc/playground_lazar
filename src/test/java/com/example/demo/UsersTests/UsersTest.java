@@ -1,6 +1,9 @@
 package com.example.demo.UsersTests;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.extractProperty;
 import static org.hamcrest.CoreMatchers.equalTo;
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
 
 import java.util.HashMap;
@@ -101,7 +104,6 @@ public class UsersTest {
 	// 3.a Test user confirmation
 	@Test
 	public void TestUserConfirmationByCode() {
-		//UserEntity user = userController.validateCode("playground_lazar", "address@mail.end", code);
 		this.code = "123";
 		UserTO user = this.rest.getForObject(this.url + "/confirm/{playground}/{email}/{code}",
 				UserTO.class, "playground_lazar", "address@mail.end", code);
@@ -131,8 +133,17 @@ public class UsersTest {
 	public void TestUserLoginSuccessfully() throws Exception {
 
 		UserTO user = new UserTO("address@mail.end", "playground_lazar", "tal", "anAvatar");
-		//userController.getService().registerNewUser(user);
-		//userController.logIn("playground_lazar", "address@mail.end");
+		userServices.registerNewUser(user.ToEntity());
+		
+		System.err.println(userServices.getAllUsers());
+		
+		UserEntity actual = this.rest.getForObject(this.url + "/login/{playground}/{email}",
+				UserEntity.class, user.getPlayground(),user.getEmail());
+		
+		System.err.println(actual);
+		assertEquals(user.getEmail(), actual.getEmail());
+		
+		
 
 		
 	}

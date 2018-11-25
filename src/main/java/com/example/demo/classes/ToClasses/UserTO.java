@@ -78,6 +78,7 @@ public class UserTO {
 	// new method !! Liran Nachman
 	public UserEntity ToEntity()
 	{
+		
 		return new UserEntity(this.email, this.playground
 				, this.username, this.avatar, role);
 	}

@@ -19,6 +19,7 @@ import com.example.demo.classes.ToClasses.UserTO;
 import com.example.demo.classes.exceptions.InvalidCodeException;
 import com.example.demo.classes.exceptions.UserNotFoundException;
 import com.example.demo.services.IUserService;
+import com.example.demo.services.UserServiceDummy;
 
 @RestController
 @RequestMapping("playground/users")
@@ -27,7 +28,7 @@ public class UsersController {
 	private String TEST_CODE = "123";
 	
 	@Autowired
-	private IUserService userService;
+	private UserServiceDummy userService;
 	
 	private enum types{
 		
@@ -79,12 +80,16 @@ public class UsersController {
 	}
 	
 	//3. Log in
+	
 	@RequestMapping(value="/login/{playground}/{email}", method=RequestMethod.GET)
 	public UserEntity logIn
 	(@PathVariable("playground") String playground,
 	 @PathVariable("email") String email) throws Exception {
+		
 		return userService.getUser(email);
+		
 	}
+	
 		//the returned user should be searched in the database.
 	
 	//4. update user by email and playground 

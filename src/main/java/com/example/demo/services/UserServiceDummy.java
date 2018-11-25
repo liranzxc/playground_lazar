@@ -20,6 +20,7 @@ public class UserServiceDummy implements IUserService{
 	private Map<String, UserEntity> deletedUsers = new ConcurrentHashMap<>();
 	
 	
+	
 	@Override
 	public void registerNewUser(UserEntity user) throws InvalidEmailException{ //need to create new exception for already registered email
 		allRegisteredUsers.put(user.getEmail(), user);
@@ -32,7 +33,12 @@ public class UserServiceDummy implements IUserService{
 
 	@Override
 	public UserEntity getUser(String email) throws UserNotFoundException {
-		return allRegisteredUsers.get(email);
+		if(this.allRegisteredUsers.containsKey(email)) {
+			return allRegisteredUsers.get(email);
+		}
+		else {
+			throw new UserNotFoundException(); 
+		}
 	}
 
 	@Override
