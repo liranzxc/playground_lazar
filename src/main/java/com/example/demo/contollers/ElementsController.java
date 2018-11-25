@@ -106,7 +106,7 @@ public class ElementsController {
 			@PathVariable("email") String email, 
 			@PathVariable("playground") String playground,
 			@PathVariable("id") String id) throws ElementNotFoundException {
-
+		//TODO add pagination
 		return new ElementTO(this.elementService.getElement(playground, id));
 	}
 
