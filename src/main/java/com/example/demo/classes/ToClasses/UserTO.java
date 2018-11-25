@@ -66,11 +66,20 @@ public class UserTO {
 		super();
 	}
 
+	public UserTO(UserEntity userEntity) {
+		this.avatar = userEntity.getAvatar();
+		this.email = userEntity.getEmail();
+		this.playground = userEntity.getPlayground();
+		this.role = userEntity.getRole();
+		this.username = userEntity.getUsername();
+	}
+
 	// to Entity object 
 	// new method !! Liran Nachman
 	public UserEntity ToEntity()
 	{
-		return new UserEntity(this);
+		return new UserEntity(this.email, this.playground
+				, this.username, this.avatar, role);
 	}
 	
 }

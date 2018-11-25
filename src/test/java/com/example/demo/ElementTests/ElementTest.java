@@ -29,6 +29,7 @@ import com.example.demo.classes.EntityClasses.ElementEntity;
 import com.example.demo.classes.ToClasses.ElementTO;
 import com.example.demo.classes.exceptions.ElementAlreadyExistException;
 import com.example.demo.classes.exceptions.ElementNotFoundException;
+import com.example.demo.classes.exceptions.InvalidDistanceValueException;
 import com.example.demo.services.ElementServiceDummy;
 import com.example.demo.services.IElementService;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -36,7 +37,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
-public class ElementTestShay {
+public class ElementTest {
 
 	private ElementEntity demo_entity;
 
@@ -57,7 +58,7 @@ public class ElementTestShay {
 	private String url;
 
 	private RestTemplate restTemplate;
-	private ObjectMapper jsonMapper;
+	//private ObjectMapper jsonMapper;
 
 	@Autowired
 	private IElementService elementService;
@@ -65,7 +66,7 @@ public class ElementTestShay {
 	@PostConstruct
 	public void init() {
 		this.restTemplate = new RestTemplate();
-		this.jsonMapper = new ObjectMapper();
+	//	this.jsonMapper = new ObjectMapper();
 		this.url = "http://localhost:" + port + "/playground/elements";
 
 		System.err.println(this.url);
@@ -74,9 +75,9 @@ public class ElementTestShay {
 
 	@Before
 	public void setup() {
-
-		this.demo_entity = new ElementEntity("lazar", "1", new Location(), "demo", new Date(), null, "demo type", null,
-				"Shay", "ggwp@123.com");
+		this.demo_entity = new ElementEntity("playground_lazar", "1", new Location(0, 1), "demo", new Date(), null, "demo type", null,
+				"Aviv", "demo@gmail.com");
+		
 	}
 
 	@After
@@ -184,4 +185,147 @@ public class ElementTestShay {
 		this.elementService.getElement(playground, id);
 	}
 
+	
+	
+	// Feature 9 - scenario 1
+		@Test
+		public void GetAllElementsSuccessWithOneElement() throws ElementAlreadyExistException
+		{
+			// Given:
+			this.elementService.addNewElement(this.demo_entity);
+			
+			
+			// When:
+			String userPlayground = "playground_lazar";
+			String email = "aviv@gmail.com";
+			 
+			 ElementTO[] allElements = 
+			this.restTemplate.getForObject(
+					this.url + "/{userPlayground}/{email}/all" 
+					,ElementTO[].class 
+					,userPlayground, email);
+			
+			 // Than:
+			boolean success = false;
+			if(allElements.length == 1 && allElements[0].equals(new ElementTO(this.demo_entity)))
+				success = true;
+			
+			assertTrue(success);
+		}
+		
+		// TODO: test for pagination - feature 9
+		
+
+		// Feature 10 - scenario 1
+		@Test
+		public void GetAllElementsNearToLocationOneOne() throws ElementAlreadyExistException {
+			
+			// Given:
+			this.elementService.addNewElement(this.demo_entity);
+			
+			// When:
+			String userPlayground = "playground_lazar";
+			String email = "aviv@gmail.com";
+			double x = 1.0, y = 1.0, distance = 1.0;
+			
+			 
+			 ElementTO[] allElements = 
+			this.restTemplate.getForObject(
+					this.url + "/{userPlayground}/{email}/near/{x}/{y}/{distance}" 
+					,ElementTO[].class 
+					,userPlayground, email, x, y, distance);
+			
+			 // Than:
+			boolean success = false;
+			if(allElements.length == 1 && allElements[0].equals(new ElementTO(this.demo_entity)))
+				success = true;
+			
+			assertTrue(success);
+		}
+		
+		// Feature 10 - scenario 2
+		@Test(expected=InvalidDistanceValueException.class)
+		public void GetTheNearElementsWithInvalidDistance() throws ElementAlreadyExistException, InvalidDistanceValueException{
+			
+			// Given:
+			this.elementService.addNewElement(this.demo_entity);
+			
+			// When:
+			String userPlayground = "playground_lazar";
+			String email = "aviv@gmail.com";
+			double x = 1.0, y = 1.0, distance = -1.0;
+			
+			// Than:
+			ElementTO[] allElements;
+//			boolean success = false;
+//			try {
+//				allElements = 
+//						this.restTemplate.getForObject(
+//								this.url + "/{userPlayground}/{email}/near/{x}/{y}/{distance}" 
+//								,ElementTO[].class 
+//								,userPlayground, email, x, y, distance);
+//			}
+//			catch (Exception e) {  // TODO: replace to InvalidDistanceValueException
+//				success = true;
+//			}
+			
+			this.elementService.getElementsNearBy(x, y, distance);
+			
+//			assertTrue(success);		
+		}
+		
+		
+		// Feature 11 - scenario 1
+		@Test
+		public void SearchElementByHisID() throws ElementAlreadyExistException {
+			// Given:
+			this.elementService.addNewElement(this.demo_entity);
+			
+			// When:
+			String userPlayground = "playground_lazar";
+			String email = "aviv@gmail.com";
+			String attributeName = "id";
+			String value = "1";
+			
+			// Than:
+			 ElementTO[] allElements = 
+					this.restTemplate.getForObject(
+							this.url + "/{userPlayground}/{email}/search/{attributeName}/{value}" 
+							,ElementTO[].class 
+							,userPlayground, email, attributeName, value);	
+			
+			boolean success = false;
+			
+			if(allElements.length == 1 && allElements[0].equals(new ElementTO(this.demo_entity)))
+				success = true;
+			
+			assertTrue(success);				
+		}
+		
+		// Feature 11 - scenario 2
+		@Test
+		public void SearchElementByInvalidAttributeName() throws ElementAlreadyExistException {
+			// Given:
+			this.elementService.addNewElement(this.demo_entity);
+			
+			// When:
+			String userPlayground = "playground_lazar";
+			String email = "aviv@gmail.com";
+			String attributeName = "attack";
+			String value = "1";
+			
+			// Than:
+			boolean success = false;
+			 ElementTO[] allElements;
+			 try {
+				 allElements= this.restTemplate.getForObject(
+							this.url + "/{userPlayground}/{email}/search/{attributeName}/{value}" 
+							,ElementTO[].class 
+							,userPlayground, email, attributeName, value);	
+			 } catch (Exception e) {  // TODO: replace with InvalidAttributeNameException
+				 success = true;
+			}
+			
+			assertTrue(success);			
+		}
 }

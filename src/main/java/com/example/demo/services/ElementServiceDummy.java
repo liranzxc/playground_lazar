@@ -14,6 +14,7 @@ import com.example.demo.classes.EntityClasses.ElementEntity;
 import com.example.demo.classes.exceptions.ElementAlreadyExistException;
 import com.example.demo.classes.exceptions.ElementNotFoundException;
 import com.example.demo.classes.exceptions.InvalidAttributeNameException;
+import com.example.demo.classes.exceptions.InvalidDistanceValueException;
 
 @Service
 public class ElementServiceDummy implements IElementService {
@@ -99,7 +100,10 @@ public class ElementServiceDummy implements IElementService {
 	}
 
 	@Override
-	public List<ElementEntity> getElementsNearBy(double x, double y, double distance) {
+	public List<ElementEntity> getElementsNearBy(double x, double y, double distance) throws InvalidDistanceValueException {
+		if(distance < 0)
+			throw new InvalidDistanceValueException("Invalid distance value");
+		
 		return this.entities
 				.values()
 			   .stream() 

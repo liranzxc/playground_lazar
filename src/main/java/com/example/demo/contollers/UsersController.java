@@ -57,21 +57,21 @@ public class UsersController {
 	
 	//1. Register a new user. //TODO require testing!!!!
 	@RequestMapping(value="/", method=RequestMethod.POST)
-	public UserEntity registerFromForm(@RequestBody UserTO userForm) {
-		UserEntity user = new UserEntity(userForm);
-		return user;
+	public UserTO registerFromForm(@RequestBody UserTO userForm) throws Exception {
+		this.userService.registerNewUser(userForm.ToEntity());
+		return userForm;
 	}
 	
 	
 	//2. Validate code
 	@RequestMapping(value="/confirm/{playground}/{email}/{code}", method=RequestMethod.GET
 			,produces=MediaType.APPLICATION_JSON_VALUE)
-	public UserEntity validateCode(
+	public UserTO validateCode(
 			@PathVariable("playground") String playground, 
 			@PathVariable("email") String email, 
 			@PathVariable("code") String code) throws InvalidCodeException {
 				if (code.equals(TEST_CODE)) {
-					return new UserEntity("GOOD CODE", "playground_lazar", "TEST", "TEST", "TEST"); //currently a TEST user.
+					return new UserTO(new UserEntity("GOOD CODE", "playground_lazar", "TEST", "TEST", "TEST")); //currently a TEST user.
 				}
 				else
 					throw new InvalidCodeException();

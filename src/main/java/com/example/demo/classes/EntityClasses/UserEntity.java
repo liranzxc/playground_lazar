@@ -22,15 +22,7 @@ public class UserEntity {
 		this.role = role;
 	}
 	//Constructor which get a NewUserForm and creates a new user from the details.
-	public UserEntity(UserTO userForm) {
-		super();
-		this.setUsername(userForm.getUsername());
-		this.setPlayground(playground);
-		this.setEmail(userForm.getEmail());
-		this.setAvatar(userForm.getAvatar());
-		this.setRole(userForm.getRole());
-	}
-	
+
 	public UserEntity() {
 		super();
 	}

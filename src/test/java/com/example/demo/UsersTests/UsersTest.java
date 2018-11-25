@@ -45,6 +45,8 @@ public class UsersTest {
 	private String code;
 	private String url;
 	
+	private RestTemplate rest;
+	
 	private enum types {
 
 		Player("player"), Manager("manger");
@@ -63,7 +65,7 @@ public class UsersTest {
 
 	};
 
-	RestTemplate rest = new RestTemplate();
+	
 
 	@Autowired
 	private UsersController userController = new UsersController();
@@ -72,6 +74,7 @@ public class UsersTest {
 	public void init() {
 		this.url = "http://localhost:" + port + "/playground/users";
 		this.code = userController.getTEST_CODE();
+		rest = new RestTemplate();
 	}
 
 	@Before
@@ -84,88 +87,42 @@ public class UsersTest {
 		this.userController.getService().cleanup();
 	}
 	
-	// 1. Test user registration
+	// 2. Test user registration
 	@Test
 	public void TestNewUserForm() {
 		//When I POST /playground/users
 		UserTO testUser = new UserTO("name", "mail@something.com", "avatar.url", types.Player.getType());
-		UserEntity user = userController.registerFromForm(testUser);
-//		Then the response is: 
-//		{
-//			"email": any string,
-//			"playground": any string,
-//			"username": any string,
-//			"avatar": any string,
-//			"role": any string,
-//			"points":"0"
-//		}
-
+		UserTO user = this.rest.postForObject(this.url + "/", testUser ,UserTO.class);
+		
 	}
 	
-	// 2.a Test user confirmation
+	// 3.a Test user confirmation
 	@Test
 	public void TestUserConfirmationByCode() {
-//		When I GET /playground/users/confirm with:
-//		{ 
-//			"playground":"playground_lazar",
-//			"email": any string,
-//			"code": any reasonable code from digits 
-//		}
-//		with headers:
-//			Content-Type: application/json
-
-		try {
-			UserEntity user = userController.validateCode("playground_lazar", "address@mail.end", code);
-		} catch (InvalidCodeException e) {
-			e.printStackTrace();
-		}
-		
-//		Then the response is: 
-//		{
-//			"email": any string,		
-//			"playground":"playground_lazar",
-//			"username": any string,
-//			"avatar": any string,
-//			"role": any string,
-//			"points":"0"
-//		}
-
+		//UserEntity user = userController.validateCode("playground_lazar", "address@mail.end", code);
+		UserTO user = this.rest.getForObject(this.url + "/confirm/{playground}/{email}/{code}",
+				UserTO.class, "playground_lazar", "address@mail.end", code);
 
 	}
 
-	// 2.b Test Code exception
+	// 3.b Test Code exception
 	@Test(expected=InvalidCodeException.class)
 	public void TestInvalidCodeThrowsException() throws InvalidCodeException {
-		UserEntity user = userController.validateCode("playground_lazar", "address@mail.end", "WrongCode");
+		UserTO user = userController.validateCode("playground_lazar", "address@mail.end", "WrongCode");
 	}
 	
-	// 3. Test user log in successfully 
+	// 4. Test user log in successfully 
 	@Test
 	public void TestUserLoginSuccessfully() throws Exception {
-//		When I GET /playground/users/login with:
-//		{ 
-//			"playground":"playground_lazar",
-//			"email": any string
-//		}
-//		with headers:
-//			Content-Type: application/json
-		UserEntity user = new UserEntity("address@mail.end", "playground_lazar", "tal", "anAvatar", types.Manager.getType());
-		userController.getService().registerNewUser(user);
-		userController.logIn("playground_lazar", "address@mail.end");
-		
-//		Then the response is: 
-//		{
-//			"email":any string,
-//			"playground":"playground_lazar",
-//			"username": any string,
-//			"avatar": any string,
-//			"role": any string,
-//			"points": any number equals or higher than 0
-//		}
 
+		UserTO user = new UserTO("address@mail.end", "playground_lazar", "tal", "anAvatar");
+		//userController.getService().registerNewUser(user);
+		//userController.logIn("playground_lazar", "address@mail.end");
+
+		
 	}
 	
-	// 4. Test update user
+	// 5. Test update user
 	@Test
 	public void TestUpdateUserFromDB() {
 
