@@ -10,6 +10,7 @@ import javax.annotation.PostConstruct;
 import org.springframework.stereotype.Service;
 
 import com.example.demo.classes.EntityClasses.UserEntity;
+import com.example.demo.classes.exceptions.InvalidEmailException;
 import com.example.demo.classes.exceptions.UserNotFoundException;
 
 @Service
@@ -20,13 +21,13 @@ public class UserServiceDummy implements IUserService{
 	
 	
 	@Override
-	public void registerNewUser(UserEntity user) throws Exception { //need to create new exception for already registered email
+	public void registerNewUser(UserEntity user) throws InvalidEmailException{ //need to create new exception for already registered email
 		allRegisteredUsers.put(user.getEmail(), user);
 	}
 
 	@Override
 	public void updateUserInfo(UserEntity user) {
-		allRegisteredUsers.put(user.getEmail(), user); //asserting not null in important fields.
+		allRegisteredUsers.put(user.getEmail(), user); //assume not null in important fields.
 	}
 
 	@Override
@@ -35,7 +36,7 @@ public class UserServiceDummy implements IUserService{
 	}
 
 	@Override
-	public void deleteUser(String email) throws Exception {
+	public void deleteUser(String email) throws UserNotFoundException {
 		UserEntity user = allRegisteredUsers.remove(email);
 		deletedUsers.put(user.getEmail(), user);
 		
