@@ -56,16 +56,14 @@ public class ElementsController {
 			produces = MediaType.APPLICATION_JSON_VALUE)
 	public ElementTO createElement(@RequestBody ElementTO element,
 			@PathVariable(name = "userPlayground", required = true) String userPlayground,
-			@PathVariable(name = "email", required = true) String email) throws InvalidEmailException, ElementAlreadyExistException, InvalidEmailException, com.example.demo.classes.exceptions.ElementAlreadyExistException {
+			@PathVariable(name = "email", required = true) String email) 
+					throws InvalidEmailException
+					,ElementAlreadyExistException {
 			
-
-		
 		if (!verifiedEmail(email)) {
 			System.err.println("create element throwing Exception");
 			throw new InvalidEmailException("Illeagal email has been given");
 		}
-
-		
 
 		this.elementService.addNewElement(element.ToEntity());
 
@@ -83,7 +81,9 @@ public class ElementsController {
 			@PathVariable(name = "userPlayground", required = true) String userPlayground,
 			@PathVariable(name = "email", required = true) String email,
 			@PathVariable(name = "playground", required = true) String playground,
-			@PathVariable(name = "id", required = true) String id) throws NullPointerException, ElementNotFoundException {
+			@PathVariable(name = "id", required = true) String id) 
+					throws NullPointerException
+					,ElementNotFoundException {
 
 		if (element == null) {
 			throw new NullPointerException("cant update element into nothing"); // TODO maybe changed exception thrown
@@ -140,7 +140,9 @@ public class ElementsController {
 			@PathVariable(name="userPlayground") String userPlayground
 			,@PathVariable(name="email") String email
 			,@RequestParam(name="size", required=false, defaultValue="10") int size
-			,@RequestParam(name="page", required=false, defaultValue="0") int page) {
+			,@RequestParam(name="page", required=false, defaultValue="0") int page) 
+					throws InvalidPageSizeRequestException
+					,InvalidPageRequestException {
 		
 		List<ElementEntity> mylist = elementService.getAllElements(size, page);
 		
@@ -168,7 +170,9 @@ public class ElementsController {
 			,@PathVariable("distance") double distance
 			,@RequestParam(name="size", required=false, defaultValue="10") int size
 			,@RequestParam(name="page", required=false, defaultValue="0") int page) 
-					throws InvalidDistanceValueException {
+					throws InvalidDistanceValueException
+					,InvalidPageSizeRequestException
+					,InvalidPageRequestException {
 		
 		if(distance < 0)  
 			throw new InvalidDistanceValueException("Distance must be equal or higher from 0");

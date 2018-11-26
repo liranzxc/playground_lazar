@@ -14,9 +14,13 @@ import com.example.demo.classes.exceptions.ElementAlreadyExistException;
 import com.example.demo.classes.exceptions.ElementNotFoundException;
 import com.example.demo.classes.exceptions.InvalidAttributeNameException;
 import com.example.demo.classes.exceptions.InvalidDistanceValueException;
+import com.example.demo.classes.exceptions.InvalidPageRequestException;
+import com.example.demo.classes.exceptions.InvalidPageSizeRequestException;
 
 @Service
 public class ElementServiceJpa implements IElementService {
+	
+	// TODO: Enum or final integers for Pagination parameters: default page and default size
 
 	@Autowired
 	private IElementRepository dataBase;
@@ -64,9 +68,10 @@ public class ElementServiceJpa implements IElementService {
 		if(this.dataBase.existsById(key)) {
 			this.dataBase.deleteById(key);
 		}
-		else {
-			throw new ElementNotFoundException();
-		}
+		// TODO: delete it, Eyal explained in class that it's not needed.
+//		else {
+//			throw new ElementNotFoundException();
+//		}
 		
 	}
 
@@ -80,7 +85,12 @@ public class ElementServiceJpa implements IElementService {
 	}
 
 	@Override
-	public List<ElementEntity> getAllElements(int size, int page) {
+	public List<ElementEntity> getAllElements(int size, int page) throws InvalidPageSizeRequestException, InvalidPageRequestException {
+		if(size < 1)
+			throw new InvalidPageSizeRequestException();
+		if(page < 0)
+			throw new InvalidPageRequestException();
+		
 		List<ElementEntity> list = StreamSupport
 				.stream(this.dataBase.findAll().spliterator(), false)
 				.skip(size *page)

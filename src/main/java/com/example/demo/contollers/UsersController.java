@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.example.demo.classes.EntityClasses.UserEntity;
 import com.example.demo.classes.ToClasses.UserTO;
-import com.example.demo.classes.exceptions.InvalidCodeException;
+import com.example.demo.classes.exceptions.InvalidConfirmationCodeException;
 import com.example.demo.classes.exceptions.UserNotFoundException;
 import com.example.demo.services.userServices.IUserService;
 import com.example.demo.services.userServices.UserServiceDummy;
@@ -58,7 +58,7 @@ public class UsersController {
 	
 	//1. Register a new user. //TODO require testing!!!!
 	@RequestMapping(value="/", method=RequestMethod.POST)
-	public UserTO registerFromForm(@RequestBody UserTO userForm) throws Exception {
+	public UserTO registerFromForm(@RequestBody UserTO userForm) {
 		this.userService.registerNewUser(userForm.ToEntity());
 		return userForm;
 	}
@@ -70,12 +70,12 @@ public class UsersController {
 	public UserTO validateCode(
 			@PathVariable("playground") String playground, 
 			@PathVariable("email") String email, 
-			@PathVariable("code") String code) throws InvalidCodeException {
+			@PathVariable("code") String code) throws InvalidConfirmationCodeException {
 				if (code.equals(TEST_CODE)) {
 					return new UserTO(new UserEntity("GOOD CODE", "playground_lazar", "TEST", "TEST", "TEST")); //currently a TEST user.
 				}
 				else
-					throw new InvalidCodeException();
+					throw new InvalidConfirmationCodeException();
 			//TODO in the future we should search for the relevant user in the database and return it.
 	}
 	

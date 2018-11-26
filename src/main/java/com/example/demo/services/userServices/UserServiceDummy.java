@@ -22,7 +22,8 @@ public class UserServiceDummy implements IUserService{
 	
 	
 	@Override
-	public void registerNewUser(UserEntity user){ //need to create new exception for already registered email
+	public void registerNewUser(UserEntity user){ 
+		// TODO: need to create new exception for already registered email
 		allRegisteredUsers.put(user.getEmail(), user);
 	}
 

@@ -35,7 +35,7 @@ import com.example.demo.Application;
 import com.example.demo.classes.EntityClasses.UserEntity;
 import com.example.demo.classes.ToClasses.ActivityTO;
 import com.example.demo.classes.ToClasses.UserTO;
-import com.example.demo.classes.exceptions.InvalidCodeException;
+import com.example.demo.classes.exceptions.InvalidConfirmationCodeException;
 import com.example.demo.classes.exceptions.ElementAlreadyExistException;
 import com.example.demo.contollers.UsersController;
 import com.example.demo.services.userServices.UserServiceDummy;
@@ -111,8 +111,8 @@ public class UsersTest {
 	}
 
 	// 3.b Test Code exception
-	@Test(expected=InvalidCodeException.class)
-	public void TestInvalidCodeThrowsException() throws InvalidCodeException {
+	@Test(expected=InvalidConfirmationCodeException.class)
+	public void TestInvalidCodeThrowsException() throws InvalidConfirmationCodeException {
 		
 		this.code = "222";
 		try
@@ -123,7 +123,7 @@ public class UsersTest {
 		catch (Exception e) {
 			// TODO: handle exception
 			
-			throw new InvalidCodeException();
+			throw new InvalidConfirmationCodeException();
 		}
 	
 	}
