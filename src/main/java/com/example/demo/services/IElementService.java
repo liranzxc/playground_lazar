@@ -8,7 +8,7 @@ import com.example.demo.classes.exceptions.ElementNotFoundException;
 import com.example.demo.classes.exceptions.InvalidAttributeNameException;
 import com.example.demo.classes.exceptions.InvalidDistanceValueException;
 
-public interface IElementService {
+public interface IElementService{
 
 	public void addNewElement(ElementEntity et) throws ElementAlreadyExistException;
 	public void updateElement(ElementEntity et) throws ElementNotFoundException;

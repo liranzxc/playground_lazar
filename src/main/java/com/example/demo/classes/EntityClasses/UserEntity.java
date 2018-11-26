@@ -1,10 +1,11 @@
 package com.example.demo.classes.EntityClasses;
 
-import org.springframework.stereotype.Component;
+import javax.persistence.Entity;
+import javax.persistence.Id;
 
-import com.example.demo.classes.ToClasses.UserTO;
 
-@Component
+
+@Entity
 public class UserEntity {
 	
 	private String email;
@@ -26,6 +27,7 @@ public class UserEntity {
 	public UserEntity() {
 		super();
 	}
+	@Id
 	public String getEmail() {
 		return email;
 	}
