@@ -1,4 +1,4 @@
-package com.example.demo.services;
+package com.example.demo.services.elementServices;
 
 import java.util.List;
 import java.util.Map;
@@ -16,7 +16,7 @@ import com.example.demo.classes.exceptions.ElementNotFoundException;
 import com.example.demo.classes.exceptions.InvalidAttributeNameException;
 import com.example.demo.classes.exceptions.InvalidDistanceValueException;
 
-@Service
+//@Service
 public class ElementServiceDummy implements IElementService {
 	
 	private Map<String, ElementEntity> entities;

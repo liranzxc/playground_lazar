@@ -30,8 +30,8 @@ import com.example.demo.classes.ToClasses.ElementTO;
 import com.example.demo.classes.exceptions.ElementAlreadyExistException;
 import com.example.demo.classes.exceptions.ElementNotFoundException;
 import com.example.demo.classes.exceptions.InvalidDistanceValueException;
-import com.example.demo.services.ElementServiceDummy;
-import com.example.demo.services.IElementService;
+import com.example.demo.services.elementServices.ElementServiceDummy;
+import com.example.demo.services.elementServices.IElementService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
