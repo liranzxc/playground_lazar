@@ -38,7 +38,7 @@ import com.example.demo.classes.ToClasses.UserTO;
 import com.example.demo.classes.exceptions.InvalidCodeException;
 import com.example.demo.classes.exceptions.ElementAlreadyExistException;
 import com.example.demo.contollers.UsersController;
-import com.example.demo.services.UserServiceDummy;
+import com.example.demo.services.userServices.UserServiceDummy;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)

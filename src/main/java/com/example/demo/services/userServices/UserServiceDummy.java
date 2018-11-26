@@ -1,4 +1,4 @@
-package com.example.demo.services;
+package com.example.demo.services.userServices;
 
 import java.util.List;
 import java.util.Map;
@@ -13,7 +13,7 @@ import com.example.demo.classes.EntityClasses.UserEntity;
 import com.example.demo.classes.exceptions.InvalidEmailException;
 import com.example.demo.classes.exceptions.UserNotFoundException;
 
-@Service
+//@Service
 public class UserServiceDummy implements IUserService{
 
 	private Map<String, UserEntity> allRegisteredUsers = new ConcurrentHashMap<>();;
@@ -22,7 +22,7 @@ public class UserServiceDummy implements IUserService{
 	
 	
 	@Override
-	public void registerNewUser(UserEntity user) throws InvalidEmailException{ //need to create new exception for already registered email
+	public void registerNewUser(UserEntity user){ //need to create new exception for already registered email
 		allRegisteredUsers.put(user.getEmail(), user);
 	}
 
