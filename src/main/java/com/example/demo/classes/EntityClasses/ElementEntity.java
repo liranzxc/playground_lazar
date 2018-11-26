@@ -4,12 +4,16 @@ import java.util.Date;
 import java.util.Map;
 import java.util.TreeMap;
 
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.Transient;
+
 import org.springframework.stereotype.Component;
 
 import com.example.demo.classes.Location;
 import com.example.demo.classes.ToClasses.ElementTO;
 
-@Component
+@Entity
 public class ElementEntity {
 
 	public ElementEntity() {
@@ -78,6 +82,7 @@ public class ElementEntity {
 		this.playground = playground;
 	}
 
+	@Id
 	public String getId() {
 		return id;
 	}
@@ -86,6 +91,7 @@ public class ElementEntity {
 		this.id = id;
 	}
 
+	@Transient
 	public Location getLocation() {
 		return location;
 	}
@@ -126,6 +132,7 @@ public class ElementEntity {
 		this.type = type;
 	}
 
+	@Transient
 	public Map<String, Object> getAttributes() {
 		return attributes;
 	}

@@ -1,5 +1,6 @@
 package com.example.demo.contollers;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -7,12 +8,17 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.example.demo.Repository.IActivityRepository;
 import com.example.demo.classes.ToClasses.ActivityTO;
 
 @RestController
 @RequestMapping("playground/activites")
 public class ActivitesController {
 
+	
+	@Autowired
+	IActivityRepository activityRepository;
+	
 	// activites controller
 
 	// 11. go to some activity and do something and return object
@@ -24,6 +30,7 @@ public class ActivitesController {
 			@PathVariable(name = "userPlayground") String userPlayground, 
 			@PathVariable(name = "email") String email) {
 		
+			activityRepository.save(activity.ToEntity());
 		
 		// just return activity for testing - Checked !
 		return activity;
