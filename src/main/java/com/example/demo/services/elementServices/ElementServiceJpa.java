@@ -4,7 +4,7 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
-import com.example.demo.Repository.ElementRepository;
+import com.example.demo.Repository.IElementRepository;
 import com.example.demo.classes.EntityClasses.ElementEntity;
 import com.example.demo.classes.exceptions.ElementAlreadyExistException;
 import com.example.demo.classes.exceptions.ElementNotFoundException;
@@ -14,12 +14,11 @@ import com.example.demo.classes.exceptions.InvalidDistanceValueException;
 public class ElementServiceJpa implements IElementService {
 
 	@Autowired
-	private ElementRepository dateBase;
+	private IElementRepository dateBase;
 	
 	
 	@Override
 	public void addNewElement(ElementEntity et) throws ElementAlreadyExistException {
-		// TODO Auto-generated method stub
 		
 	}
 

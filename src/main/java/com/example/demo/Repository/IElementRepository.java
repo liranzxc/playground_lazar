@@ -4,6 +4,6 @@ import org.springframework.data.repository.CrudRepository;
 
 import com.example.demo.classes.EntityClasses.ElementEntity;
 
-public interface ElementRepository extends CrudRepository<ElementEntity, String> {
+public interface IElementRepository extends CrudRepository<ElementEntity, String> {
 
 }
