@@ -18,8 +18,8 @@ import com.example.demo.classes.EntityClasses.UserEntity;
 import com.example.demo.classes.ToClasses.UserTO;
 import com.example.demo.classes.exceptions.InvalidCodeException;
 import com.example.demo.classes.exceptions.UserNotFoundException;
-import com.example.demo.services.IUserService;
-import com.example.demo.services.UserServiceDummy;
+import com.example.demo.services.userServices.IUserService;
+import com.example.demo.services.userServices.UserServiceDummy;
 
 @RestController
 @RequestMapping("playground/users")
