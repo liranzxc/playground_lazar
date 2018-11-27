@@ -22,7 +22,7 @@ import com.example.demo.classes.ToClasses.ElementTO;
 import com.example.demo.classes.exceptions.ElementAlreadyExistException;
 import com.example.demo.classes.exceptions.ElementNotFoundException;
 import com.example.demo.classes.exceptions.InvalidDistanceValueException;
-
+import com.example.demo.classes.exceptions.InvalidEmailException;
 import com.example.demo.services.elementServices.IElementService;
 
 
@@ -114,7 +114,26 @@ public class ElementTest {
 		this.elementService.addNewElement(eto.ToEntity());
 
 	}
+	
+	
+	@Test(expected=InvalidEmailException.class)
+	public void createElementWithInvalidEmailAndFail() throws InvalidEmailException {
+		String usrPlayground = "lazar_playground";
+		String email = "badmail";
+		ElementTO eto = new ElementTO(this.demo_entity);
 
+		// when
+		try {
+			this.restTemplate.postForObject(this.url + "/{userPlayground}/{email}", eto, ElementTO.class, usrPlayground,
+					email);
+		} catch (Exception e) {
+			throw new InvalidEmailException("cant create an element with invalid email: " + email);
+		}
+	}
+	
+	
+	
+	
 	@Test
 	public void updateElementSuccessfully() throws ElementAlreadyExistException {
 		//given 
@@ -131,6 +150,28 @@ public class ElementTest {
 								eto, userPlayground, email, playground, id);
 				
 	}
+	
+	
+	@Test(expected=ElementNotFoundException.class)
+	public void updateElementThatDoesntExist() throws ElementNotFoundException {
+		ElementTO eto = new ElementTO(demo_entity);		
+		String userPlayground = "lazar_2019";
+		String email = "demo@gmail.com";
+		String playground = eto.getPlayground();
+		String id = eto.getId();
+		
+		//when 
+		try {
+		this.restTemplate.put(this.url + "/{userPlayground}/{email}/{playground}/{id}",
+								eto, userPlayground, email, playground, id);
+		}catch(Exception e) {
+			throw new ElementNotFoundException("you cant update an element that doesnt exist");
+		}
+		
+	}
+	
+	
+	
 
 	@Test
 	public void getSpecificElementSuccess() throws ElementNotFoundException, ElementAlreadyExistException {
@@ -164,20 +205,18 @@ public class ElementTest {
 	public void getSpecificElementFail() throws ElementNotFoundException {
 		//given element not in database (tearDown and setup take care of that)
 		
-		//TODO understand how to wrap resTemplate methods to throw my exception
-		//when 1
-	//	String userPlayground = "lazar_playground";
-	//	String email = "demo@gmail.com";
-	//	String playground = "lazar_playground";
-	//	String id = "1";		
-    //		
-    //	this.restTemplate.getForObject(this.url + "/{userPlayground}/{email}/{playground}/{id}",
-	//									ElementTO.class, userPlayground, email, playground, id);
 		
-		//when 2
+		String userPlayground = "lazar_playground";
+		String email = "demo@gmail.com";
 		String playground = "lazar_playground";
-		String id = "1";	
-		this.elementService.getElement(playground, id);
+		String id = "1";		
+    	
+		try {
+    	this.restTemplate.getForObject(this.url + "/{userPlayground}/{email}/{playground}/{id}",
+										ElementTO.class, userPlayground, email, playground, id);
+		}catch(Exception e) {
+			throw new ElementNotFoundException("element doesnt exist");
+		}
 	}
 
 	
