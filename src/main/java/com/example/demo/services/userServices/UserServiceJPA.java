@@ -12,7 +12,7 @@ import com.example.demo.classes.EntityClasses.UserEntity;
 import com.example.demo.classes.exceptions.EmailAlreadyRegisteredException;
 import com.example.demo.classes.exceptions.UserNotFoundException;
 
-@Service
+//@Service
 public class UserServiceJPA implements IUserService{
 
 	@Autowired

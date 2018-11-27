@@ -16,7 +16,7 @@ public interface IElementService{
 	public void updateElement(ElementEntity et) throws ElementNotFoundException;
 	public ElementEntity getElement(String playground, String id) throws ElementNotFoundException;
 	
-	public void deleteElement(String playground, String id) throws ElementNotFoundException;
+	public void deleteElement(String playground, String id);
 	
 	public List<ElementEntity> getAllElements();
 	public List<ElementEntity> getAllElements(int size, int page) throws InvalidPageSizeRequestException, InvalidPageRequestException;

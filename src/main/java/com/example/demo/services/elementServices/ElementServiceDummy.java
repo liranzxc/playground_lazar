@@ -46,9 +46,6 @@ public class ElementServiceDummy implements IElementService {
 		
 			//extract element from the dataBase and update the relevant fields
 			ElementEntity dbElement = this.entities.get(updateElementKey);
-			if(et.getLocation() != null) {
-				dbElement.setLocation(et.getLocation());
-			}
 			if(et.getName() != null) {
 				dbElement.setName(et.getName());
 			}
@@ -58,6 +55,9 @@ public class ElementServiceDummy implements IElementService {
 			if(et.getCreatorEmail() != null) {
 				dbElement.setCreatorEmail(et.getCreatorEmail());
 			}
+			
+			dbElement.setX(et.getX());
+			dbElement.setY(et.getY());
 			
 			//override existing entity with updated entity 
 			this.entities.put(updateElementKey, dbElement);	
@@ -80,15 +80,11 @@ public class ElementServiceDummy implements IElementService {
 	}
 	
 	@Override
-	public void deleteElement(String playground, String id) throws ElementNotFoundException {
+	public void deleteElement(String playground, String id){
 		String elementKey = playground + id;
 		if(this.entities.containsKey(elementKey)) {
 			this.entities.remove(elementKey);
 		}
-		else{
-			throw new ElementNotFoundException();
-		}
-		
 	}
 
 	@Override
@@ -123,9 +119,8 @@ public class ElementServiceDummy implements IElementService {
 	}
 	
 	private boolean isNear(ElementEntity et, double x, double y, double distance) {
-		Location location = et.getLocation();
-		double etX = location.getX();
-		double etY = location.getY();
+		double etX = et.getX();
+		double etY = et.getY();
 		
 		if(etX < x - distance || etX > x + distance) { // check if x isn't in range
 			return false;

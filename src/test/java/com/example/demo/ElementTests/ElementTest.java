@@ -1,23 +1,15 @@
 package com.example.demo.ElementTests;
 
-import static org.junit.Assert.assertThat;
+
 import static org.junit.Assert.assertTrue;
-
-import java.time.LocalDate;
 import java.util.Date;
-import java.util.HashMap;
-
 import javax.annotation.PostConstruct;
-
-import org.hibernate.validator.internal.constraintvalidators.bv.AssertTrueValidator;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.boot.web.server.LocalServerPort;
-import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 
-import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -30,10 +22,9 @@ import com.example.demo.classes.ToClasses.ElementTO;
 import com.example.demo.classes.exceptions.ElementAlreadyExistException;
 import com.example.demo.classes.exceptions.ElementNotFoundException;
 import com.example.demo.classes.exceptions.InvalidDistanceValueException;
-import com.example.demo.services.elementServices.ElementServiceDummy;
+
 import com.example.demo.services.elementServices.IElementService;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
+
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
@@ -281,15 +272,15 @@ public class ElementTest {
 		
 		// Feature 11 - scenario 1
 		@Test
-		public void SearchElementByHisID() throws ElementAlreadyExistException {
+		public void SearchElementByHisName() throws ElementAlreadyExistException {
 			// Given:
 			this.elementService.addNewElement(this.demo_entity);
 			
 			// When:
 			String userPlayground = "playground_lazar";
 			String email = "aviv@gmail.com";
-			String attributeName = "id";
-			String value = "1";
+			String attributeName = "name";
+			String value = "demo";
 			
 			// Than:
 			 ElementTO[] allElements = 

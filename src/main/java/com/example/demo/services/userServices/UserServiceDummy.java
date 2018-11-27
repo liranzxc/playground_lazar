@@ -13,7 +13,7 @@ import com.example.demo.classes.EntityClasses.UserEntity;
 import com.example.demo.classes.exceptions.InvalidEmailException;
 import com.example.demo.classes.exceptions.UserNotFoundException;
 
-//@Service
+@Service
 public class UserServiceDummy implements IUserService{
 
 	private Map<String, UserEntity> allRegisteredUsers = new ConcurrentHashMap<>();;

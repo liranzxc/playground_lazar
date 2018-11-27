@@ -2,10 +2,12 @@ package com.example.demo.contollers;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collector;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -178,22 +180,30 @@ public class ElementsController {
 			throw new InvalidDistanceValueException("Distance must be equal or higher from 0");
 		
 		
-		List<ElementEntity> allElementEntities = elementService.getAllElements(size, page);
+//		List<ElementEntity> allElementEntities = elementService.getAllElements(size, page);
+//		
+//		ArrayList<ElementEntity> allNearElementEntities = 
+//				allElementEntities.stream()  // transfer 
+//				.filter(  // filter by predicate
+//						e -> getDistanceBetween(e.getLocation(), new Location(x, y)) <= distance)
+//				.collect(Collectors.toCollection(ArrayList::new));  // transfer to array
+//		
+//		allNearElementEntities.trimToSize();
+//		
+//		ElementTO[] allNearElementsTO = new ElementTO[allNearElementEntities.size()];
+//		for(int i = 0; i < allNearElementsTO.length; i++) {
+//			allNearElementsTO[i] = new ElementTO(allNearElementEntities.get(i));
+//		}
+//		
+		List<ElementEntity> nearBy = this.elementService
+				.getAllElementsNearBy(x, y, distance);
 		
-		ArrayList<ElementEntity> allNearElementEntities = 
-				allElementEntities.stream()  // transfer 
-				.filter(  // filter by predicate
-						e -> getDistanceBetween(e.getLocation(), new Location(x, y)) <= distance)
-				.collect(Collectors.toCollection(ArrayList::new));  // transfer to array
+		return nearBy.stream()
+				.map(ee -> new ElementTO(ee))
+				.collect(Collectors.toList())
+				.toArray(new ElementTO[nearBy.size()]);
 		
-		allNearElementEntities.trimToSize();
 		
-		ElementTO[] allNearElementsTO = new ElementTO[allNearElementEntities.size()];
-		for(int i = 0; i < allNearElementsTO.length; i++) {
-			allNearElementsTO[i] = new ElementTO(allNearElementEntities.get(i));
-		}
-		
-		return allNearElementsTO;
 	}
 	
 	

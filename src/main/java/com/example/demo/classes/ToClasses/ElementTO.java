@@ -57,7 +57,7 @@ public class ElementTO {
 		
 		this.playground = entity.getPlayground();
 		this.id = entity.getId();
-		this.location = entity.getLocation();
+		this.location = new Location(entity.getX(), entity.getY());
 		this.name = entity.getName();
 		this.creationDate = entity.getCreationDate();
 		this.expireDate = entity.getExpireDate();
