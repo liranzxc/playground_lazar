@@ -1,4 +1,4 @@
-package com.example.demo.classes.ToClasses;
+package com.example.demo.classes.to;
 
 import java.util.Date;
 import java.util.Map;
@@ -7,7 +7,7 @@ import java.util.TreeMap;
 import org.springframework.stereotype.Component;
 
 import com.example.demo.classes.Location;
-import com.example.demo.classes.EntityClasses.ElementEntity;
+import com.example.demo.classes.entities.ElementEntity;
 
 @Component
 public class ElementTO {

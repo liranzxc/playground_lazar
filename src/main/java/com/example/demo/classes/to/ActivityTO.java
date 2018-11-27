@@ -1,17 +1,13 @@
-package com.example.demo.classes.EntityClasses;
+package com.example.demo.classes.to;
 
 import java.util.Map;
 
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Transient;
-
 import org.springframework.stereotype.Component;
 
-import com.example.demo.classes.ToClasses.ActivityTO;
+import com.example.demo.classes.entities.ActivityEntity;
 
-@Entity
-public class ActivityEntity {
+@Component
+public class ActivityTO {
 		private String playground;
 		private String id;
 		private String elementPlayground;
@@ -20,10 +16,10 @@ public class ActivityEntity {
 		private String playerPlayground;
 		private String playerEmail;
 		
-		public ActivityEntity() {
+		public ActivityTO() {
 			super();
 		}
-		public ActivityEntity(String playground, String id, String elementPlayground, String elementId, String type,
+		public ActivityTO(String playground, String id, String elementPlayground, String elementId, String type,
 				String playerPlayground, String playerEmail, Map<String, Object> attributes) {
 			super();
 			this.playground = playground;
@@ -35,24 +31,12 @@ public class ActivityEntity {
 			this.playerEmail = playerEmail;
 			this.attributes = attributes;
 		}
-		public ActivityEntity(ActivityTO activityTO) {
-			// TODO Auto-generated constructor stub
-			this.id = activityTO.getId();
-			this.playground  = activityTO.getPlayground();
-			this.elementPlayground = activityTO.getElementPlayground();
-			this.elementId = activityTO.getElementId() ;
-			this.type = activityTO.getType();
-			this.playerPlayground = activityTO.getPlayerPlayground();
-			this.playerEmail = getPlayerEmail();
-			this.attributes = getAttributes();
-		}
 		public String getPlayground() {
 			return playground;
 		}
 		public void setPlayground(String playground) {
 			this.playground = playground;
 		}
-		@Id
 		public String getId() {
 			return id;
 		}
@@ -89,7 +73,6 @@ public class ActivityEntity {
 		public void setPlayerEmail(String playerEmail) {
 			this.playerEmail = playerEmail;
 		}
-		@Transient
 		public Map<String, Object> getAttributes() {
 			return attributes;
 		}
@@ -97,4 +80,9 @@ public class ActivityEntity {
 			this.attributes = attributes;
 		}
 		private Map<String,Object> attributes;
+
+		public ActivityEntity ToEntity() {
+			// TODO Auto-generated method stub
+			return new ActivityEntity(this);
+		}
 }

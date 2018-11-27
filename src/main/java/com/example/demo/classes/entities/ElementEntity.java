@@ -1,4 +1,4 @@
-package com.example.demo.classes.EntityClasses;
+package com.example.demo.classes.entities;
 
 import java.util.Date;
 import java.util.Map;

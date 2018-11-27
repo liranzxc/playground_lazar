@@ -1,12 +1,16 @@
-package com.example.demo.classes.EntityClasses;
+package com.example.demo.classes.entities;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.Table;
 
 
 
 @Entity
+@Table(name = "USERS")
 public class UserEntity {
+	private static int ID = 0;
+
 	
 	private String email;
 	private String playground;
@@ -14,8 +18,10 @@ public class UserEntity {
 	private String avatar;
 	private String role;
 	private Long points = 0l; // new user always starts with 0 points
+	private String id;
 	public UserEntity(String email, String playground, String username, String avatar, String role) {
 		super();
+		this.id = String.valueOf(ID++);
 		this.email = email;
 		this.playground = playground;
 		this.username = username;
@@ -26,8 +32,10 @@ public class UserEntity {
 
 	public UserEntity() {
 		super();
+		this.id = String.valueOf(ID++);
 	}
-	@Id
+	
+
 	public String getEmail() {
 		return email;
 	}
@@ -63,6 +71,10 @@ public class UserEntity {
 	}
 	public void setPoints(Long points) {
 		this.points = points;
+	}
+	@Id
+	public String getId() {
+		return this.id;
 	}
 
 }

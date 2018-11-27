@@ -14,12 +14,12 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.example.demo.classes.EntityClasses.UserEntity;
-import com.example.demo.classes.ToClasses.UserTO;
+import com.example.demo.classes.entities.UserEntity;
 import com.example.demo.classes.exceptions.InvalidConfirmationCodeException;
 import com.example.demo.classes.exceptions.UserNotFoundException;
-import com.example.demo.services.userServices.IUserService;
-import com.example.demo.services.userServices.UserServiceDummy;
+import com.example.demo.classes.to.UserTO;
+import com.example.demo.services.userservices.IUserService;
+import com.example.demo.services.userservices.UserServiceDummy;
 
 @RestController
 @RequestMapping("playground/users")

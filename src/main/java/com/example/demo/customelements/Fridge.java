@@ -1,10 +1,10 @@
-package com.example.demo.CustomElements;
+package com.example.demo.customelements;
 
 import java.util.Date;
 import java.util.Map;
 
 import com.example.demo.classes.Location;
-import com.example.demo.classes.EntityClasses.ElementEntity;
+import com.example.demo.classes.entities.ElementEntity;
 
 public class Fridge extends ElementEntity{
 

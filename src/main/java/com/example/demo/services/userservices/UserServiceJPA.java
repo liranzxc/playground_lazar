@@ -1,4 +1,4 @@
-package com.example.demo.services.userServices;
+package com.example.demo.services.userservices;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -7,22 +7,22 @@ import java.util.stream.StreamSupport;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.example.demo.Repository.UserRepository;
-import com.example.demo.classes.EntityClasses.UserEntity;
+import com.example.demo.classes.entities.UserEntity;
 import com.example.demo.classes.exceptions.EmailAlreadyRegisteredException;
 import com.example.demo.classes.exceptions.UserNotFoundException;
+import com.example.demo.repository.IUserRepository;
 
 //@Service
 public class UserServiceJPA implements IUserService{
 
 	@Autowired
-	private UserRepository dataBase;
+	private IUserRepository dataBase;
 	
 	//TODO id must be fixed
 	
 	@Override
 	public void registerNewUser(UserEntity user) throws EmailAlreadyRegisteredException {
-		if (!dataBase.existsById(null)) {
+		if (!dataBase.existsById(user.getId())) {
 			dataBase.save(user);
 		}
 		else
@@ -32,7 +32,7 @@ public class UserServiceJPA implements IUserService{
 
 	@Override
 	public void updateUserInfo(UserEntity user) throws UserNotFoundException {
-		if (dataBase.existsById(null)) {
+		if (dataBase.existsById(user.getId())) {
 			dataBase.save(user);
 		}
 		else
@@ -77,5 +77,6 @@ public class UserServiceJPA implements IUserService{
 	public void cleanup() {
 		dataBase.deleteAll();
 	}
+	
 
 }

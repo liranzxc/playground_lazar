@@ -1,8 +1,8 @@
-package com.example.demo.services.userServices;
+package com.example.demo.services.userservices;
 
 import java.util.List;
 
-import com.example.demo.classes.EntityClasses.UserEntity;
+import com.example.demo.classes.entities.UserEntity;
 import com.example.demo.classes.exceptions.EmailAlreadyRegisteredException;
 import com.example.demo.classes.exceptions.InvalidEmailException;
 import com.example.demo.classes.exceptions.UserNotFoundException;

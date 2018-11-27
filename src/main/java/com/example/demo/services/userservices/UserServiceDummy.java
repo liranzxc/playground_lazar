@@ -1,4 +1,4 @@
-package com.example.demo.services.userServices;
+package com.example.demo.services.userservices;
 
 import java.util.List;
 import java.util.Map;
@@ -9,7 +9,7 @@ import javax.annotation.PostConstruct;
 
 import org.springframework.stereotype.Service;
 
-import com.example.demo.classes.EntityClasses.UserEntity;
+import com.example.demo.classes.entities.UserEntity;
 import com.example.demo.classes.exceptions.InvalidEmailException;
 import com.example.demo.classes.exceptions.UserNotFoundException;
 

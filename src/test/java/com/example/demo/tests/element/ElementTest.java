@@ -1,4 +1,4 @@
-package com.example.demo.ElementTests;
+package com.example.demo.tests.element;
 
 
 import static org.junit.Assert.assertTrue;
@@ -17,13 +17,13 @@ import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import com.example.demo.classes.Location;
-import com.example.demo.classes.EntityClasses.ElementEntity;
-import com.example.demo.classes.ToClasses.ElementTO;
+import com.example.demo.classes.entities.ElementEntity;
 import com.example.demo.classes.exceptions.ElementAlreadyExistException;
 import com.example.demo.classes.exceptions.ElementNotFoundException;
 import com.example.demo.classes.exceptions.InvalidDistanceValueException;
 import com.example.demo.classes.exceptions.InvalidEmailException;
-import com.example.demo.services.elementServices.IElementService;
+import com.example.demo.classes.to.ElementTO;
+import com.example.demo.services.elementservices.IElementService;
 
 
 @RunWith(SpringRunner.class)

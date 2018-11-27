@@ -1,4 +1,4 @@
-package com.example.demo.UsersTests;
+package com.example.demo.tests.user;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.extractProperty;
@@ -32,13 +32,13 @@ import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import com.example.demo.Application;
-import com.example.demo.classes.EntityClasses.UserEntity;
-import com.example.demo.classes.ToClasses.ActivityTO;
-import com.example.demo.classes.ToClasses.UserTO;
 import com.example.demo.classes.exceptions.InvalidConfirmationCodeException;
+import com.example.demo.classes.to.ActivityTO;
+import com.example.demo.classes.to.UserTO;
+import com.example.demo.classes.entities.UserEntity;
 import com.example.demo.classes.exceptions.ElementAlreadyExistException;
 import com.example.demo.contollers.UsersController;
-import com.example.demo.services.userServices.UserServiceDummy;
+import com.example.demo.services.userservices.UserServiceDummy;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)

@@ -1,4 +1,4 @@
-package com.example.demo.services.elementServices;
+package com.example.demo.services.elementservices;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -8,15 +8,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.example.demo.Repository.IElementRepository;
 import com.example.demo.classes.Location;
-import com.example.demo.classes.EntityClasses.ElementEntity;
+import com.example.demo.classes.entities.ElementEntity;
 import com.example.demo.classes.exceptions.ElementAlreadyExistException;
 import com.example.demo.classes.exceptions.ElementNotFoundException;
 import com.example.demo.classes.exceptions.InvalidAttributeNameException;
 import com.example.demo.classes.exceptions.InvalidDistanceValueException;
 import com.example.demo.classes.exceptions.InvalidPageRequestException;
 import com.example.demo.classes.exceptions.InvalidPageSizeRequestException;
+import com.example.demo.repository.IElementRepository;
 
 @Service
 public class ElementServiceJpa implements IElementService {
