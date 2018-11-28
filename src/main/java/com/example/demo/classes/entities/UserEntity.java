@@ -77,7 +77,7 @@ public class UserEntity {
 		return this.id;
 	}
 	
-	//TODO fix this
+	//empty setter for hiberanate, id should not be able to be change from the outside
 	public void setId(String id) {
 
 	}
