@@ -93,18 +93,13 @@ public class ElementServiceJpa implements IElementService {
 		if(page < 0)
 			throw new InvalidPageRequestException();
 		
-//		List<ElementEntity> list = StreamSupport
-//				.stream(this.dataBase.findAll().spliterator(), false)
-//				.skip(size *page)
-//				.limit(size)
-//				.collect(Collectors.toList());
-		
-		List<ElementEntity> list = this.getAllElements()
-				.stream()
+		List<ElementEntity> list = StreamSupport
+				.stream(this.dataBase.findAll().spliterator(), false)
 				.skip(size *page)
 				.limit(size)
 				.collect(Collectors.toList());
-				
+		
+
 		return list;
 	}
 

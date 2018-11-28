@@ -76,5 +76,10 @@ public class UserEntity {
 	public String getId() {
 		return this.id;
 	}
+	
+	//TODO fix this
+	public void setId(String id) {
+
+	}
 
 }
