@@ -20,8 +20,8 @@ public interface IElementService{
 	
 	public List<ElementEntity> getAllElements();
 	public List<ElementEntity> getAllElements(int size, int page) throws InvalidPageSizeRequestException, InvalidPageRequestException;
-	public List<ElementEntity> getAllElementsNearBy(double x, double y, double distance) throws InvalidDistanceValueException;
-	public List<ElementEntity> getAllElementsByAttributeAndValue(String attribute, String value) throws InvalidAttributeNameException;
+	public List<ElementEntity> getAllElementsNearBy(double x, double y, double distance, int size, int page) throws InvalidDistanceValueException;
+	public List<ElementEntity> getAllElementsByAttributeAndValue(String attribute, String value, int size, int page) throws InvalidAttributeNameException;
 	
 	public void cleanup();
 

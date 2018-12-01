@@ -96,7 +96,7 @@ public class ElementServiceDummy implements IElementService {
 	}
 
 	@Override
-	public List<ElementEntity> getAllElementsNearBy(double x, double y, double distance) throws InvalidDistanceValueException {
+	public List<ElementEntity> getAllElementsNearBy(double x, double y, double distance, int size ,int page) throws InvalidDistanceValueException {
 		if(distance < 0)
 			throw new InvalidDistanceValueException("Invalid distance value");
 		
@@ -104,6 +104,8 @@ public class ElementServiceDummy implements IElementService {
 				.values()
 			   .stream() 
 			   .filter(ee -> isNear(ee, x, y, distance))
+			   .skip(size * page)
+			   .limit(size)
 			   .collect(Collectors.toList());
 		
 	}
@@ -143,7 +145,7 @@ public class ElementServiceDummy implements IElementService {
 	}
 
 	@Override
-	public List<ElementEntity> getAllElementsByAttributeAndValue(String attribute, String value) throws InvalidAttributeNameException {
+	public List<ElementEntity> getAllElementsByAttributeAndValue(String attribute, String value, int size, int page) throws InvalidAttributeNameException {
 		List<ElementEntity> filteredElements;
 		
 		switch (attribute) {
@@ -154,6 +156,8 @@ public class ElementServiceDummy implements IElementService {
 					.values()
 					.stream()
 					.filter(e -> e.getPlayground().equals(value))
+					.skip(size * page)
+					.limit(size)
 					.collect(Collectors.toList());
 			break;
 			

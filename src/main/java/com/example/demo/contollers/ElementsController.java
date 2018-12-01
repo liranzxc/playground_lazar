@@ -194,7 +194,7 @@ public class ElementsController {
 //		}
 //		
 		List<ElementEntity> nearBy = this.elementService
-				.getAllElementsNearBy(x, y, distance);
+				.getAllElementsNearBy(x, y, distance,size, page);
 		
 		return nearBy.stream()
 				.map(ee -> new ElementTO(ee))
@@ -240,7 +240,7 @@ public class ElementsController {
 		}
 		
 		List<ElementEntity> requiredEntities = this.elementService
-				.getAllElementsByAttributeAndValue(attributeName, value)
+				.getAllElementsByAttributeAndValue(attributeName, value, size, page)
 				.stream().skip(size * page).limit(size)
 				.collect(Collectors.toCollection(ArrayList::new));
 		

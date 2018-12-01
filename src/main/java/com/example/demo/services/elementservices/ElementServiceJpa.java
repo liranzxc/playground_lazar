@@ -8,7 +8,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.example.demo.classes.Location;
 import com.example.demo.classes.entities.ElementEntity;
 import com.example.demo.classes.exceptions.ElementAlreadyExistException;
 import com.example.demo.classes.exceptions.ElementNotFoundException;
@@ -105,7 +104,7 @@ public class ElementServiceJpa implements IElementService {
 
 	@Override
 	@Transactional(readOnly=true)
-	public List<ElementEntity> getAllElementsNearBy(double x, double y, double distance)
+	public List<ElementEntity> getAllElementsNearBy(double x, double y, double distance, int size, int page)
 			throws InvalidDistanceValueException {
 		
 		if(distance < 0) {
@@ -115,6 +114,8 @@ public class ElementServiceJpa implements IElementService {
 			List<ElementEntity> list = StreamSupport
 					.stream(this.dataBase.findAll().spliterator(), false)
 					.filter(ee -> isNear(ee, x, y, distance))
+					.skip(size * page)
+					.limit(size)
 					.collect(Collectors.toList());
 			return list;
 		}
@@ -123,7 +124,7 @@ public class ElementServiceJpa implements IElementService {
 
 	@Override
 	@Transactional(readOnly=true)
-	public List<ElementEntity> getAllElementsByAttributeAndValue(String attribute, String value)
+	public List<ElementEntity> getAllElementsByAttributeAndValue(String attribute, String value, int size, int page)
 			throws InvalidAttributeNameException {
 		List<ElementEntity> filteredElements;
 		
@@ -151,6 +152,12 @@ public class ElementServiceJpa implements IElementService {
 		default:
 			throw new InvalidAttributeNameException("Attribute Name does not exist in Element");
 		}	
+		
+		
+		filteredElements = filteredElements.stream()
+							.skip(size * page)
+							.limit(size)
+							.collect(Collectors.toList());
 		return filteredElements;
 	}
 

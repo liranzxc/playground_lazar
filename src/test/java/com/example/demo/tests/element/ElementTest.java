@@ -314,12 +314,12 @@ public class ElementTest {
 //							this.url + "/{userPlayground}/{email}/near/{x}/{y}/{distance}" 
 //							,ElementTO[].class 
 //							,userPlayground, email, x, y, distance);
-//		}
+//		
 //		catch (Exception e) {  // TODO: replace to InvalidDistanceValueException
 //			success = true;
 //		}
 		
-		this.elementService.getAllElementsNearBy(x, y, distance);
+		this.elementService.getAllElementsNearBy(x, y, distance, 10, 1);
 		
 //		assertTrue(success);		
 	}	
