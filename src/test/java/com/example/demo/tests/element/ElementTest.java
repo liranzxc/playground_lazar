@@ -329,7 +329,7 @@ public class ElementTest {
 	// Feature 11 //
 	////////////////
 		
-	// Feature 11 - scenario 1
+	// scenario 1
 	@Test
 	public void SearchElementByHisName() throws ElementAlreadyExistException {
 		// Given:
@@ -357,7 +357,7 @@ public class ElementTest {
 	}	
 				
 		
-		// Feature 11 - scenario 2
+	// scenario 2
 		@Test
 		public void SearchElementByInvalidAttributeName() throws ElementAlreadyExistException {
 			// Given:

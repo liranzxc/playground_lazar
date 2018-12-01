@@ -4,10 +4,10 @@ import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
-import javax.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.example.demo.classes.entities.UserEntity;
 import com.example.demo.classes.exceptions.EmailAlreadyRegisteredException;
@@ -16,7 +16,7 @@ import com.example.demo.classes.exceptions.InvalidPageSizeRequestException;
 import com.example.demo.classes.exceptions.UserNotFoundException;
 import com.example.demo.repository.IUserRepository;
 
-//@Service
+@Service
 public class UserServiceJPA implements IUserService{
 
 	@Autowired
@@ -47,7 +47,7 @@ public class UserServiceJPA implements IUserService{
 	}
 
 	@Override
-	@Transactional
+	@Transactional(readOnly=true)
 	public UserEntity getUser(String email) throws UserNotFoundException {
 		if (dataBase.existsById(null)) {
 			return dataBase.findById(null).get();
@@ -69,7 +69,7 @@ public class UserServiceJPA implements IUserService{
 //	}
 
 	@Override
-	@Transactional
+	@Transactional(readOnly=true)
 	public List<UserEntity> getAllUsers(int size, int page) throws InvalidPageSizeRequestException, InvalidPageRequestException {
 		if(size < 1)
 			throw new InvalidPageSizeRequestException();

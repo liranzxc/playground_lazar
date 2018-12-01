@@ -6,6 +6,7 @@ import java.util.stream.StreamSupport;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
 import org.springframework.transaction.annotation.Transactional;
 
 import com.example.demo.classes.entities.ElementEntity;
@@ -154,11 +155,10 @@ public class ElementServiceJpa implements IElementService {
 		}	
 		
 		
-		filteredElements = filteredElements.stream()
+		return filteredElements.stream()
 							.skip(size * page)
 							.limit(size)
 							.collect(Collectors.toList());
-		return filteredElements;
 	}
 
 	@Override
@@ -192,5 +192,8 @@ public class ElementServiceJpa implements IElementService {
 		return true;
 	}
 
-
 }
+
+
+
+
