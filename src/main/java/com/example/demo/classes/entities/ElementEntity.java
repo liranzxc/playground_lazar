@@ -1,19 +1,21 @@
-package com.example.demo.classes.EntityClasses;
+package com.example.demo.classes.entities;
 
 import java.util.Date;
 import java.util.Map;
-import java.util.TreeMap;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.Lob;
+import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 import javax.persistence.Transient;
 
-import org.springframework.stereotype.Component;
-
 import com.example.demo.classes.Location;
-import com.example.demo.classes.ToClasses.ElementTO;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 @Entity
+@Table(name = "ELEMENTS")
 public class ElementEntity {
 
 	public ElementEntity() {
@@ -26,7 +28,9 @@ public class ElementEntity {
 
 	private String playground;
 	private String id;
-	private Location location;
+	//private Location location;
+	private double x;
+	private double y;
 	private String name;
 	private Date creationDate;
 	private Date expireDate;
@@ -34,6 +38,7 @@ public class ElementEntity {
 	private Map<String, Object> attributes;
 	private String creatorPlayground;
 	private String creatorEmail;
+	
 
 //	public ElementEntity(ElementTO elementTO) {
 //
@@ -59,7 +64,10 @@ public class ElementEntity {
 		ID++;
 		this.playground = playground;
 		this.id = id;
-		this.location = location;
+		//this.location = location;
+		// TODO: fix constructor to give x,y instead locations
+		this.x = location.getX();
+		this.y = location.getY();
 		this.name = name;
 		this.creationDate = creationDate;
 		this.expireDate = expireDate;
@@ -69,11 +77,8 @@ public class ElementEntity {
 		this.creatorEmail = creatorEmail;
 	}
 
-//	public ElementTO(String string, int i, Location location2, String string2, Date date, Date date2, String string3,
-//			TreeMap<String, Object> treeMap, String string4, String string5) {
-//		// TODO Auto-generated constructor stub
-//	}
 
+	//@Id
 	public String getPlayground() {
 		return playground;
 	}
@@ -86,19 +91,13 @@ public class ElementEntity {
 	public String getId() {
 		return id;
 	}
+	
 
 	public void setId(String id) {
 		this.id = id;
 	}
 
-	@Transient
-	public Location getLocation() {
-		return location;
-	}
 
-	public void setLocation(Location location) {
-		this.location = location;
-	}
 
 	public String getName() {
 		return name;
@@ -108,6 +107,7 @@ public class ElementEntity {
 		this.name = name;
 	}
 
+	@Temporal(TemporalType.TIMESTAMP)
 	public Date getCreationDate() {
 		return creationDate;
 	}
@@ -131,6 +131,27 @@ public class ElementEntity {
 	public void setType(String type) {
 		this.type = type;
 	}
+	
+
+	public double getX() {
+		return x;
+	}
+
+
+	public void setX(double x) {
+		this.x = x;
+	}
+
+
+	public double getY() {
+		return y;
+	}
+
+
+	public void setY(double y) {
+		this.y = y;
+	}
+
 
 	@Transient
 	public Map<String, Object> getAttributes() {
@@ -141,6 +162,23 @@ public class ElementEntity {
 		this.attributes = attributes;
 	}
 
+	@Lob
+	public String getJsonAttributes() {
+		try {
+			return new ObjectMapper().writeValueAsString(this.attributes);
+		} catch (Exception e) {
+			throw new RuntimeException(e);
+		}
+	}
+	
+	public void setJsonAttributes(String jsonAttributes) {
+		try {
+			this.attributes = new ObjectMapper().readValue(jsonAttributes, Map.class);
+		} catch (Exception e){
+			throw new RuntimeException(e);
+		}
+	}
+	
 	public String getCreatorPlayground() {
 		return creatorPlayground;
 	}
@@ -156,5 +194,24 @@ public class ElementEntity {
 	public void setCreatorEmail(String creatorEmail) {
 		this.creatorEmail = creatorEmail;
 	}
+
+
+	@Override
+	public String toString() {
+		return "ElementEntity [playground=" + playground + ", id=" + id + ", x=" + x + ", y=" + y + ", name=" + name
+				+ ", creationDate=" + creationDate + ", expireDate=" + expireDate + ", type=" + type + ", attributes="
+				+ attributes + ", creatorPlayground=" + creatorPlayground + ", creatorEmail=" + creatorEmail + "]";
+	}
+
+
+
+//	public String getDatabaseKey() {
+//		String key = this.playground + this.id;
+//		return key;
+//	}
+	
+	
+	
+	//public String toString
 	
 }

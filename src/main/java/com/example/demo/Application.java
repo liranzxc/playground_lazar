@@ -6,8 +6,8 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 
-import com.example.demo.Repository.UserRepository;
-import com.example.demo.classes.EntityClasses.UserEntity;
+import com.example.demo.classes.entities.UserEntity;
+import com.example.demo.repository.IUserRepository;
 
 @SpringBootApplication
 public class Application {
@@ -22,7 +22,7 @@ public class Application {
 	}
 
 	 @Bean
-	    public CommandLineRunner run(UserRepository userRepository) throws Exception {
+	    public CommandLineRunner run(IUserRepository userRepository) throws Exception {
 	        return args -> {
 	           
 	        	userRepository.save(new UserEntity("lirannh@gmail.com",

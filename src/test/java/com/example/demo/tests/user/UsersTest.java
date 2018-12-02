@@ -1,13 +1,7 @@
-package com.example.demo.UsersTests;
+package com.example.demo.tests.user;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.extractProperty;
-import static org.hamcrest.CoreMatchers.equalTo;
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertThat;
-
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import javax.annotation.PostConstruct;
@@ -20,25 +14,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.boot.web.server.LocalServerPort;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.junit4.SpringRunner;
-import org.springframework.util.LinkedMultiValueMap;
-import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
-import org.springframework.web.util.UriComponentsBuilder;
-
-import com.example.demo.Application;
-import com.example.demo.classes.EntityClasses.UserEntity;
-import com.example.demo.classes.ToClasses.ActivityTO;
-import com.example.demo.classes.ToClasses.UserTO;
 import com.example.demo.classes.exceptions.InvalidConfirmationCodeException;
-import com.example.demo.classes.exceptions.ElementAlreadyExistException;
-import com.example.demo.contollers.UsersController;
-import com.example.demo.services.userServices.UserServiceDummy;
+import com.example.demo.classes.to.UserTO;
+import com.example.demo.classes.entities.UserEntity;
+import com.example.demo.services.userservices.UserServiceDummy;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)

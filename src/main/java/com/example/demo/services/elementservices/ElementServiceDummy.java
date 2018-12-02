@@ -1,4 +1,4 @@
-package com.example.demo.services.elementServices;
+package com.example.demo.services.elementservices;
 
 import java.util.List;
 import java.util.Map;
@@ -10,7 +10,7 @@ import javax.annotation.PostConstruct;
 import org.springframework.stereotype.Service;
 
 import com.example.demo.classes.Location;
-import com.example.demo.classes.EntityClasses.ElementEntity;
+import com.example.demo.classes.entities.ElementEntity;
 import com.example.demo.classes.exceptions.ElementAlreadyExistException;
 import com.example.demo.classes.exceptions.ElementNotFoundException;
 import com.example.demo.classes.exceptions.InvalidAttributeNameException;
@@ -46,9 +46,6 @@ public class ElementServiceDummy implements IElementService {
 		
 			//extract element from the dataBase and update the relevant fields
 			ElementEntity dbElement = this.entities.get(updateElementKey);
-			if(et.getLocation() != null) {
-				dbElement.setLocation(et.getLocation());
-			}
 			if(et.getName() != null) {
 				dbElement.setName(et.getName());
 			}
@@ -58,6 +55,9 @@ public class ElementServiceDummy implements IElementService {
 			if(et.getCreatorEmail() != null) {
 				dbElement.setCreatorEmail(et.getCreatorEmail());
 			}
+			
+			dbElement.setX(et.getX());
+			dbElement.setY(et.getY());
 			
 			//override existing entity with updated entity 
 			this.entities.put(updateElementKey, dbElement);	
@@ -80,15 +80,11 @@ public class ElementServiceDummy implements IElementService {
 	}
 	
 	@Override
-	public void deleteElement(String playground, String id) throws ElementNotFoundException {
+	public void deleteElement(String playground, String id){
 		String elementKey = playground + id;
 		if(this.entities.containsKey(elementKey)) {
 			this.entities.remove(elementKey);
 		}
-		else{
-			throw new ElementNotFoundException();
-		}
-		
 	}
 
 	@Override
@@ -100,7 +96,7 @@ public class ElementServiceDummy implements IElementService {
 	}
 
 	@Override
-	public List<ElementEntity> getAllElementsNearBy(double x, double y, double distance) throws InvalidDistanceValueException {
+	public List<ElementEntity> getAllElementsNearBy(double x, double y, double distance, int size ,int page) throws InvalidDistanceValueException {
 		if(distance < 0)
 			throw new InvalidDistanceValueException("Invalid distance value");
 		
@@ -108,6 +104,8 @@ public class ElementServiceDummy implements IElementService {
 				.values()
 			   .stream() 
 			   .filter(ee -> isNear(ee, x, y, distance))
+			   .skip(size * page)
+			   .limit(size)
 			   .collect(Collectors.toList());
 		
 	}
@@ -123,9 +121,8 @@ public class ElementServiceDummy implements IElementService {
 	}
 	
 	private boolean isNear(ElementEntity et, double x, double y, double distance) {
-		Location location = et.getLocation();
-		double etX = location.getX();
-		double etY = location.getY();
+		double etX = et.getX();
+		double etY = et.getY();
 		
 		if(etX < x - distance || etX > x + distance) { // check if x isn't in range
 			return false;
@@ -148,7 +145,7 @@ public class ElementServiceDummy implements IElementService {
 	}
 
 	@Override
-	public List<ElementEntity> getAllElementsByAttributeAndValue(String attribute, String value) throws InvalidAttributeNameException {
+	public List<ElementEntity> getAllElementsByAttributeAndValue(String attribute, String value, int size, int page) throws InvalidAttributeNameException {
 		List<ElementEntity> filteredElements;
 		
 		switch (attribute) {
@@ -159,6 +156,8 @@ public class ElementServiceDummy implements IElementService {
 					.values()
 					.stream()
 					.filter(e -> e.getPlayground().equals(value))
+					.skip(size * page)
+					.limit(size)
 					.collect(Collectors.toList());
 			break;
 			

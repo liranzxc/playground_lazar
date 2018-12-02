@@ -1,8 +1,8 @@
-package com.example.demo.Repository;
+package com.example.demo.repository;
 
 import org.springframework.data.repository.CrudRepository;
 
-import com.example.demo.classes.EntityClasses.ElementEntity;
+import com.example.demo.classes.entities.ElementEntity;
 
 public interface IElementRepository extends CrudRepository<ElementEntity, String> {
 

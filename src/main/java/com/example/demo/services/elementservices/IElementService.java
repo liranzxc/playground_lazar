@@ -1,8 +1,8 @@
-package com.example.demo.services.elementServices;
+package com.example.demo.services.elementservices;
 
 import java.util.List;
 
-import com.example.demo.classes.EntityClasses.ElementEntity;
+import com.example.demo.classes.entities.ElementEntity;
 import com.example.demo.classes.exceptions.ElementAlreadyExistException;
 import com.example.demo.classes.exceptions.ElementNotFoundException;
 import com.example.demo.classes.exceptions.InvalidAttributeNameException;
@@ -16,12 +16,12 @@ public interface IElementService{
 	public void updateElement(ElementEntity et) throws ElementNotFoundException;
 	public ElementEntity getElement(String playground, String id) throws ElementNotFoundException;
 	
-	public void deleteElement(String playground, String id) throws ElementNotFoundException;
+	public void deleteElement(String playground, String id);
 	
 	public List<ElementEntity> getAllElements();
 	public List<ElementEntity> getAllElements(int size, int page) throws InvalidPageSizeRequestException, InvalidPageRequestException;
-	public List<ElementEntity> getAllElementsNearBy(double x, double y, double distance) throws InvalidDistanceValueException;
-	public List<ElementEntity> getAllElementsByAttributeAndValue(String attribute, String value) throws InvalidAttributeNameException;
+	public List<ElementEntity> getAllElementsNearBy(double x, double y, double distance, int size, int page) throws InvalidDistanceValueException;
+	public List<ElementEntity> getAllElementsByAttributeAndValue(String attribute, String value, int size, int page) throws InvalidAttributeNameException;
 	
 	public void cleanup();
 

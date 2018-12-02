@@ -1,4 +1,4 @@
-package com.example.demo.services.elementServices;
+package com.example.demo.services.elementservices;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -7,15 +7,16 @@ import java.util.stream.StreamSupport;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.example.demo.Repository.IElementRepository;
-import com.example.demo.classes.Location;
-import com.example.demo.classes.EntityClasses.ElementEntity;
+import org.springframework.transaction.annotation.Transactional;
+
+import com.example.demo.classes.entities.ElementEntity;
 import com.example.demo.classes.exceptions.ElementAlreadyExistException;
 import com.example.demo.classes.exceptions.ElementNotFoundException;
 import com.example.demo.classes.exceptions.InvalidAttributeNameException;
 import com.example.demo.classes.exceptions.InvalidDistanceValueException;
 import com.example.demo.classes.exceptions.InvalidPageRequestException;
 import com.example.demo.classes.exceptions.InvalidPageSizeRequestException;
+import com.example.demo.repository.IElementRepository;
 
 @Service
 public class ElementServiceJpa implements IElementService {
@@ -29,6 +30,7 @@ public class ElementServiceJpa implements IElementService {
 	// things like transactions and key logic need to be apply
 	
 	@Override
+	@Transactional
 	public void addNewElement(ElementEntity et) throws ElementAlreadyExistException {
 		String key = getKeyFromElementEntity(et);
 		if(!this.dataBase.existsById(key)) {
@@ -40,6 +42,7 @@ public class ElementServiceJpa implements IElementService {
 	}
 
 	@Override
+	@Transactional
 	public void updateElement(ElementEntity et) throws ElementNotFoundException {
 		String key = getKeyFromElementEntity(et);
 		if(this.dataBase.existsById(key)) {
@@ -52,6 +55,7 @@ public class ElementServiceJpa implements IElementService {
 	}
 
 	@Override
+	@Transactional(readOnly=true)
 	public ElementEntity getElement(String playground, String id) throws ElementNotFoundException {
 		String key = generateKeyFromPlaygroundAndId(playground, id);
 		if(this.dataBase.existsById(key)) {
@@ -63,19 +67,16 @@ public class ElementServiceJpa implements IElementService {
 	}
 
 	@Override
-	public void deleteElement(String playground, String id) throws ElementNotFoundException {
+	@Transactional
+	public void deleteElement(String playground, String id)  {
 		String key = generateKeyFromPlaygroundAndId(playground, id);
 		if(this.dataBase.existsById(key)) {
 			this.dataBase.deleteById(key);
 		}
-		// TODO: delete it, Eyal explained in class that it's not needed.
-//		else {
-//			throw new ElementNotFoundException();
-//		}
-		
 	}
 
 	@Override
+	@Transactional(readOnly=true)
 	public List<ElementEntity> getAllElements() {
 		List<ElementEntity> list = StreamSupport.
 				stream(this.dataBase.findAll().spliterator(), false)
@@ -85,6 +86,7 @@ public class ElementServiceJpa implements IElementService {
 	}
 
 	@Override
+	@Transactional(readOnly=true)
 	public List<ElementEntity> getAllElements(int size, int page) throws InvalidPageSizeRequestException, InvalidPageRequestException {
 		if(size < 1)
 			throw new InvalidPageSizeRequestException();
@@ -96,11 +98,14 @@ public class ElementServiceJpa implements IElementService {
 				.skip(size *page)
 				.limit(size)
 				.collect(Collectors.toList());
+		
+
 		return list;
 	}
 
 	@Override
-	public List<ElementEntity> getAllElementsNearBy(double x, double y, double distance)
+	@Transactional(readOnly=true)
+	public List<ElementEntity> getAllElementsNearBy(double x, double y, double distance, int size, int page)
 			throws InvalidDistanceValueException {
 		
 		if(distance < 0) {
@@ -110,6 +115,8 @@ public class ElementServiceJpa implements IElementService {
 			List<ElementEntity> list = StreamSupport
 					.stream(this.dataBase.findAll().spliterator(), false)
 					.filter(ee -> isNear(ee, x, y, distance))
+					.skip(size * page)
+					.limit(size)
 					.collect(Collectors.toList());
 			return list;
 		}
@@ -117,30 +124,63 @@ public class ElementServiceJpa implements IElementService {
 	}
 
 	@Override
-	public List<ElementEntity> getAllElementsByAttributeAndValue(String attribute, String value)
+	@Transactional(readOnly=true)
+	public List<ElementEntity> getAllElementsByAttributeAndValue(String attribute, String value, int size, int page)
 			throws InvalidAttributeNameException {
-		// TODO Auto-generated method stub
-		return null;
+		List<ElementEntity> filteredElements;
+		
+		switch (attribute) {
+		
+		case "name":
+		{
+			filteredElements = this.getAllElements()
+					.stream()
+					.filter(e -> e.getName().equals(value))
+					.collect(Collectors.toList());
+			break;
+		}
+		case "type":
+		{
+			filteredElements = this.getAllElements()
+					.stream()
+					.filter(e -> e.getType().equals(value))
+					.collect(Collectors.toList());
+			break;
+		}
+			
+		
+			
+		default:
+			throw new InvalidAttributeNameException("Attribute Name does not exist in Element");
+		}	
+		
+		
+		return filteredElements.stream()
+							.skip(size * page)
+							.limit(size)
+							.collect(Collectors.toList());
 	}
 
 	@Override
+	@Transactional
 	public void cleanup() {
 		this.dataBase.deleteAll();
 	}
 	
-	private String getKeyFromElementEntity(ElementEntity et) {
-		return et.getPlayground() + et.getId();
+	//TODO fix this method base on key that would be decided
+	private String getKeyFromElementEntity(ElementEntity entity) {
+		String key =  entity.getId();
+		return key;
 	}
 	
 	private String generateKeyFromPlaygroundAndId(String playground, String id) {
-		String key = playground + id;
+		String key = id;
 		return key;
 	}
 	
 	private boolean isNear(ElementEntity et, double x, double y, double distance) {
-		Location location = et.getLocation();
-		double etX = location.getX();
-		double etY = location.getY();
+		double etX = et.getX();
+		double etY = et.getY();
 		
 		if(etX < x - distance || etX > x + distance) { // check if x isn't in range
 			return false;
@@ -152,5 +192,8 @@ public class ElementServiceJpa implements IElementService {
 		return true;
 	}
 
-
 }
+
+
+
+
