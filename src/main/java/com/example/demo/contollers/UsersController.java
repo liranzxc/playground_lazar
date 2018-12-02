@@ -15,17 +15,14 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.demo.classes.entities.UserEntity;
+import com.example.demo.classes.exceptions.EmailAlreadyRegisteredException;
 import com.example.demo.classes.exceptions.InvalidConfirmationCodeException;
 import com.example.demo.classes.exceptions.UserNotFoundException;
-<<<<<<< HEAD
-import com.example.demo.services.userServices.IUserService;
-import com.example.demo.services.userServices.UserServiceDummy;
-=======
+
 import com.example.demo.classes.to.UserTO;
 import com.example.demo.services.userservices.IUserService;
 import com.example.demo.services.userservices.UserServiceDummy;
 
->>>>>>> de00f6df7e533af0bbc3c2cd91034e760c7ffc62
 @RestController
 @RequestMapping("playground/users")
 public class UsersController {
@@ -33,7 +30,7 @@ public class UsersController {
 	private String TEST_CODE = "123";
 	
 	@Autowired
-	private UserServiceDummy userService;
+	private IUserService userService;
 	
 	private enum types{
 		
@@ -63,7 +60,7 @@ public class UsersController {
 	
 	//1. Register a new user. //TODO require testing!!!!
 	@RequestMapping(value="/", method=RequestMethod.POST)
-	public UserTO registerFromForm(@RequestBody UserTO userForm) {
+	public UserTO registerFromForm(@RequestBody UserTO userForm) throws EmailAlreadyRegisteredException {
 		this.userService.registerNewUser(userForm.ToEntity());
 		return userForm;
 	}

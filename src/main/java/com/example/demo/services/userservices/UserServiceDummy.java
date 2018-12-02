@@ -15,7 +15,7 @@ import com.example.demo.classes.exceptions.InvalidPageRequestException;
 import com.example.demo.classes.exceptions.InvalidPageSizeRequestException;
 import com.example.demo.classes.exceptions.UserNotFoundException;
 
-@Service
+//@Service
 public class UserServiceDummy implements IUserService{
 
 	private Map<String, UserEntity> allRegisteredUsers = new ConcurrentHashMap<>();;
