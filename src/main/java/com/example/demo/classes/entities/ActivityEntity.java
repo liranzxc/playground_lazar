@@ -6,11 +6,13 @@ import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Transient;
 
+import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.stereotype.Component;
 
 import com.example.demo.classes.to.ActivityTO;
 
 @Entity
+@Document
 public class ActivityEntity {
 		private String playground;
 		private String id;

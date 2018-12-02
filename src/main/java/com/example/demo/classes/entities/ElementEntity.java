@@ -11,11 +11,14 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.persistence.Transient;
 
+import org.springframework.data.mongodb.core.mapping.Document;
+
 import com.example.demo.classes.Location;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 @Entity
-@Table(name = "ELEMENTS")
+@Document
+//@Table(name = "ELEMENTS")
 public class ElementEntity {
 
 	public ElementEntity() {

@@ -4,10 +4,13 @@ import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
+import org.springframework.data.mongodb.core.mapping.Document;
+
 
 
 @Entity
-@Table(name = "USERS")
+@Document
+//@Table(name = "USERS")
 public class UserEntity {
 	private static int ID = 0;
 
