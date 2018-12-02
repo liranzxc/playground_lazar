@@ -19,6 +19,7 @@ import org.springframework.web.client.RestTemplate;
 import com.example.demo.classes.exceptions.InvalidConfirmationCodeException;
 import com.example.demo.classes.to.UserTO;
 import com.example.demo.classes.entities.UserEntity;
+import com.example.demo.services.userservices.IUserService;
 import com.example.demo.services.userservices.UserServiceDummy;
 
 @RunWith(SpringRunner.class)
@@ -53,7 +54,7 @@ public class UsersTest {
 	
 
 	@Autowired
-	private UserServiceDummy userServices;
+	private IUserService userServices;
 	
 	@PostConstruct
 	public void init() {
@@ -116,7 +117,8 @@ public class UsersTest {
 		UserTO user = new UserTO("address@mail.end", "playground_lazar", "tal", "anAvatar");
 		userServices.registerNewUser(user.ToEntity());
 		
-		System.err.println(userServices.getAllUsers());
+		//System.err.println(userServices.getAllUsers(5, 1));
+		
 		
 		UserEntity actual = this.rest.getForObject(this.url + "/login/{playground}/{email}",
 				UserEntity.class, user.getPlayground(),user.getEmail());

@@ -49,8 +49,8 @@ public class UserServiceJPA implements IUserService{
 	@Override
 	@Transactional(readOnly=true)
 	public UserEntity getUser(String email) throws UserNotFoundException {
-		if (dataBase.existsById(null)) {
-			return dataBase.findById(null).get();
+		if (dataBase.existsById(email)) {
+			return dataBase.findById(email).get();
 		}
 		else
 			throw new UserNotFoundException("The user " +email +" not found.");

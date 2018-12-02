@@ -35,7 +35,7 @@ public class UserEntity {
 		this.id = String.valueOf(ID++);
 	}
 	
-
+	@Id
 	public String getEmail() {
 		return email;
 	}
@@ -72,7 +72,7 @@ public class UserEntity {
 	public void setPoints(Long points) {
 		this.points = points;
 	}
-	@Id
+	
 	public String getId() {
 		return this.id;
 	}
