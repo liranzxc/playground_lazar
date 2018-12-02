@@ -20,7 +20,6 @@ import com.example.demo.classes.exceptions.InvalidConfirmationCodeException;
 import com.example.demo.classes.exceptions.UserNotFoundException;
 import com.example.demo.services.userServices.IUserService;
 import com.example.demo.services.userServices.UserServiceDummy;
-
 @RestController
 @RequestMapping("playground/users")
 public class UsersController {
