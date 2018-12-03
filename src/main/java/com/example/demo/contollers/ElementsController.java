@@ -174,7 +174,7 @@ public class ElementsController {
 					,InvalidPageSizeRequestException
 					,InvalidPageRequestException {
 		
-		if(distance < 0)  
+		if(distance < 0.0)  
 			throw new InvalidDistanceValueException("Distance must be equal or higher from 0");
 		
 		
