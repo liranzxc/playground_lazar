@@ -3,6 +3,7 @@ package com.example.demo.contollers;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Random;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -51,6 +52,7 @@ public class UsersController {
 	    }
 	
 	};
+	
 
 	// user controller
 
@@ -58,7 +60,9 @@ public class UsersController {
 		return TEST_CODE;
 	}
 	
-	//1. Register a new user. //TODO require testing!!!!
+
+	
+	//1. Register a new user.
 	@RequestMapping(value="/", method=RequestMethod.POST)
 	public UserTO registerFromForm(@RequestBody UserTO userForm) throws EmailAlreadyRegisteredException {
 		this.userService.registerNewUser(userForm.ToEntity());
@@ -72,9 +76,11 @@ public class UsersController {
 	public UserTO validateCode(
 			@PathVariable("playground") String playground, 
 			@PathVariable("email") String email, 
-			@PathVariable("code") String code) throws InvalidConfirmationCodeException {
-				if (code.equals(TEST_CODE)) {
-					return new UserTO(new UserEntity("GOOD CODE", "playground_lazar", "TEST", "TEST", "TEST")); //currently a TEST user.
+			@PathVariable("code") String code) throws InvalidConfirmationCodeException, UserNotFoundException {
+				if (code.equals(userService.getUser(email).getCode())) {
+					UserTO validatedUser = new UserTO(userService.getUser(email));
+					validatedUser.setValidated(true);
+					return validatedUser;
 				}
 				else
 					throw new InvalidConfirmationCodeException();
@@ -86,9 +92,9 @@ public class UsersController {
 	@RequestMapping(value="/login/{playground}/{email}", method=RequestMethod.GET)
 	public UserEntity logIn
 	(@PathVariable("playground") String playground,
-	 @PathVariable("email") String email) throws Exception {
-		
-		return userService.getUser(email);
+	 @PathVariable("email") String email) throws UserNotFoundException {
+		//return userService.getUser(email);
+		return new UserEntity();
 		
 	}
 	
@@ -130,7 +136,7 @@ public class UsersController {
 	
 	public List<UserEntity> CreateUserDB()
 	{
-		return new LinkedList<UserEntity>(Arrays.asList(new UserEntity("lirannh@gmail.com", "play", "liran", "dog",types.Player.getAction()),
-				new UserEntity("aviv@gmail.com", "player2", "aviv", "fish",types.Player.getAction())));
+		return new LinkedList<UserEntity>(Arrays.asList(new UserEntity("lirannh@gmail.com", "play", "liran", "dog",types.Player.getAction(), false),
+				new UserEntity("aviv@gmail.com", "player2", "aviv", "fish",types.Player.getAction(), false)));
 	}
 }

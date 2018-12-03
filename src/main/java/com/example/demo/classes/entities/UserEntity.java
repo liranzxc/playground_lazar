@@ -2,8 +2,6 @@ package com.example.demo.classes.entities;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
-import javax.persistence.Table;
-
 import org.springframework.data.mongodb.core.mapping.Document;
 
 
@@ -17,12 +15,19 @@ public class UserEntity {
 	
 	private String email;
 	private String playground;
+
+
 	private String username;
 	private String avatar;
 	private String role;
 	private Long points = 0l; // new user always starts with 0 points
 	private String id;
-	public UserEntity(String email, String playground, String username, String avatar, String role) {
+	private String code;
+	private boolean isValidated;
+	
+
+	
+	public UserEntity(String email, String playground, String username, String avatar, String role, boolean validated) {
 		super();
 		this.id = String.valueOf(ID++);
 		this.email = email;
@@ -30,8 +35,19 @@ public class UserEntity {
 		this.username = username;
 		this.avatar = avatar;
 		this.role = role;
+		this.isValidated = validated;
 	}
 	//Constructor which get a NewUserForm and creates a new user from the details.
+
+	
+	
+	public boolean isValidated() {
+		return isValidated;
+	}
+
+	public void setValidated(boolean validated) {
+		this.isValidated = validated;
+	}
 
 	public UserEntity() {
 		super();
@@ -83,6 +99,16 @@ public class UserEntity {
 	//empty setter for hiberanate, id should not be able to be change from the outside
 	public void setId(String id) {
 
+	}
+	
+	public String getCode() {
+		return code;
+	}
+
+
+
+	public void setCode(String code) {
+		this.code = code;
 	}
 
 }

@@ -16,6 +16,8 @@ import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.web.client.RestTemplate;
+
+import com.example.demo.classes.exceptions.EmailAlreadyRegisteredException;
 import com.example.demo.classes.exceptions.InvalidConfirmationCodeException;
 import com.example.demo.classes.to.UserTO;
 import com.example.demo.classes.entities.UserEntity;
@@ -74,25 +76,28 @@ public class UsersTest {
 		userServices.cleanup();
 	}
 	
-	// 2. Test user registration
+	// 1. Test user registration
 	@Test
 	public void TestNewUserForm() {
 		//When I POST /playground/users
-		UserTO testUser = new UserTO("name", "mail@something.com", "avatar.url", types.Player.getType());
+		UserTO testUser = new UserTO("name", "mail@something.com", "avatar.url", types.Player.getType(), false);
 		UserTO user = this.rest.postForObject(this.url + "/", testUser ,UserTO.class);
 		
 	}
 	
-	// 3.a Test user confirmation
+	// 2.a Test user confirmation
 	@Test
-	public void TestUserConfirmationByCode() {
-		this.code = "123";
+	public void TestUserConfirmationByCode() throws EmailAlreadyRegisteredException {
+		this.code = "Code";
+		UserTO testUser = new UserTO("name", "mail@something.com", "avatar.url", types.Player.getType(), false);
+		userServices.registerNewUser(testUser.ToEntity());
+		
 		UserTO user = this.rest.getForObject(this.url + "/confirm/{playground}/{email}/{code}",
 				UserTO.class, "playground_lazar", "address@mail.end", code);
 
 	}
 
-	// 3.b Test Code exception
+	// 2.b Test Code exception
 	@Test(expected=InvalidConfirmationCodeException.class)
 	public void TestInvalidCodeThrowsException() throws InvalidConfirmationCodeException {
 		
@@ -103,42 +108,38 @@ public class UsersTest {
 					UserTO.class, "playground_lazar", "address@mail.end", code);
 		}
 		catch (Exception e) {
-			// TODO: handle exception
-			
 			throw new InvalidConfirmationCodeException();
 		}
 	
 	}
 	
-	// 4. Test user log in successfully 
+	// 3. Test user log in successfully 
 	@Test
 	public void TestUserLoginSuccessfully() throws Exception {
-
-		UserTO user = new UserTO("address@mail.end", "playground_lazar", "tal", "anAvatar");
+		System.out.println("test login");
+		Map<String, String> map = new HashMap<String, String>();
+		map.put("playground", "playground_lazar");
+		map.put("email", "address@mail.end");
+		UserTO user = new UserTO("tal", "address@mail.end", "anAvatr", types.Manager.getType(), true);
 		userServices.registerNewUser(user.ToEntity());
 		
 		//System.err.println(userServices.getAllUsers(5, 1));
-		
-		
+
 		UserEntity actual = this.rest.getForObject(this.url + "/login/{playground}/{email}",
-				UserEntity.class, user.getPlayground(),user.getEmail());
+				UserEntity.class, map);
 		
 		System.err.println(actual);
 		assertEquals(user.getEmail(), actual.getEmail());
-		
-		
-
-		
 	}
 	
-	// 5. Test update user
+	// 4. Test update user
 	@Test
 	public void TestUpdateUserFromDB() {
 		Map<String, String> map = new HashMap<String, String>();
 		map.put("playground", "play");
 		map.put("email", "lirannh@gmail.com");
 
-		UserTO userto = new UserTO("liranzxc", "lirannh@gmail.com", "DOG", types.Manager.getType());
+		UserTO userto = new UserTO("liranzxc", "lirannh@gmail.com", "DOG", types.Manager.getType(), false);
 
 		rest.put(url + "/{playground}/{email}", userto, map);
 		

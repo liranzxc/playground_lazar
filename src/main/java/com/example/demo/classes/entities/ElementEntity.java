@@ -155,7 +155,6 @@ public class ElementEntity {
 		this.y = y;
 	}
 
-
 	@Transient
 	public Map<String, Object> getAttributes() {
 		return attributes;

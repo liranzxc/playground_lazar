@@ -7,18 +7,21 @@ import com.example.demo.classes.entities.UserEntity;
 @Component
 public class UserTO {
 
+
 	private String username;
 	private String email;
 	private String avatar;
 	private String role;
 	private String playground;
+	private boolean isValidated;
 	
-	public UserTO(String username, String email, String avatar, String role) {
+	public UserTO(String username, String email, String avatar, String role, boolean validated) {
 		this.username = username;
 		this.email = email;
 		this.avatar = avatar;
 		this.role = role;
 		this.playground = "playground_lazar";
+		this.isValidated = validated;
 	}
 
 	public String getUsername() {
@@ -78,9 +81,17 @@ public class UserTO {
 	// new method !! Liran Nachman
 	public UserEntity ToEntity()
 	{
-		
 		return new UserEntity(this.email, this.playground
-				, this.username, this.avatar, role);
+				, this.username, this.avatar, role, this.isValidated);
 	}
+	
+	public boolean isValidated() {
+		return isValidated;
+	}
+
+	public void setValidated(boolean validated) {
+		this.isValidated = validated;
+	}
+
 	
 }
