@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.example.demo.classes.entities.ElementEntity;
 import com.example.demo.classes.entities.UserEntity;
 import com.example.demo.classes.exceptions.EmailAlreadyRegisteredException;
 import com.example.demo.classes.exceptions.InvalidPageRequestException;
@@ -24,19 +25,16 @@ public class UserServiceJPA implements IUserService{
 	@Autowired
 	private IUserRepository dataBase;
 	private IGeneratorService generator;
-	//TODO id must be fixed
 	
 	@Override
 	@Transactional
 	public void registerNewUser(UserEntity user) throws EmailAlreadyRegisteredException {
-		if (!dataBase.existsById(user.getEmail())) {
-			user.setCode("Code");
+		if (!dataBase.existsByEmail(user.getEmail())) {
+			user.setCode("C0D3");
+			//user.setCode(generator.generateValidationCode());
 			System.err.println("Code for " +user.getEmail() +": " +user.getCode()); //Prints the code to the console
+			//generator.stopConsoleForCode();
 			dataBase.save(user);
-			
-			// Liran : why same if again ? you checked in line 32  :) .
-			if (dataBase.existsById(user.getEmail()))
-					System.out.println("found the user written");
 		}
 		else
 			throw new EmailAlreadyRegisteredException("The email address " + user.getEmail() +" is already registered.");
@@ -46,7 +44,7 @@ public class UserServiceJPA implements IUserService{
 	@Override
 	@Transactional
 	public void updateUserInfo(UserEntity user) throws UserNotFoundException {
-		if (dataBase.existsById(user.getEmail())) {
+		if (dataBase.existsByEmail(user.getId())) {
 			dataBase.save(user);
 		}
 		else
@@ -57,11 +55,11 @@ public class UserServiceJPA implements IUserService{
 	@Override
 	@Transactional(readOnly=true)
 	public UserEntity getUser(String email) throws UserNotFoundException {
-		if (dataBase.existsById(email)) {
-			return dataBase.findById(email).get();
+		if (dataBase.existsByEmail(email)) {
+			return dataBase.findByEmail(email).get();
 		}
 		else
-			throw new UserNotFoundException("The user " +email +" not found.");
+			throw new UserNotFoundException("The user with id " +email +" not found.");
 	}
 
 	//Not needed currently
@@ -97,12 +95,11 @@ public class UserServiceJPA implements IUserService{
 //		// TODO Auto-generated method stub
 //		return null;
 //	}
-
 	
 	@Override
 	@Transactional
 	public void cleanup() {
 		dataBase.deleteAll();
 	}
-
+	
 }

@@ -93,12 +93,9 @@ public class UsersController {
 	public UserEntity logIn
 	(@PathVariable("playground") String playground,
 	 @PathVariable("email") String email) throws UserNotFoundException {
-		//return userService.getUser(email);
-		return new UserEntity();
-		
+		return userService.getUser(email);
 	}
-	
-		//the returned user should be searched in the database.
+
 	
 	//4. update user by email and playground 
 	@RequestMapping(value="/{playground}/{email}" , method=RequestMethod.PUT,consumes=MediaType.APPLICATION_JSON_VALUE)

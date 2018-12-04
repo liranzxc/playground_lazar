@@ -2,6 +2,7 @@ package com.example.demo.classes.entities;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
+
 import org.springframework.data.mongodb.core.mapping.Document;
 
 
@@ -58,6 +59,7 @@ public class UserEntity {
 	public String getEmail() {
 		return email;
 	}
+	
 	public void setEmail(String email) {
 		this.email = email;
 	}

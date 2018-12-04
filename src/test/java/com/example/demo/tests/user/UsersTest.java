@@ -19,6 +19,7 @@ import org.springframework.web.client.RestTemplate;
 
 import com.example.demo.classes.exceptions.EmailAlreadyRegisteredException;
 import com.example.demo.classes.exceptions.InvalidConfirmationCodeException;
+import com.example.demo.classes.exceptions.UserNotFoundException;
 import com.example.demo.classes.to.UserTO;
 import com.example.demo.classes.entities.UserEntity;
 import com.example.demo.services.userservices.IUserService;
@@ -30,7 +31,6 @@ public class UsersTest {
 
 	@LocalServerPort
 	private int port;
-	private String code;
 	private String url;
 	
 	private RestTemplate rest;
@@ -61,7 +61,7 @@ public class UsersTest {
 	@PostConstruct
 	public void init() {
 		this.url = "http://localhost:" + port + "/playground/users";
-		this.code ="123";
+
 
 		rest = new RestTemplate();
 	}
@@ -88,20 +88,30 @@ public class UsersTest {
 	// 2.a Test user confirmation
 	@Test
 	public void TestUserConfirmationByCode() throws EmailAlreadyRegisteredException {
-		this.code = "Code";
-		UserTO testUser = new UserTO("name", "mail@something.com", "avatar.url", types.Player.getType(), false);
+		String testEmail = "mail@something.com";
+		UserTO testUser = new UserTO("name", testEmail , "avatar.url", types.Player.getType(), false);
 		userServices.registerNewUser(testUser.ToEntity());
+		String code = null;
+		try {
+			code = userServices.getUser(testEmail).getCode();
+		} catch (UserNotFoundException e) {
+			e.printStackTrace();
+		}
+		Map<String, String> map = new HashMap<String, String>();
+		map.put("playground", "playground_lazar");
+		map.put("email", "mail@something.com");
+		map.put("code", code);
+
 		
 		UserTO user = this.rest.getForObject(this.url + "/confirm/{playground}/{email}/{code}",
-				UserTO.class, "playground_lazar", "address@mail.end", code);
+				UserTO.class, map);
 
 	}
 
 	// 2.b Test Code exception
 	@Test(expected=InvalidConfirmationCodeException.class)
 	public void TestInvalidCodeThrowsException() throws InvalidConfirmationCodeException {
-		
-		this.code = "222";
+		String code = "0"; //since code is a 4-char string, this will always cause an InvalidConfirmationCodeException.
 		try
 		{
 			UserTO user = this.rest.getForObject(this.url + "/confirm/{playground}/{email}/{code}",
@@ -116,7 +126,6 @@ public class UsersTest {
 	// 3. Test user log in successfully 
 	@Test
 	public void TestUserLoginSuccessfully() throws Exception {
-		System.out.println("test login");
 		Map<String, String> map = new HashMap<String, String>();
 		map.put("playground", "playground_lazar");
 		map.put("email", "address@mail.end");
@@ -128,7 +137,6 @@ public class UsersTest {
 		UserEntity actual = this.rest.getForObject(this.url + "/login/{playground}/{email}",
 				UserEntity.class, map);
 		
-		System.err.println(actual);
 		assertEquals(user.getEmail(), actual.getEmail());
 	}
 	
