@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.example.demo.classes.entities.ElementEntity;
 import com.example.demo.classes.entities.UserEntity;
 import com.example.demo.classes.exceptions.EmailAlreadyRegisteredException;
 import com.example.demo.classes.exceptions.InvalidPageRequestException;
@@ -23,18 +24,16 @@ public class UserServiceJPA implements IUserService{
 
 	@Autowired
 	private IUserRepository dataBase;
-	private IGeneratorService generator;
+	//private IGeneratorService generator;
 	//TODO id must be fixed
 	
 	@Override
 	@Transactional
 	public void registerNewUser(UserEntity user) throws EmailAlreadyRegisteredException {
-		if (!dataBase.existsById(user.getEmail())) {
+		if (!dataBase.existsById(user.getId())) {
 			user.setCode("Code");
 			System.err.println("Code for " +user.getEmail() +": " +user.getCode()); //Prints the code to the console
 			dataBase.save(user);
-			if (dataBase.existsById(user.getEmail()))
-					System.out.println("found the user written");
 		}
 		else
 			throw new EmailAlreadyRegisteredException("The email address " + user.getEmail() +" is already registered.");
@@ -44,7 +43,7 @@ public class UserServiceJPA implements IUserService{
 	@Override
 	@Transactional
 	public void updateUserInfo(UserEntity user) throws UserNotFoundException {
-		if (dataBase.existsById(user.getEmail())) {
+		if (dataBase.existsById(user.getId())) {
 			dataBase.save(user);
 		}
 		else
@@ -59,7 +58,7 @@ public class UserServiceJPA implements IUserService{
 			return dataBase.findById(email).get();
 		}
 		else
-			throw new UserNotFoundException("The user " +email +" not found.");
+			throw new UserNotFoundException("The user with id " +email +" not found.");
 	}
 
 	//Not needed currently
@@ -95,12 +94,11 @@ public class UserServiceJPA implements IUserService{
 //		// TODO Auto-generated method stub
 //		return null;
 //	}
-
 	
 	@Override
 	@Transactional
 	public void cleanup() {
 		dataBase.deleteAll();
 	}
-
+	
 }

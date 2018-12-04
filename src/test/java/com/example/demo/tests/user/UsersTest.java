@@ -128,7 +128,6 @@ public class UsersTest {
 		UserEntity actual = this.rest.getForObject(this.url + "/login/{playground}/{email}",
 				UserEntity.class, map);
 		
-		System.err.println(actual);
 		assertEquals(user.getEmail(), actual.getEmail());
 	}
 	
