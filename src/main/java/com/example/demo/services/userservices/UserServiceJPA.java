@@ -24,15 +24,16 @@ public class UserServiceJPA implements IUserService{
 
 	@Autowired
 	private IUserRepository dataBase;
-	//private IGeneratorService generator;
-	//TODO id must be fixed
+	private IGeneratorService generator;
 	
 	@Override
 	@Transactional
 	public void registerNewUser(UserEntity user) throws EmailAlreadyRegisteredException {
-		if (!dataBase.existsById(user.getId())) {
-			user.setCode("Code");
+		if (!dataBase.existsByEmail(user.getEmail())) {
+			user.setCode("C0D3");
+			//user.setCode(generator.generateValidationCode());
 			System.err.println("Code for " +user.getEmail() +": " +user.getCode()); //Prints the code to the console
+			//generator.stopConsoleForCode();
 			dataBase.save(user);
 		}
 		else
@@ -43,7 +44,7 @@ public class UserServiceJPA implements IUserService{
 	@Override
 	@Transactional
 	public void updateUserInfo(UserEntity user) throws UserNotFoundException {
-		if (dataBase.existsById(user.getId())) {
+		if (dataBase.existsByEmail(user.getId())) {
 			dataBase.save(user);
 		}
 		else
@@ -54,8 +55,8 @@ public class UserServiceJPA implements IUserService{
 	@Override
 	@Transactional(readOnly=true)
 	public UserEntity getUser(String email) throws UserNotFoundException {
-		if (dataBase.existsById(email)) {
-			return dataBase.findById(email).get();
+		if (dataBase.existsByEmail(email)) {
+			return dataBase.findByEmail(email).get();
 		}
 		else
 			throw new UserNotFoundException("The user with id " +email +" not found.");
