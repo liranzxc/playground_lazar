@@ -20,7 +20,7 @@ import com.example.demo.services.otherservices.IGeneratorService;
 
 @Service
 public class UserServiceJPA implements IUserService{
-
+	
 	@Autowired
 	private IUserRepository dataBase;
 	private IGeneratorService generator;
@@ -33,6 +33,8 @@ public class UserServiceJPA implements IUserService{
 			user.setCode("Code");
 			System.err.println("Code for " +user.getEmail() +": " +user.getCode()); //Prints the code to the console
 			dataBase.save(user);
+			
+			// Liran : why same if again ? you checked in line 32  :) .
 			if (dataBase.existsById(user.getEmail()))
 					System.out.println("found the user written");
 		}
