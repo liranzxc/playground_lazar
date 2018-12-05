@@ -24,13 +24,15 @@ public class UserServiceJPA implements IUserService{
 	
 	@Autowired
 	private IUserRepository dataBase;
+	
+	@Autowired
 	private IGeneratorService generator;
 	
 	@Override
 	@Transactional
 	public void registerNewUser(UserEntity user) throws EmailAlreadyRegisteredException {
 		if (!dataBase.existsByEmail(user.getEmail())) {
-			user.setCode("C0D3");
+			user.setCode(generator.generateValidationCode());
 			//user.setCode(generator.generateValidationCode());
 			System.err.println("Code for " +user.getEmail() +": " +user.getCode()); //Prints the code to the console
 			//generator.stopConsoleForCode();
@@ -38,6 +40,7 @@ public class UserServiceJPA implements IUserService{
 		}
 		else
 			throw new EmailAlreadyRegisteredException("The email address " + user.getEmail() +" is already registered.");
+		
 		
 	}
 

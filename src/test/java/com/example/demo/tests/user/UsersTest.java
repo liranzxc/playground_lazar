@@ -85,6 +85,7 @@ public class UsersTest {
 		
 	}
 	
+	
 	// 2.a Test user confirmation
 	@Test
 	public void TestUserConfirmationByCode() throws EmailAlreadyRegisteredException {
