@@ -8,12 +8,16 @@ import org.springframework.stereotype.Service;
 @Service
 public class GeneratorService implements IGeneratorService {
 
-	private Scanner wait = new Scanner(System.in);
 
 	@Override
 	public void stopConsoleForCode() {
-		System.out.println("Copy the code you provided and then press any key.");
-		wait.next();
+		System.out.println("Copy the code you obtained and then press enter.");
+		  try
+	        {
+	            System.in.read();
+	        }  
+	        catch(Exception e)
+	        {}  
 	}
 
 	@Override

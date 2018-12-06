@@ -75,14 +75,21 @@ public class UserTO {
 		this.playground = userEntity.getPlayground();
 		this.role = userEntity.getRole();
 		this.username = userEntity.getUsername();
+		if (userEntity.getCode() == null)
+			this.isValidated = true;
+		else
+			this.isValidated = false;
 	}
 
 	// to Entity object 
 	// new method !! Liran Nachman
 	public UserEntity ToEntity()
 	{
-		return new UserEntity(this.email, this.playground
-				, this.username, this.avatar, role, this.isValidated);
+		UserEntity user = new UserEntity(this.email, this.playground, this.username, this.avatar, role);
+		if (this.isValidated == true) {
+			user.setCode(null);
+		}
+		return user;
 	}
 	
 	public boolean isValidated() {

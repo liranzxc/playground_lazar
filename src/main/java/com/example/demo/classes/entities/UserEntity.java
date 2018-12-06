@@ -13,10 +13,8 @@ import org.springframework.data.mongodb.core.mapping.Document;
 public class UserEntity {
 	private static int ID = 0;
 
-	
 	private String email;
 	private String playground;
-
 
 	private String username;
 	private String avatar;
@@ -24,11 +22,10 @@ public class UserEntity {
 	private Long points = 0l; // new user always starts with 0 points
 	private String id;
 	private String code;
-	private boolean isValidated;
 	
 
 	
-	public UserEntity(String email, String playground, String username, String avatar, String role, boolean validated) {
+	public UserEntity(String email, String playground, String username, String avatar, String role) {
 		super();
 		this.id = String.valueOf(ID++);
 		this.email = email;
@@ -36,19 +33,8 @@ public class UserEntity {
 		this.username = username;
 		this.avatar = avatar;
 		this.role = role;
-		this.isValidated = validated;
 	}
 	//Constructor which get a NewUserForm and creates a new user from the details.
-
-	
-	
-	public boolean isValidated() {
-		return isValidated;
-	}
-
-	public void setValidated(boolean validated) {
-		this.isValidated = validated;
-	}
 
 	public UserEntity() {
 		super();
