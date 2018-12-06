@@ -314,7 +314,7 @@ public class ElementTest {
 		
 	
 	// scenario 2
-	@Test(expected=InvalidDistanceValueException.class)
+	@Test
 	public void GetElementsFailedWithInvalidDistance() throws ElementAlreadyExistException, InvalidDistanceValueException{
 		
 		// Given:
@@ -338,20 +338,15 @@ public class ElementTest {
 			success = true;
 		}
 		
-		this.elementService.getAllElementsNearBy(x, y, distance, 10, 1);
+		//this.elementService.getAllElementsNearBy(x, y, distance, 10, 1);
 		
 		assertTrue(success);		
 	}	
 	
 
 	// scenario 3
-	@Test(expected=InvalidDistanceValueException.class)
-	public void GetTheFirstTenResultsForTwentyElementsInDisanceOneOrLower() throws ElementAlreadyExistException, InvalidDistanceValueException{
-		
-//		double sourceX = 0.;
-//		double sourceY = 0.;
-//		double destX = 0.;
-//		double destY = 0.;
+	@Test
+	public void GetTheFirstTenResultsFromTwentyElementsInDisanceOneOrLower() throws ElementAlreadyExistException, InvalidDistanceValueException{
 		
 		for(ElementEntity e : this.demo_entities) {
 			if(Integer.parseInt(e.getId()) % 2 == 1) {
@@ -377,17 +372,19 @@ public class ElementTest {
 		
 		// Than:
 		ElementTO[] allElements;
-//		boolean success = false;
-//		
-//		allElements = 
-//					this.restTemplate.getForObject(
-//							this.url + "/{userPlayground}/{email}/near/{x}/{y}/{distance}" 
-//							,ElementTO[].class 
-//							,userPlayground, email, x, y, distance);
-//		
-//		
-//		
-//		assertTrue(success);		
+		boolean success = false;
+		
+		allElements = 
+					this.restTemplate.getForObject(
+							this.url + "/{userPlayground}/{email}/near/{x}/{y}/{distance}" 
+							,ElementTO[].class 
+							,userPlayground, email, x, y, distance);
+		
+		if(allElements.length == 10)
+			success = true;
+		
+		
+		assertTrue(success);		
 	}	
 	
 	
