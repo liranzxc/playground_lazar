@@ -218,7 +218,6 @@ public class ElementTest {
 		elementTOFromDB = this.restTemplate.getForObject(this.url + "/{userPlayground}/{email}/{playground}/{id}",
 														ElementTO.class, userPlayground, email, playground, id);
 		
-		
 		//that
 		boolean success = true;
 		if(!elementTOFromDB.getId().equals(originalElementTO.getId())) {
