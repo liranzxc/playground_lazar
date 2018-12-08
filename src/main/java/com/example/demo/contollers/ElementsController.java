@@ -85,7 +85,7 @@ public class ElementsController {
 			throws NullPointerException, ElementNotFoundException {
 
 		if (element == null) {
-			throw new NullPointerException("cant update element into nothing"); // TODO maybe changed exception thrown
+			throw new NullPointerException("cant update element into nothing");
 		}
 		element.setCreatorEmail(email);
 		element.setCreatorPlayground(userPlayground);

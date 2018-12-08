@@ -30,7 +30,8 @@ public class ElementServiceJpa implements IElementService {
 	@Override
 	@Transactional
 	public void addNewElement(ElementEntity et) throws ElementAlreadyExistException {
-		String key = getKeyFromElementEntity(et);
+		String key = et.getKey();
+		System.err.println(key);
 		if (!this.dataBase.existsByKey(key)) {
 			this.dataBase.save(et);
 		} else {
@@ -41,9 +42,11 @@ public class ElementServiceJpa implements IElementService {
 	@Override
 	@Transactional
 	public void updateElement(ElementEntity et) throws ElementNotFoundException {
-		String key = getKeyFromElementEntity(et);
+		String key = et.getKey();
+		System.err.println(key);
 		if (this.dataBase.existsByKey(key)) {
-			this.dataBase.save(et);
+			this.dataBase.deleteByKey(key); // delete not updated element
+			this.dataBase.save(et); // save updated element
 		} else {
 			throw new ElementNotFoundException();
 		}
@@ -140,12 +143,6 @@ public class ElementServiceJpa implements IElementService {
 	@Transactional
 	public void cleanup() {
 		this.dataBase.deleteAll();
-	}
-
-	// TODO fix this method base on key that would be decided
-	private String getKeyFromElementEntity(ElementEntity entity) {
-		String key = entity.getKey();
-		return key;
 	}
 
 	private String generateKeyFromPlaygroundAndId(String playground, String id) {
