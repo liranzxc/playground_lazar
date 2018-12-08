@@ -59,8 +59,6 @@ public class ElementTest_Feature10 {
 	//	this.jsonMapper = new ObjectMapper();
 		this.url = "http://localhost:" + port + "/playground/elements";
 
-		//System.err.println(this.url);
-
 	}
 
 	@Before
@@ -90,7 +88,7 @@ public class ElementTest_Feature10 {
 
 
 ////////////////
-// Feature 11 //
+// Feature 10 //
 ////////////////
 
 // scenario 1

@@ -53,7 +53,7 @@ public class ElementsController {
 	// "demp777@gmail.com");
 
 	/*
-	 * Feature 6:
+	 * Feature 5:
 	 */
 	@RequestMapping(path = {
 			"/{userPlayground}/{email}" }, method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
@@ -73,7 +73,7 @@ public class ElementsController {
 	}
 
 	/*
-	 * Feature 7:
+	 * Feature 6:
 	 */
 	@RequestMapping(path = {
 			"/{userPlayground}/{email}/{playground}/{id}" }, method = RequestMethod.PUT, consumes = MediaType.APPLICATION_JSON_VALUE)
@@ -96,7 +96,7 @@ public class ElementsController {
 	}
 
 	/*
-	 * Feature 8:
+	 * Feature 7:
 	 */
 	@RequestMapping(path = {
 			"/{userPlayground}/{email}/{playground}/{id}" }, method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
@@ -125,7 +125,7 @@ public class ElementsController {
 	}
 
 	/*
-	 * Feature 9:
+	 * Feature 8:
 	 */
 	@RequestMapping(path = {
 			"/{userPlayground}/{email}/all" }, method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
@@ -151,7 +151,7 @@ public class ElementsController {
 		 */ }
 
 	/*
-	 * Feature 10:
+	 * Feature 9:
 	 */
 	@RequestMapping(path = {
 			"/{userPlayground}/{email}/near/{x}/{y}/{distance}" }, method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
@@ -192,7 +192,7 @@ public class ElementsController {
 	}
 
 	/*
-	 * Feature 11:
+	 * Feature 10:
 	 */
 	@RequestMapping(path = {
 			"/{userPlayground}/{email}/search/{attributeName}/{value}" }, method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)

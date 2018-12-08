@@ -37,7 +37,7 @@ import com.example.demo.services.elementservices.IElementService;
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
 public class ElementTest {
 
-	private int numOfDemoEntities = 50;
+	private int numOfDemoEntities = 20;
 	private ElementEntity[] demo_entities;
 	private ElementEntity demo_entity;
 
@@ -76,7 +76,7 @@ public class ElementTest {
 		this.restTemplate = new RestTemplate();
 		this.url = "http://localhost:" + port + "/playground/elements";
 
-		System.err.println(this.url);
+		//System.err.println(this.url);
 		ElementEntity.zeroID();
 		this.demo_entity = new ElementEntity("playground_lazar", new Location(0, 1), "demo", new Date(), null,
 				"demo type", null, "Aviv", "demo@gmail.com");
@@ -112,9 +112,10 @@ public class ElementTest {
 	// Feature 5 //
 	///////////////
 
+	// Scenario 1
 	@Test
 	public void createElementSuccsefully() {
-		String usrPlayground = "lazar_playground";
+		String usrPlayground = "playground_lazar";
 		String email = "demo@gmail.com";
 		ElementTO eto = new ElementTO(this.demo_entity);
 
@@ -133,28 +134,10 @@ public class ElementTest {
 		assertTrue(success);
 	}
 
-	@Test(expected = ElementAlreadyExistException.class)
-	public void createElementWhenElementAlreadyExist() throws ElementAlreadyExistException {
-		// given
-		this.elementService.addNewElement(demo_entity);
-
-		// when
-		String usrPlayground = "lazar_playground";
-		String email = "demo@gmail.com";
-		ElementTO eto = new ElementTO(demo_entity);
-
-		try {
-			this.restTemplate.postForObject(this.url + "/{userPlayground}/{email}", eto, ElementTO.class, usrPlayground,
-					email);
-
-		} catch (Exception e) {
-			throw new ElementAlreadyExistException();
-		}
-	}
-
+	// Scenario 2
 	@Test(expected = InvalidEmailException.class)
 	public void createElementWithInvalidEmailAndFail() throws InvalidEmailException {
-		String usrPlayground = "lazar_playground";
+		String usrPlayground = "playground_lazar";
 		String email = "badmail";
 		ElementTO eto = new ElementTO(this.demo_entity);
 
@@ -167,10 +150,33 @@ public class ElementTest {
 		}
 	}
 
+	// Scenario 3
+	@Test(expected = ElementAlreadyExistException.class)
+	public void createElementWhenElementAlreadyExist() throws ElementAlreadyExistException {
+		// given
+		this.elementService.addNewElement(demo_entity);
+
+		// when
+		String usrPlayground = "playground_lazar";
+		String email = "demo@gmail.com";
+		ElementTO eto = new ElementTO(demo_entity);
+
+		try {
+			this.restTemplate.postForObject(this.url + "/{userPlayground}/{email}", eto, ElementTO.class, usrPlayground,
+					email);
+
+		} catch (Exception e) {
+			throw new ElementAlreadyExistException();
+		}
+	}
+
+	
+
 	///////////////
 	// Feature 6 //
 	///////////////
 
+	// Scenario 1:
 	@Test
 	public void updateElementSuccessfully() throws ElementAlreadyExistException {
 		// given
@@ -188,6 +194,7 @@ public class ElementTest {
 
 	}
 
+	// Scenario 2:
 	@Test(expected = ElementNotFoundException.class)
 	public void updateElementThatDoesntExist() throws ElementNotFoundException {
 		ElementTO eto = new ElementTO(demo_entity);
@@ -210,22 +217,24 @@ public class ElementTest {
 	// Feature 7 //
 	///////////////
 
+	// Scenario 1:
 	@Test
 	public void getSpecificElementSuccess() throws ElementNotFoundException, ElementAlreadyExistException {
-		// given
+		
+		// given: an elementEntity with "id":1
 		ElementTO originalElementTO = new ElementTO(demo_entity);
-		String userPlayground = "lazar_playground";
+		this.elementService.addNewElement(originalElementTO.ToEntity());
+
+		// when
+		String userPlayground = "playground_lazar";
 		String email = "demo@gmail.com";
 		String playground = originalElementTO.getPlayground();
 		String id = originalElementTO.getId();
-
-		this.elementService.addNewElement(originalElementTO.ToEntity());
-
 		ElementTO elementTOFromDB;
 		elementTOFromDB = this.restTemplate.getForObject(this.url + "/{userPlayground}/{email}/{playground}/{id}",
 				ElementTO.class, userPlayground, email, playground, id);
 
-		// that
+		// Than
 		boolean success = true;
 		if (!elementTOFromDB.getId().equals(originalElementTO.getId())) {
 			success = false;
@@ -236,13 +245,14 @@ public class ElementTest {
 		assertTrue(success);
 	}
 
+	// Scenario 2:
 	@Test(expected = ElementNotFoundException.class)
 	public void getSpecificElementFail() throws ElementNotFoundException {
 		// given element not in database (tearDown and setup take care of that)
 
-		String userPlayground = "lazar_playground";
+		String userPlayground = "playground_lazar";
 		String email = "demo@gmail.com";
-		String playground = "lazar_playground";
+		String playground = "playground_lazar";
 		String id = "1";
 
 		try {
@@ -265,7 +275,7 @@ public class ElementTest {
 
 		// When:
 		String userPlayground = "playground_lazar";
-		String email = "aviv@gmail.com";
+		String email = "demo@gmail.com";
 
 		ElementTO[] allElements = this.restTemplate.getForObject(this.url + "/{userPlayground}/{email}/all",
 				ElementTO[].class, userPlayground, email);
@@ -277,8 +287,29 @@ public class ElementTest {
 
 		assertTrue(success);
 	}
+	
+	// scenario 2:
+	@Test
+	public void GetNoElementSuccessWithNoElementsInDatabase() {
+		
+		// Given: nothing
+		
+		// When:
+		String userPlayground = "playground_lazar";
+		String email = "demo@gmail.com";
 
-	// TODO: test for pagination - feature 9
+		ElementTO[] allElements = this.restTemplate.getForObject(this.url + "/{userPlayground}/{email}/all",
+				ElementTO[].class, userPlayground, email);
+
+		// Than:
+		boolean success = false;
+		if (allElements.length == 0)
+			success = true;
+
+		assertTrue(success);
+	}
+
+	
 
 	/////////////////////////////////////////////////
 	/////////////////// Feature 9 ///////////////////
@@ -288,7 +319,7 @@ public class ElementTest {
 	@Test
 	public void GetOneElementSuccessfulyInDistanceOne() throws ElementAlreadyExistException {
 
-		// Given:
+		// Given: an array of one ElementEntity in database with size >0
 		this.elementService.addNewElement(this.demo_entity);
 
 		// When:
@@ -315,7 +346,7 @@ public class ElementTest {
 	public void GetElementsFailedWithInvalidDistance()
 			throws ElementAlreadyExistException, InvalidDistanceValueException {
 
-		// Given:
+		// Given: an array of ElementEntity array is database in size >0
 		this.elementService.addNewElement(this.demo_entity);
 
 		// When:
@@ -333,12 +364,36 @@ public class ElementTest {
 			success = true;
 		}
 
-		// this.elementService.getAllElementsNearBy(x, y, distance, 10, 1);
-
 		assertTrue(success);
 	}
-
-	// scenario 3
+	
+	// Scenario 3
+	@Test
+	public void GetNoElementNearLocationZeroZeroAndDistanceOne() throws ElementAlreadyExistException {
+		
+		// Given: 
+		this.elementService.addNewElement(this.demo_entity);
+		
+		// When:
+		String userPlayground = "playground_lazar";
+		String email = "aviv@gmail.com";
+		double x = 1.0, y = 1.0, distance = 0.0;
+		
+		// Than:
+		boolean success = false;
+		
+		ElementTO[] allElements = this.restTemplate.getForObject(
+				this.url + "/{userPlayground}/{email}/near/{x}/{y}/{distance}", ElementTO[].class, userPlayground,
+				email, x, y, distance);
+		
+		if(allElements.length == 0)
+			success = true;
+		
+		assertTrue(success);
+	}
+	
+	
+	// scenario 4 (pagination)
 	@Test
 	public void GetTheFirstTenResultsFromTwentyElementsInDisanceOneOrLower()
 			throws ElementAlreadyExistException, InvalidDistanceValueException {
@@ -353,12 +408,12 @@ public class ElementTest {
 			}
 		}
 
-		// Given:
+		// Given: 20 elements in distance 1 or lower
 		for (ElementEntity e : this.demo_entities) {
 			this.elementService.addNewElement(e);
 		}
 
-		// When:
+		// When: 
 		String userPlayground = "playground_lazar";
 		String email = "aviv@gmail.com";
 		double x = 0.0, y = 0.0, distance = 1.0;
@@ -377,18 +432,18 @@ public class ElementTest {
 		assertTrue(success);
 	}
 
-	@Test
-	public void LiranTestPagantion() throws ElementAlreadyExistException, InvalidPageSizeRequestException, InvalidPageRequestException {
-		
-
-		for(int i= 0 ; i< 30;i++) {
-			this.elementService.addNewElement(demo_entities[i]);
-		}
-		
-		List<ElementEntity> list = this.elementService.getAllElements(PageRequest.of(1, 3, Sort.by("id")));
-		
-		list.forEach(System.err::println);
-		
-
-	}
+//	@Test
+//	public void LiranTestPagantion() throws ElementAlreadyExistException, InvalidPageSizeRequestException, InvalidPageRequestException {
+//		
+//
+//		for(int i= 0 ; i< 30;i++) {
+//			this.elementService.addNewElement(demo_entities[i]);
+//		}
+//		
+//		List<ElementEntity> list = this.elementService.getAllElements(PageRequest.of(1, 3, Sort.by("id")));
+//		
+//		list.forEach(System.err::println);
+//		
+//
+//	}
 }
