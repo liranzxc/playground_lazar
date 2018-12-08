@@ -27,7 +27,7 @@ public class ElementEntity {
 	
 	public ElementEntity() {
 		super();
-		String id = ID++ + "";
+		this.id = ID++;
 		this.key = "playground_lazar" + "@@" + id;
 	}
 
@@ -45,7 +45,7 @@ public class ElementEntity {
 	private String creatorEmail;
 	
 	//@GeneratedValue(strategy=GenerationType.AUTO)
-	private String id;
+	private int id;
 	
 
 	public ElementEntity(String playground, Location location, String name, Date creationDate,
@@ -53,7 +53,7 @@ public class ElementEntity {
 			String creatorEmail) {
 
 		super();
-		this.id = ID++ + "";
+		this.id = ID++;
 		this.key = id +"@@" +playground ;
 		
 		this.x = location.getX();
