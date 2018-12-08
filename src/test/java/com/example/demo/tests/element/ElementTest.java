@@ -14,7 +14,6 @@ import org.junit.Test;
 import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
-import org.springframework.data.mongodb.core.aggregation.SetOperators.AllElementsTrue;
 import org.springframework.web.client.RestTemplate;
 
 import org.junit.runner.RunWith;
@@ -78,29 +77,32 @@ public class ElementTest {
 		this.url = "http://localhost:" + port + "/playground/elements";
 
 		System.err.println(this.url);
-
-	}
-
-	@Before
-	public void setup() throws InterruptedException {
-
 		ElementEntity.zeroID();
 		this.demo_entity = new ElementEntity("playground_lazar", new Location(0, 1), "demo", new Date(), null,
 				"demo type", null, "Aviv", "demo@gmail.com");
 
 		/*
-		 * Create 11 element entities more in array for more tests. we used sleep method
+		 * Create numOfDemoEntities element entities more in array for more tests. we used sleep method
 		 * for getting different time-stamps.
 		 */
 		demo_entities = new ElementEntity[numOfDemoEntities];
 		for (int i = 0; i < this.numOfDemoEntities; i++) {
-			Thread.sleep(20);
+			try {
+				Thread.sleep(20);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
 			this.demo_entities[i] = new ElementEntity("playground_lazar"+i, new Location(), "demo",
 					new Date(), null, "demo type", null, "Aviv", "demo@gmail.com");
 		}
-
 	}
 
+
+
+	@Before
+	public void setup() throws InterruptedException {
+	}
+	
 	@After
 	public void teardown() {
 		this.elementService.cleanup();
@@ -365,6 +367,7 @@ public class ElementTest {
 		ElementTO[] allElements;
 		boolean success = false;
 
+		//default size = 10, page = 0;
 		allElements = this.restTemplate.getForObject(this.url + "/{userPlayground}/{email}/near/{x}/{y}/{distance}",
 				ElementTO[].class, userPlayground, email, x, y, distance);
 

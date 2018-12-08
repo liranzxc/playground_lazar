@@ -145,10 +145,8 @@ public class ElementTO {
 	// To Entity !!
 	public ElementEntity ToEntity()
 	{
-		return new ElementEntity
-				(this.playground, this.location, this.name, 
-				this.creationDate, this.expireDate, this.type, 
-				this.attributes, this.creatorPlayground, this.creatorEmail);
+		return new ElementEntity(playground, id, this.location.getX(), this.location.getY()
+				,name, creationDate, expireDate, type, attributes, creatorPlayground, creatorEmail);
 	}
 	
 	

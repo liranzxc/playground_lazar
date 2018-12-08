@@ -67,6 +67,26 @@ public class ElementEntity {
 		this.creatorEmail = creatorEmail;
 	}
 
+	
+	
+	public ElementEntity(String playground, String id, double x, double y, String name, Date creationDate, Date expireDate, String type,
+			Map<String, Object> attributes, String creatorPlayground, String creatorEmail) {
+		super();
+		this.key = id + "@@" + playground;
+		this.x = x;
+		this.y = y;
+		this.name = name;
+		this.creationDate = creationDate;
+		this.expireDate = expireDate;
+		this.type = type;
+		this.attributes = attributes;
+		this.creatorPlayground = creatorPlayground;
+		this.creatorEmail = creatorEmail;
+		this.id = Integer.parseInt(id);
+	}
+
+
+
 	@Id
 	public String getKey() {
 		return key;
