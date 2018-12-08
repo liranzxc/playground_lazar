@@ -16,19 +16,23 @@ import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.web.client.RestTemplate;
+
+import com.example.demo.classes.exceptions.EmailAlreadyRegisteredException;
 import com.example.demo.classes.exceptions.InvalidConfirmationCodeException;
+import com.example.demo.classes.exceptions.UserNotActivatedException;
+import com.example.demo.classes.exceptions.UserNotFoundException;
 import com.example.demo.classes.to.UserTO;
 import com.example.demo.classes.entities.UserEntity;
 import com.example.demo.services.userservices.IUserService;
-import com.example.demo.services.userservices.UserServiceDummy;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
 public class UsersTest {
 
+	//TODO must fix the exception test for the correct exceptions~! currently http500 is invoked everytime.
+	
 	@LocalServerPort
 	private int port;
-	private String code;
 	private String url;
 	
 	private RestTemplate rest;
@@ -59,7 +63,7 @@ public class UsersTest {
 	@PostConstruct
 	public void init() {
 		this.url = "http://localhost:" + port + "/playground/users";
-		this.code ="123";
+
 
 		rest = new RestTemplate();
 	}
@@ -74,76 +78,105 @@ public class UsersTest {
 		userServices.cleanup();
 	}
 	
-	// 2. Test user registration
+	// 1. Test user registration
 	@Test
 	public void TestNewUserForm() {
 		//When I POST /playground/users
-		UserTO testUser = new UserTO("name", "mail@something.com", "avatar.url", types.Player.getType());
+		UserTO testUser = new UserTO("name", "mail@something.com", "avatar.url", types.Player.getType(), false);
 		UserTO user = this.rest.postForObject(this.url + "/", testUser ,UserTO.class);
 		
 	}
 	
-	// 3.a Test user confirmation
+	
+	// 2.a Test user confirmation
 	@Test
-	public void TestUserConfirmationByCode() {
-		this.code = "123";
+	public void TestUserConfirmationByCode() throws EmailAlreadyRegisteredException, UserNotFoundException {
+		String testEmail = "mail@something.com";
+		UserTO testUser = new UserTO("name", testEmail , "avatar.url", types.Player.getType(), false);
+		userServices.registerNewUser(testUser.ToEntity());
+		String code = null;
+		try {
+			code = userServices.getUser(testEmail).getCode();
+		} catch (UserNotFoundException e) {
+			e.printStackTrace();
+		}
+		Map<String, String> map = new HashMap<String, String>();
+		map.put("playground", "playground_lazar");
+		map.put("email", "mail@something.com");
+		map.put("code", code);
 		UserTO user = this.rest.getForObject(this.url + "/confirm/{playground}/{email}/{code}",
-				UserTO.class, "playground_lazar", "address@mail.end", code);
+				UserTO.class, map);
+		assertEquals(userServices.getUser(testEmail).getCode(), null);
 
 	}
 
-	// 3.b Test Code exception
+	// 2.b Test Code exception
 	@Test(expected=InvalidConfirmationCodeException.class)
 	public void TestInvalidCodeThrowsException() throws InvalidConfirmationCodeException {
-		
-		this.code = "222";
+		String code = "0"; //since code is a 4-char string, this will always cause an InvalidConfirmationCodeException.
 		try
 		{
 			UserTO user = this.rest.getForObject(this.url + "/confirm/{playground}/{email}/{code}",
 					UserTO.class, "playground_lazar", "address@mail.end", code);
 		}
 		catch (Exception e) {
-			// TODO: handle exception
-			
+			//System.out.println(e.getClass());
 			throw new InvalidConfirmationCodeException();
 		}
 	
 	}
 	
-	// 4. Test user log in successfully 
+	// 3. Test user log in successfully 
 	@Test
 	public void TestUserLoginSuccessfully() throws Exception {
-
-		UserTO user = new UserTO("address@mail.end", "playground_lazar", "tal", "anAvatar");
+		Map<String, String> map = new HashMap<String, String>();
+		map.put("playground", "playground_lazar");
+		map.put("email", "address@mail.end");
+		UserTO user = new UserTO("tal", "address@mail.end", "anAvatr", types.Manager.getType(), true);
 		userServices.registerNewUser(user.ToEntity());
 		
 		//System.err.println(userServices.getAllUsers(5, 1));
-		
-		
-		UserEntity actual = this.rest.getForObject(this.url + "/login/{playground}/{email}",
-				UserEntity.class, user.getPlayground(),user.getEmail());
-		
-		System.err.println(actual);
-		assertEquals(user.getEmail(), actual.getEmail());
-		
-		
 
+		UserEntity actual = this.rest.getForObject(this.url + "/login/{playground}/{email}",
+				UserEntity.class, map);
 		
+		assertEquals(user.getEmail(), actual.getEmail());
 	}
 	
-	// 5. Test update user
+	// 4.a Test update user
 	@Test
-	public void TestUpdateUserFromDB() {
+	public void TestUpdateUserFromDB() throws EmailAlreadyRegisteredException, UserNotFoundException {
 		Map<String, String> map = new HashMap<String, String>();
-		map.put("playground", "play");
-		map.put("email", "lirannh@gmail.com");
-
-		UserTO userto = new UserTO("liranzxc", "lirannh@gmail.com", "DOG", types.Manager.getType());
-
+		map.put("playground", "playground_lazar");
+		map.put("email", "liranh@gmail.com");
+		UserTO userto = new UserTO("liranzxc", "liranh@gmail.com", "DOG", types.Manager.getType(), true);
+		UserEntity et = userto.ToEntity();
+		userServices.registerNewUser(et);
+		et.setCode(null);
+		userServices.updateUserInfo(et);
+		userto.setAvatar("CAT");
 		rest.put(url + "/{playground}/{email}", userto, map);
-		
-		// put method return void , so how we can do Assert? 
-
+		assertEquals(userto.getAvatar(), "CAT");
 	}
 
+	
+	// 4.b Test that guest cannot update details
+	@Test(expected=UserNotActivatedException.class)
+	public void TestUnactivatedUserThrowsExceptionWhenUpdatingDetails() throws EmailAlreadyRegisteredException, UserNotFoundException, UserNotActivatedException {
+		Map<String, String> map = new HashMap<String, String>();
+		map.put("playground", "playground_lazar");
+		map.put("email", "liran@gmail.com");
+		UserTO userto = new UserTO("liranzxc", "liran@gmail.com", "DOG", types.Manager.getType(), true);
+		UserEntity et = userto.ToEntity();
+		userServices.registerNewUser(et);
+		et.setCode("C0D3");
+		userServices.updateUserInfo(et);
+		userto.setAvatar("CAT");
+		try {
+			rest.put(url + "/{playground}/{email}", userto, map);
+		}catch(Exception e) {
+			System.out.println(e.getClass());
+			throw new UserNotActivatedException();
+		}
+	}
 }

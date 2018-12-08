@@ -2,7 +2,6 @@ package com.example.demo.classes.entities;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
-import javax.persistence.Table;
 
 import org.springframework.data.mongodb.core.mapping.Document;
 
@@ -14,14 +13,18 @@ import org.springframework.data.mongodb.core.mapping.Document;
 public class UserEntity {
 	private static int ID = 0;
 
-	
 	private String email;
 	private String playground;
+
 	private String username;
 	private String avatar;
 	private String role;
 	private Long points = 0l; // new user always starts with 0 points
 	private String id;
+	private String code;
+	
+
+	
 	public UserEntity(String email, String playground, String username, String avatar, String role) {
 		super();
 		this.id = String.valueOf(ID++);
@@ -42,6 +45,7 @@ public class UserEntity {
 	public String getEmail() {
 		return email;
 	}
+	
 	public void setEmail(String email) {
 		this.email = email;
 	}
@@ -83,6 +87,16 @@ public class UserEntity {
 	//empty setter for hiberanate, id should not be able to be change from the outside
 	public void setId(String id) {
 
+	}
+	
+	public String getCode() {
+		return code;
+	}
+
+
+
+	public void setCode(String code) {
+		this.code = code;
 	}
 
 }

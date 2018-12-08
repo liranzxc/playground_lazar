@@ -7,18 +7,21 @@ import com.example.demo.classes.entities.UserEntity;
 @Component
 public class UserTO {
 
+
 	private String username;
 	private String email;
 	private String avatar;
 	private String role;
 	private String playground;
+	private boolean isValidated;
 	
-	public UserTO(String username, String email, String avatar, String role) {
+	public UserTO(String username, String email, String avatar, String role, boolean validated) {
 		this.username = username;
 		this.email = email;
 		this.avatar = avatar;
 		this.role = role;
 		this.playground = "playground_lazar";
+		this.isValidated = validated;
 	}
 
 	public String getUsername() {
@@ -72,15 +75,30 @@ public class UserTO {
 		this.playground = userEntity.getPlayground();
 		this.role = userEntity.getRole();
 		this.username = userEntity.getUsername();
+		if (userEntity.getCode() == null)
+			this.isValidated = true;
+		else
+			this.isValidated = false;
 	}
 
 	// to Entity object 
 	// new method !! Liran Nachman
 	public UserEntity ToEntity()
 	{
-		
-		return new UserEntity(this.email, this.playground
-				, this.username, this.avatar, role);
+		UserEntity user = new UserEntity(this.email, this.playground, this.username, this.avatar, role);
+		if (this.isValidated == true) {
+			user.setCode(null);
+		}
+		return user;
 	}
+	
+	public boolean isValidated() {
+		return isValidated;
+	}
+
+	public void setValidated(boolean validated) {
+		this.isValidated = validated;
+	}
+
 	
 }

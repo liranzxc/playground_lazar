@@ -21,19 +21,16 @@ import com.example.demo.repository.IElementRepository;
 @Service
 public class ElementServiceJpa implements IElementService {
 	
-	// TODO: Enum or final integers for Pagination parameters: default page and default size
 
 	@Autowired
 	private IElementRepository dataBase;
 	
-	//TODO fix this class, basic logic has been laid out, but 
-	// things like transactions and key logic need to be apply
-	
+
 	@Override
 	@Transactional
 	public void addNewElement(ElementEntity et) throws ElementAlreadyExistException {
 		String key = getKeyFromElementEntity(et);
-		if(!this.dataBase.existsById(key)) {
+		if(!this.dataBase.existsByKey(key)) {
 			this.dataBase.save(et);
 		}
 		else {
@@ -45,7 +42,7 @@ public class ElementServiceJpa implements IElementService {
 	@Transactional
 	public void updateElement(ElementEntity et) throws ElementNotFoundException {
 		String key = getKeyFromElementEntity(et);
-		if(this.dataBase.existsById(key)) {
+		if(this.dataBase.existsByKey(key)) {
 			this.dataBase.save(et);
 		}
 		else {
@@ -58,8 +55,8 @@ public class ElementServiceJpa implements IElementService {
 	@Transactional(readOnly=true)
 	public ElementEntity getElement(String playground, String id) throws ElementNotFoundException {
 		String key = generateKeyFromPlaygroundAndId(playground, id);
-		if(this.dataBase.existsById(key)) {
-			return this.dataBase.findById(key).get();
+		if(this.dataBase.existsByKey(key)) {
+			return this.dataBase.findByKey(key).get();
 		}
 		else {
 			throw new ElementNotFoundException();
@@ -70,8 +67,8 @@ public class ElementServiceJpa implements IElementService {
 	@Transactional
 	public void deleteElement(String playground, String id)  {
 		String key = generateKeyFromPlaygroundAndId(playground, id);
-		if(this.dataBase.existsById(key)) {
-			this.dataBase.deleteById(key);
+		if(this.dataBase.existsByKey(key)) {
+			this.dataBase.deleteByKey(key);
 		}
 	}
 
@@ -169,12 +166,12 @@ public class ElementServiceJpa implements IElementService {
 	
 	//TODO fix this method base on key that would be decided
 	private String getKeyFromElementEntity(ElementEntity entity) {
-		String key =  entity.getId();
+		String key =  entity.getKey();
 		return key;
 	}
 	
 	private String generateKeyFromPlaygroundAndId(String playground, String id) {
-		String key = id;
+		String key = playground + "@@" + id;
 		return key;
 	}
 	

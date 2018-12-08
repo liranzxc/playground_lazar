@@ -4,7 +4,6 @@ import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -15,48 +14,54 @@ import com.example.demo.classes.exceptions.InvalidPageRequestException;
 import com.example.demo.classes.exceptions.InvalidPageSizeRequestException;
 import com.example.demo.classes.exceptions.UserNotFoundException;
 import com.example.demo.repository.IUserRepository;
+import com.example.demo.services.otherservices.IGeneratorService;
 
 @Service
-public class UserServiceJPA implements IUserService{
+public class UserServiceJPA implements IUserService {
 
 	@Autowired
 	private IUserRepository dataBase;
-	
-	//TODO id must be fixed
-	
+
+	@Autowired
+	private IGeneratorService generator;
+
 	@Override
 	@Transactional
 	public void registerNewUser(UserEntity user) throws EmailAlreadyRegisteredException {
-		if (!dataBase.existsById(user.getId())) {
+		if (!dataBase.existsByEmail(user.getEmail())) {
+			user.setCode(generator.generateValidationCode());
+			System.err.println("Code for " + user.getEmail() + ": " + user.getCode()); // Prints the code to the
+																						// console
+			// generator.stopConsoleForCode(); //Used to halt the system so the code can be
+			// copied.
+
 			dataBase.save(user);
-		}
-		else
-			throw new EmailAlreadyRegisteredException("The email address " + user.getEmail() +" is already registered.");
-		
+		} else
+			throw new EmailAlreadyRegisteredException(
+					"The email address " + user.getEmail() + " is already registered.");
+
 	}
 	
 	@Override
 	@Transactional
 	public void updateUserInfo(UserEntity user) throws UserNotFoundException {
-		if (dataBase.existsById(user.getId())) {
+		if (dataBase.existsByEmail(user.getEmail())) {
 			dataBase.save(user);
-		}
-		else
-			throw new UserNotFoundException("The user " +user.getEmail() +" not found.");
-		
+		} else
+			throw new UserNotFoundException("The user " + user.getEmail() + " not found.");
+
 	}
 
 	@Override
-	@Transactional(readOnly=true)
+	@Transactional(readOnly = true)
 	public UserEntity getUser(String email) throws UserNotFoundException {
-		if (dataBase.existsById(email)) {
-			return dataBase.findById(email).get();
-		}
-		else
-			throw new UserNotFoundException("The user " +email +" not found.");
+		if (dataBase.existsByEmail(email)) {
+			return dataBase.findByEmail(email).get();
+		} else
+			throw new UserNotFoundException("The user with id " + email + " not found.");
 	}
 
-	//Not needed currently
+	// Not needed currently
 //	@Override
 //	@Transactional
 //	public void deleteUser(String email) throws UserNotFoundException {
@@ -69,17 +74,16 @@ public class UserServiceJPA implements IUserService{
 //	}
 
 	@Override
-	@Transactional(readOnly=true)
-	public List<UserEntity> getAllUsers(int size, int page) throws InvalidPageSizeRequestException, InvalidPageRequestException {
-		if(size < 1)
+	@Transactional(readOnly = true)
+	public List<UserEntity> getAllUsers(int size, int page)
+			throws InvalidPageSizeRequestException, InvalidPageRequestException {
+		if (size < 1)
 			throw new InvalidPageSizeRequestException();
-		if(page < 0)
+		if (page < 0)
 			throw new InvalidPageRequestException();
-		
-		List<UserEntity> list = StreamSupport.stream(dataBase.findAll().spliterator(), false)
-				.skip(size * page)
-				.limit(size)
-				.collect(Collectors.toList());
+
+		List<UserEntity> list = StreamSupport.stream(dataBase.findAll().spliterator(), false).skip(size * page)
+				.limit(size).collect(Collectors.toList());
 		return list;
 	}
 
@@ -95,6 +99,5 @@ public class UserServiceJPA implements IUserService{
 	public void cleanup() {
 		dataBase.deleteAll();
 	}
-	
 
 }
