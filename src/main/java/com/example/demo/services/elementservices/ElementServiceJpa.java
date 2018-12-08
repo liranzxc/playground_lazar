@@ -149,7 +149,7 @@ public class ElementServiceJpa implements IElementService {
 	}
 
 	private String generateKeyFromPlaygroundAndId(String playground, String id) {
-		String key = playground + "@@" + id;
+		String key = id + "@@" + playground;
 		return key;
 	}
 
