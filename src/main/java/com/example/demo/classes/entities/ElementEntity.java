@@ -24,13 +24,11 @@ public class ElementEntity {
 	public ElementEntity() {
 		super();
 		ID++;
-		this.id = ID + "";
+		this.key = "playground_lazar" + "@@" + ID;
 	}
 
 	private static int ID = 0;
 
-	private String playground;
-	private String id;
 	private String key;
 	
 	private double x;
@@ -50,8 +48,7 @@ public class ElementEntity {
 
 		super();
 		//ID++;
-		this.playground = playground;
-		this.id = id;
+
 		this.key = playground + "@@" + id;
 		
 		this.x = location.getX();
@@ -75,24 +72,22 @@ public class ElementEntity {
 	}
 	
 	
-	@Transient
 	public String getPlayground() {
-		return playground;
-	}
-
-	public void setPlayground(String playground) {
-		this.playground = playground;
-	}
-
-	@Transient
-	public String getId() {
-		return id;
+		return this.key.split("@@")[0];
 	}
 	
-
-	public void setId(String id) {
-		this.id = id;
+	public void setPlayground(String playground) {
+		
 	}
+
+	public String getId() {
+		return this.key.split("@@")[1];
+	}
+	
+	public void setId(String id) {
+		
+	}
+	
 
 	public String getName() {
 		return name;
@@ -192,7 +187,7 @@ public class ElementEntity {
 
 	@Override
 	public String toString() {
-		return "ElementEntity [playground=" + playground + ", id=" + id + ", x=" + x + ", y=" + y + ", name=" + name
+		return "ElementEntity [playground=" + getPlayground() + ", id=" + getId() + ", x=" + x + ", y=" + y + ", name=" + name
 				+ ", creationDate=" + creationDate + ", expireDate=" + expireDate + ", type=" + type + ", attributes="
 				+ attributes + ", creatorPlayground=" + creatorPlayground + ", creatorEmail=" + creatorEmail + "]";
 	}
