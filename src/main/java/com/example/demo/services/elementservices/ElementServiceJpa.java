@@ -6,6 +6,8 @@ import java.util.stream.StreamSupport;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.Sort.Direction;
 import org.springframework.stereotype.Service;
 
 import org.springframework.transaction.annotation.Transactional;
@@ -71,8 +73,7 @@ public class ElementServiceJpa implements IElementService {
 	@Override
 	@Transactional(readOnly = true)
 	public List<ElementEntity> getAllElements() {
-		List<ElementEntity> list = StreamSupport.stream(this.dataBase.findAll().spliterator(), false)
-				.collect(Collectors.toList());
+		List<ElementEntity> list = this.dataBase.findAll(Sort.by("id")).stream().collect(Collectors.toList());
 
 		return list;
 	}

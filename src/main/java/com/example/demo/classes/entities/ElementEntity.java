@@ -45,7 +45,7 @@ public class ElementEntity {
 	private String creatorEmail;
 	
 	//@GeneratedValue(strategy=GenerationType.AUTO)
-	//private String id;
+	private String id;
 	
 
 	public ElementEntity(String playground, Location location, String name, Date creationDate,
@@ -53,8 +53,8 @@ public class ElementEntity {
 			String creatorEmail) {
 
 		super();
-		String id = ID++ + "";
-		this.key = playground + "@@" + id;
+		this.id = ID++ + "";
+		this.key = id +"@@" +playground ;
 		
 		this.x = location.getX();
 		this.y = location.getY();
@@ -78,7 +78,7 @@ public class ElementEntity {
 	
 	
 	public String getPlayground() {
-		return this.key.split("@@")[0];
+		return this.key.split("@@")[1];
 	}
 	
 	public void setPlayground(String playground) {
@@ -86,7 +86,7 @@ public class ElementEntity {
 	}
 
 	public String getId() {
-		return this.key.split("@@")[1];
+		return this.key.split("@@")[0];
 	}
 	
 	public void setId(String id) {
@@ -192,7 +192,7 @@ public class ElementEntity {
 
 	@Override
 	public String toString() {
-		return "ElementEntity [playground=" + getPlayground() + ", id=" + getId() + ", x=" + x + ", y=" + y + ", name=" + name
+		return "ElementEntity [playground=" + getPlayground() + ", id=" + getId() +", key=" + getKey() + ", x=" + x + ", y=" + y + ", name=" + name
 				+ ", creationDate=" + creationDate + ", expireDate=" + expireDate + ", type=" + type + ", attributes="
 				+ attributes + ", creatorPlayground=" + creatorPlayground + ", creatorEmail=" + creatorEmail + "]";
 	}

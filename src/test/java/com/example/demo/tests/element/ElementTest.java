@@ -94,7 +94,7 @@ public class ElementTest {
 		demo_entities = new ElementEntity[numOfDemoEntities];
 		for (int i = 0; i < this.numOfDemoEntities; i++) {
 			Thread.sleep(20);
-			this.demo_entities[i] = new ElementEntity("playground_lazar", new Location(), "demo",
+			this.demo_entities[i] = new ElementEntity("playground_lazar"+i, new Location(), "demo",
 					new Date(), null, "demo type", null, "Aviv", "demo@gmail.com");
 		}
 
