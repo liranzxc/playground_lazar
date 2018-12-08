@@ -73,7 +73,7 @@ public class ElementTest_Feature11 {
 	@Before
 	public void setup() throws InterruptedException {
 		
-		this.demo_entity = new ElementEntity("playground_lazar", "1", new Location(0, 1), "demo", new Date(), null, "demo type", null,
+		this.demo_entity = new ElementEntity("playground_lazar", new Location(0, 1), "demo", new Date(), null, "demo type", null,
 				"Aviv", "demo@gmail.com");
 		
 		/*
@@ -83,7 +83,7 @@ public class ElementTest_Feature11 {
 		demo_entities = new ElementEntity[numOfDemoEntities];
 		for(int i = 0; i < this.numOfDemoEntities; i++) {
 			Thread.sleep(50);
-			this.demo_entities[i] = new ElementEntity("playground_lazar", (i+1) + "", new Location(), "demo", new Date(), null, "demo type", null,
+			this.demo_entities[i] = new ElementEntity("playground_lazar", new Location(), "demo", new Date(), null, "demo type", null,
 					"Aviv", "demo@gmail.com");
 		}
 		

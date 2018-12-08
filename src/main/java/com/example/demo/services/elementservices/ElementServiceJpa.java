@@ -89,6 +89,7 @@ public class ElementServiceJpa implements IElementService {
 
 		List<ElementEntity> list = this.dataBase.findAll(page).getContent();
 
+
 		return list;
 	}
 

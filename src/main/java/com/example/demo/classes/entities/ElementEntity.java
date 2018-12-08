@@ -4,6 +4,8 @@ import java.util.Date;
 import java.util.Map;
 
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Lob;
 import javax.persistence.Table;
@@ -23,11 +25,9 @@ public class ElementEntity {
 
 	public ElementEntity() {
 		super();
-		ID++;
-		this.key = "playground_lazar" + "@@" + ID;
+		this.key = "playground_lazar" + "@@" + id;
 	}
 
-	private static int ID = 0;
 
 	private String key;
 	
@@ -41,8 +41,11 @@ public class ElementEntity {
 	private String creatorPlayground;
 	private String creatorEmail;
 	
+	@GeneratedValue(strategy=GenerationType.AUTO)
+	private String id;
+	
 
-	public ElementEntity(String playground, String id, Location location, String name, Date creationDate,
+	public ElementEntity(String playground, Location location, String name, Date creationDate,
 			Date expireDate, String type, Map<String, Object> attributes, String creatorPlayground,
 			String creatorEmail) {
 
