@@ -11,4 +11,4 @@ public interface IElementRepository extends MongoRepository<ElementEntity, Strin
 	public boolean existsByKey(String key);
 	public Optional<ElementEntity> findByKey(String key);
 	public void deleteByKey(String key);
-}
+	}

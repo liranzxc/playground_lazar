@@ -227,9 +227,7 @@ public class ElementServiceDummy implements IElementService {
 		}		
 		
 		return filteredElements;
-//		return filteredElements.stream()
-//						.skip(size*page)
-//						.limit(size)
-//						.collect(Collectors.toList());	
+
 	}
+
 }

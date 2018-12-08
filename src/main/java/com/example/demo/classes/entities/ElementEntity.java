@@ -75,7 +75,7 @@ public class ElementEntity {
 	}
 	
 	
-	//@Id
+	@Transient
 	public String getPlayground() {
 		return playground;
 	}
@@ -84,7 +84,7 @@ public class ElementEntity {
 		this.playground = playground;
 	}
 
-	//@Id
+	@Transient
 	public String getId() {
 		return id;
 	}
