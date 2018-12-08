@@ -12,7 +12,6 @@ import com.example.demo.classes.entities.ElementEntity;
 @Component
 public class ElementTO {
 
-	private static int ID = 0;
 
 	private String playground;
 	private String id;
@@ -27,17 +26,13 @@ public class ElementTO {
 
 	public ElementTO() {
 		super();
-		ID++;
-		this.id = ID + "";
 	}
 
 	public ElementTO(String playground, String id, Location location, String name, Date creationDate, Date expireDate,
 			String type, Map<String, Object> attributes, String creatorPlayground, String creatorEmail) {
 
 		super();
-		ID++;
 		this.playground = playground;
-		this.id = ID + "";
 		this.location = location;
 		this.name = name;
 		this.creationDate = creationDate;
@@ -150,10 +145,8 @@ public class ElementTO {
 	// To Entity !!
 	public ElementEntity ToEntity()
 	{
-		return new ElementEntity
-				(this.playground, this.id, this.location, this.name, 
-				this.creationDate, this.expireDate, this.type, 
-				this.attributes, this.creatorPlayground, this.creatorEmail);
+		return new ElementEntity(playground, id, this.location.getX(), this.location.getY()
+				,name, creationDate, expireDate, type, attributes, creatorPlayground, creatorEmail);
 	}
 	
 	

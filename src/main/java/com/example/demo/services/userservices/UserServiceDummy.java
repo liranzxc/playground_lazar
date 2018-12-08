@@ -50,11 +50,11 @@ public class UserServiceDummy implements IUserService{
 //		deletedUsers.put(user.getEmail(), user);
 //		
 //	}
-
+/*
 	public List<UserEntity> getAllUsers() {
 		return allRegisteredUsers.values().stream().collect(Collectors.toList());
 	}
-
+*/
 //	@Override
 //	public List<UserEntity> getAllDeletedUsers() {
 //		return deletedUsers.values().stream().collect(Collectors.toList());
@@ -65,11 +65,11 @@ public class UserServiceDummy implements IUserService{
 		allRegisteredUsers.clear();
 	}
 
-	@Override
+	/*@Override
 	public List<UserEntity> getAllUsers(int size, int page)
 			throws InvalidPageSizeRequestException, InvalidPageRequestException {
 		// TODO Auto-generated method stub
 		return null;
-	}
+	}*/
 
 }

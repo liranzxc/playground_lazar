@@ -4,6 +4,8 @@ import java.util.Date;
 import java.util.Map;
 
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Lob;
 import javax.persistence.Table;
@@ -21,13 +23,14 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 //@Table(name = "ELEMENTS")
 public class ElementEntity {
 
+	private static int ID = 0;
+	
 	public ElementEntity() {
 		super();
-		ID++;
-		this.key = "playground_lazar" + "@@" + ID;
+		this.id = ID++;
+		this.key = "playground_lazar" + "@@" + id;
 	}
 
-	private static int ID = 0;
 
 	private String key;
 	
@@ -41,15 +44,17 @@ public class ElementEntity {
 	private String creatorPlayground;
 	private String creatorEmail;
 	
+	//@GeneratedValue(strategy=GenerationType.AUTO)
+	private int id;
+	
 
-	public ElementEntity(String playground, String id, Location location, String name, Date creationDate,
+	public ElementEntity(String playground, Location location, String name, Date creationDate,
 			Date expireDate, String type, Map<String, Object> attributes, String creatorPlayground,
 			String creatorEmail) {
 
 		super();
-		//ID++;
-
-		this.key = playground + "@@" + id;
+		this.id = ID++;
+		this.key = id +"@@" +playground ;
 		
 		this.x = location.getX();
 		this.y = location.getY();
@@ -62,6 +67,26 @@ public class ElementEntity {
 		this.creatorEmail = creatorEmail;
 	}
 
+	
+	
+	public ElementEntity(String playground, String id, double x, double y, String name, Date creationDate, Date expireDate, String type,
+			Map<String, Object> attributes, String creatorPlayground, String creatorEmail) {
+		super();
+		this.key = id + "@@" + playground;
+		this.x = x;
+		this.y = y;
+		this.name = name;
+		this.creationDate = creationDate;
+		this.expireDate = expireDate;
+		this.type = type;
+		this.attributes = attributes;
+		this.creatorPlayground = creatorPlayground;
+		this.creatorEmail = creatorEmail;
+		this.id = Integer.parseInt(id);
+	}
+
+
+
 	@Id
 	public String getKey() {
 		return key;
@@ -73,7 +98,7 @@ public class ElementEntity {
 	
 	
 	public String getPlayground() {
-		return this.key.split("@@")[0];
+		return this.key.split("@@")[1];
 	}
 	
 	public void setPlayground(String playground) {
@@ -81,7 +106,7 @@ public class ElementEntity {
 	}
 
 	public String getId() {
-		return this.key.split("@@")[1];
+		return this.key.split("@@")[0];
 	}
 	
 	public void setId(String id) {
@@ -187,13 +212,16 @@ public class ElementEntity {
 
 	@Override
 	public String toString() {
-		return "ElementEntity [playground=" + getPlayground() + ", id=" + getId() + ", x=" + x + ", y=" + y + ", name=" + name
+		return "ElementEntity [playground=" + getPlayground() + ", id=" + getId() +", key=" + getKey() + ", x=" + x + ", y=" + y + ", name=" + name
 				+ ", creationDate=" + creationDate + ", expireDate=" + expireDate + ", type=" + type + ", attributes="
 				+ attributes + ", creatorPlayground=" + creatorPlayground + ", creatorEmail=" + creatorEmail + "]";
 	}
 
 
 
+	public static void zeroID() {
+		ElementEntity.ID = 0;
+	}
 //	public String getDatabaseKey() {
 //		String key = this.playground + this.id;
 //		return key;

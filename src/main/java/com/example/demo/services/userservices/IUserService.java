@@ -15,7 +15,7 @@ public interface IUserService {
 	public void updateUserInfo(UserEntity user) throws UserNotFoundException;
 	public UserEntity getUser(String email) throws UserNotFoundException;
 	//public void deleteUser(String email) throws UserNotFoundException; //Currently not needed
-	public List<UserEntity> getAllUsers(int size, int page) throws InvalidPageSizeRequestException, InvalidPageRequestException;
+	//public List<UserEntity> getAllUsers(int size, int page) throws InvalidPageSizeRequestException, InvalidPageRequestException;
 	//public List<UserEntity> getAllDeletedUsers(); //Currently not needed
 	public void cleanup();
 	

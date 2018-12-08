@@ -2,6 +2,8 @@ package com.example.demo.services.elementservices;
 
 import java.util.List;
 
+import org.springframework.data.domain.Pageable;
+
 import com.example.demo.classes.entities.ElementEntity;
 import com.example.demo.classes.exceptions.ElementAlreadyExistException;
 import com.example.demo.classes.exceptions.ElementNotFoundException;
@@ -19,9 +21,9 @@ public interface IElementService{
 	public void deleteElement(String playground, String id);
 	
 	public List<ElementEntity> getAllElements();
-	public List<ElementEntity> getAllElements(int size, int page) throws InvalidPageSizeRequestException, InvalidPageRequestException;
-	public List<ElementEntity> getAllElementsNearBy(double x, double y, double distance, int size, int page) throws InvalidDistanceValueException;
-	public List<ElementEntity> getAllElementsByAttributeAndValue(String attribute, String value, int size, int page) throws InvalidAttributeNameException;
+	public List<ElementEntity> getAllElements(Pageable page) throws InvalidPageSizeRequestException, InvalidPageRequestException;
+	public List<ElementEntity> getAllElementsNearBy(double x, double y, double distance, Pageable page) throws InvalidDistanceValueException;
+	public List<ElementEntity> getAllElementsByAttributeAndValue(String attribute, String value,Pageable page) throws InvalidAttributeNameException;
 	
 	public void cleanup();
 
