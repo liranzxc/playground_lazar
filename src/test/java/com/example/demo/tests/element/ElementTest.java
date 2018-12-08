@@ -109,7 +109,7 @@ public class ElementTest {
 	}
 
 	///////////////
-	// Feature 6 //
+	// Feature 5 //
 	///////////////
 
 	@Test
@@ -168,7 +168,7 @@ public class ElementTest {
 	}
 
 	///////////////
-	// Feature 7 //
+	// Feature 6 //
 	///////////////
 
 	@Test
@@ -207,7 +207,7 @@ public class ElementTest {
 	}
 
 	///////////////
-	// Feature 8 //
+	// Feature 7 //
 	///////////////
 
 	@Test
@@ -254,7 +254,7 @@ public class ElementTest {
 	}
 
 	///////////////
-	// Feature 9 //
+	// Feature 8 //
 	///////////////
 
 	// scenario 1:
@@ -280,9 +280,9 @@ public class ElementTest {
 
 	// TODO: test for pagination - feature 9
 
-	//////////////////////////////////////////////////
-	/////////////////// Feature 10 ///////////////////
-	//////////////////////////////////////////////////
+	/////////////////////////////////////////////////
+	/////////////////// Feature 9 ///////////////////
+	/////////////////////////////////////////////////
 
 	// scenario 1
 	@Test
@@ -381,16 +381,13 @@ public class ElementTest {
 	public void LiranTestPagantion() throws ElementAlreadyExistException, InvalidPageSizeRequestException, InvalidPageRequestException {
 		
 
-		for(int i= 0 ; i< 30;i++)
-		{
+		for(int i= 0 ; i< 30;i++) {
 			this.elementService.addNewElement(demo_entities[i]);
 		}
 		
 		List<ElementEntity> list = this.elementService.getAllElements(PageRequest.of(1, 3, Sort.by("id")));
 		
 		list.forEach(System.err::println);
-		
-		
 		
 
 	}

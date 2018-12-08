@@ -28,9 +28,9 @@ import com.example.demo.services.elementservices.IElementService;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
-public class ElementTest_Feature11 {
+public class ElementTest_Feature10 {
 
-	private int numOfDemoEntities = 10;
+	private int numOfEntities = 10;
 	private ElementEntity[] demo_entities;
 	private ElementEntity demo_entity;
 
@@ -59,7 +59,7 @@ public class ElementTest_Feature11 {
 	//	this.jsonMapper = new ObjectMapper();
 		this.url = "http://localhost:" + port + "/playground/elements";
 
-		System.err.println(this.url);
+		//System.err.println(this.url);
 
 	}
 
@@ -73,8 +73,8 @@ public class ElementTest_Feature11 {
 		 * Create 10 element entities more in array for more tests.
 		 * we used sleep method for getting different time-stamps.
 		 */
-		demo_entities = new ElementEntity[numOfDemoEntities];
-		for(int i = 0; i < this.numOfDemoEntities; i++) {
+		demo_entities = new ElementEntity[this.numOfEntities];
+		for(int i = 0; i < this.numOfEntities; i++) {
 			Thread.sleep(50);
 			this.demo_entities[i] = new ElementEntity("playground_lazar", new Location(), "demo", new Date(), null, "demo type", null,
 					"Aviv", "demo@gmail.com");
@@ -124,7 +124,7 @@ public class ElementTest_Feature11 {
 		// Given: 10 element entities in database (and one is the target)
 		ElementEntity demo_target = null;
 		for (ElementEntity e : this.demo_entities) {
-			if (e.getId().equals("6")) {
+			if (Integer.parseInt(e.getId()) % 10 == 6) {
 				e.setName("demo_target"); // the test
 				demo_target = e;
 			}
@@ -143,6 +143,7 @@ public class ElementTest_Feature11 {
 				userPlayground, email, attributeName, value);
 
 		boolean success = false;
+		//System.err.println("Num of elements: " + allElements.length);
 
 		if (allElements.length == 1 && allElements[0].equals(new ElementTO(demo_target)))
 			success = true;
