@@ -38,13 +38,6 @@ public class ElementTest_Feature11 {
 	 * ====================================== READ ME ===================================================== 
 	 * 
 	 * In this test class i do: 
-	 * - POST /playground/elements/{userPlayground }/{email} 					I/O: ElementTO | ElementTO 
-	 * - PUT  /playground/elements/{userPlayground}/{email}/{playground}/{id} 	I/O: ElementTO | --------- 
-	 * - GET /playground/elements/{userPlayground}/{email}/{playground}/{id} 	I/O: --------- | ElementTO 
-	 * 
-	 * 
-	 * - GET /{userPlayground}/{email}/all                                  	I/O: --------- | ElementTO 
-	 * - GET /{userPlayground}/{email}/near/{x}/{y}/{distance}              	I/O: --------- | ElementTO 
 	 * - GET /{userPlayground}/{email}/search/{attributeName}/{value} 	        I/O: --------- | ElementTO 
 	 * ====================================== READ ME  =====================================================
 	 */
