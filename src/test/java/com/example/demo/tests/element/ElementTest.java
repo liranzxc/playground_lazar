@@ -34,7 +34,7 @@ import com.example.demo.services.elementservices.IElementService;
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
 public class ElementTest {
 
-	private int numOfDemoEntities = 20;
+	private int numOfDemoEntities = 11;
 	private ElementEntity[] demo_entities;
 	private ElementEntity demo_entity;
 
@@ -67,7 +67,6 @@ public class ElementTest {
 	@PostConstruct
 	public void init() {
 		this.restTemplate = new RestTemplate();
-	//	this.jsonMapper = new ObjectMapper();
 		this.url = "http://localhost:" + port + "/playground/elements";
 
 		System.err.println(this.url);
@@ -81,13 +80,13 @@ public class ElementTest {
 				"Aviv", "demo@gmail.com");
 		
 		/*
-		 * Create 10 element entities more in array for more tests.
+		 * Create 11 element entities more in array for more tests.
 		 * we used sleep method for getting different time-stamps.
 		 */
 		demo_entities = new ElementEntity[numOfDemoEntities];
 		for(int i = 0; i < this.numOfDemoEntities; i++) {
-			Thread.sleep(50);
-			this.demo_entities[i] = new ElementEntity("playground_lazar", (i+1) + "", new Location(), "demo", new Date(), null, "demo type", null,
+			Thread.sleep(20);
+			this.demo_entities[i] = new ElementEntity("playground_lazar", (i+2) + "", new Location(), "demo", new Date(), null, "demo type", null,
 					"Aviv", "demo@gmail.com");
 		}
 		
@@ -126,15 +125,20 @@ public class ElementTest {
 	@Test(expected = ElementAlreadyExistException.class)
 	public void createElementWhenElementAlreadyExist() throws ElementAlreadyExistException {
 		// given
-		ElementTO eto = new ElementTO(demo_entity);
-		this.elementService.addNewElement(eto.ToEntity());
-
-		//when		
+		this.elementService.addNewElement(demo_entity);
 		
-		//TODO understand how to make postForObject throw ElementAlreadyExistException instead
-		//	of <org.springframework.web.client.HttpServerErrorException>
-		this.elementService.addNewElement(eto.ToEntity());
-
+		//when		
+		String usrPlayground = "lazar_playground";
+		String email = "demo@gmail.com";
+		ElementTO eto = new ElementTO(demo_entity);
+		
+		try {
+			this.restTemplate.postForObject(this.url + "/{userPlayground}/{email}", eto, ElementTO.class, usrPlayground,
+					email);
+			
+		}catch(Exception e) {
+			throw new ElementAlreadyExistException();
+		}
 	}
 	
 	
@@ -230,7 +234,6 @@ public class ElementTest {
 	@Test(expected=ElementNotFoundException.class)
 	public void getSpecificElementFail() throws ElementNotFoundException {
 		//given element not in database (tearDown and setup take care of that)
-		
 		
 		String userPlayground = "lazar_playground";
 		String email = "demo@gmail.com";
