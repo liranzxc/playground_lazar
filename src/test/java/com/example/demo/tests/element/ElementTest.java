@@ -37,7 +37,7 @@ import com.example.demo.services.elementservices.IElementService;
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
 public class ElementTest {
 
-	private int numOfDemoEntities = 11;
+	private int numOfDemoEntities = 50;
 	private ElementEntity[] demo_entities;
 	private ElementEntity demo_entity;
 
@@ -83,6 +83,7 @@ public class ElementTest {
 	@Before
 	public void setup() throws InterruptedException {
 
+		ElementEntity.zeroID();
 		this.demo_entity = new ElementEntity("playground_lazar", new Location(0, 1), "demo", new Date(), null,
 				"demo type", null, "Aviv", "demo@gmail.com");
 
@@ -379,13 +380,12 @@ public class ElementTest {
 
 		for(int i= 0 ; i< 30;i++)
 		{
-			this.elementService.addNewElement(new ElementEntity("playground_lazar", new Location(0, 1), "demo", new Date(), null,
-				"demo type", null, "Aviv", "demo@gmail.com"));
+			this.elementService.addNewElement(demo_entities[i]);
 		}
 		
 		List<ElementEntity> list = this.elementService.getAllElements();
 		
-		list.forEach(System.out::println);
+		list.forEach(System.err::println);
 		
 		teardown();
 		

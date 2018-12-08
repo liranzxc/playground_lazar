@@ -23,8 +23,11 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 //@Table(name = "ELEMENTS")
 public class ElementEntity {
 
+	private static int ID = 0;
+	
 	public ElementEntity() {
 		super();
+		String id = ID++ + "";
 		this.key = "playground_lazar" + "@@" + id;
 	}
 
@@ -41,8 +44,8 @@ public class ElementEntity {
 	private String creatorPlayground;
 	private String creatorEmail;
 	
-	@GeneratedValue(strategy=GenerationType.AUTO)
-	private String id;
+	//@GeneratedValue(strategy=GenerationType.AUTO)
+	//private String id;
 	
 
 	public ElementEntity(String playground, Location location, String name, Date creationDate,
@@ -50,8 +53,7 @@ public class ElementEntity {
 			String creatorEmail) {
 
 		super();
-		//ID++;
-
+		String id = ID++ + "";
 		this.key = playground + "@@" + id;
 		
 		this.x = location.getX();
@@ -197,6 +199,9 @@ public class ElementEntity {
 
 
 
+	public static void zeroID() {
+		ElementEntity.ID = 0;
+	}
 //	public String getDatabaseKey() {
 //		String key = this.playground + this.id;
 //		return key;
