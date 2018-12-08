@@ -34,7 +34,7 @@ public class UserServiceJPA implements IUserService{
 			throw new EmailAlreadyRegisteredException("The email address " + user.getEmail() +" is already registered.");
 		
 	}
-
+	
 	@Override
 	@Transactional
 	public void updateUserInfo(UserEntity user) throws UserNotFoundException {
