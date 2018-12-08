@@ -17,6 +17,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -134,7 +135,7 @@ public class ElementsController {
 			@RequestParam(name = "page", required = false, defaultValue = "0") int page)
 			throws InvalidPageSizeRequestException, InvalidPageRequestException {
 
-		List<ElementEntity> mylist = elementService.getAllElements(PageRequest.of(page, size));
+		List<ElementEntity> mylist = elementService.getAllElements(PageRequest.of(page, size,Sort.by("id")));
 
 		return mylist.stream().map(ElementTO::new).collect(Collectors.toList()).toArray(new ElementTO[0]);
 
@@ -180,7 +181,7 @@ public class ElementsController {
 //		}
 //		
 		List<ElementEntity> nearBy = this.elementService.getAllElementsNearBy(x, y, distance,
-				PageRequest.of(page, size));
+				PageRequest.of(page, size,Sort.by("id")));
 
 		return nearBy.stream().map(ElementTO::new).collect(Collectors.toList()).toArray(new ElementTO[nearBy.size()]);
 
@@ -214,7 +215,7 @@ public class ElementsController {
 
 		
 		/// better
-		return this.elementService.getAllElementsByAttributeAndValue(attributeName, value, PageRequest.of(page, size))
+		return this.elementService.getAllElementsByAttributeAndValue(attributeName, value, PageRequest.of(page, size,Sort.by("id")))
 				.stream().map(ElementTO::new).collect(Collectors.toList()).toArray(new ElementTO[0]);
 
 	}

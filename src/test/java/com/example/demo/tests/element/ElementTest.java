@@ -13,6 +13,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.aggregation.SetOperators.AllElementsTrue;
 import org.springframework.web.client.RestTemplate;
 
@@ -376,18 +377,16 @@ public class ElementTest {
 	@Test
 	public void LiranTestPagantion() throws ElementAlreadyExistException, InvalidPageSizeRequestException, InvalidPageRequestException {
 		
-		teardown();
 
 		for(int i= 0 ; i< 30;i++)
 		{
 			this.elementService.addNewElement(demo_entities[i]);
 		}
 		
-		List<ElementEntity> list = this.elementService.getAllElements();
+		List<ElementEntity> list = this.elementService.getAllElements(PageRequest.of(1, 3, Sort.by("id")));
 		
 		list.forEach(System.err::println);
 		
-		teardown();
 		
 		
 
