@@ -380,7 +380,7 @@ public class ElementTest {
 					this.restTemplate.getForObject(
 							this.url + "/{userPlayground}/{email}/near/{x}/{y}/{distance}" 
 							,ElementTO[].class 
-							,userPlayground, email, x, y, distance);
+							,userPlayground, email, x, y, distance,5,0);
 		
 		if(allElements.length == 10)
 			success = true;

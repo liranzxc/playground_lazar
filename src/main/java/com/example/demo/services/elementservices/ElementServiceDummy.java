@@ -7,6 +7,7 @@ import java.util.stream.Collectors;
 
 import javax.annotation.PostConstruct;
 
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import com.example.demo.classes.Location;
@@ -15,8 +16,13 @@ import com.example.demo.classes.exceptions.ElementAlreadyExistException;
 import com.example.demo.classes.exceptions.ElementNotFoundException;
 import com.example.demo.classes.exceptions.InvalidAttributeNameException;
 import com.example.demo.classes.exceptions.InvalidDistanceValueException;
+import com.example.demo.classes.exceptions.InvalidPageRequestException;
+import com.example.demo.classes.exceptions.InvalidPageSizeRequestException;
 
 //@Service
+
+
+/// dont user Dummy Service anymore !!
 public class ElementServiceDummy implements IElementService {
 	
 	private Map<String, ElementEntity> entities;
@@ -95,7 +101,7 @@ public class ElementServiceDummy implements IElementService {
 				.collect(Collectors.toList());
 	}
 
-	@Override
+	//@Override
 	public List<ElementEntity> getAllElementsNearBy(double x, double y, double distance, int size ,int page) throws InvalidDistanceValueException {
 		if(distance < 0)
 			throw new InvalidDistanceValueException("Invalid distance value");
@@ -134,7 +140,7 @@ public class ElementServiceDummy implements IElementService {
 		return true;
 	}
 
-	@Override
+	//@Override
 	public List<ElementEntity> getAllElements(int size, int page) {
 		return this.entities
 				.values()
@@ -144,7 +150,7 @@ public class ElementServiceDummy implements IElementService {
 				.collect(Collectors.toList());
 	}
 
-	@Override
+	//@Override
 	public List<ElementEntity> getAllElementsByAttributeAndValue(String attribute, String value, int size, int page) throws InvalidAttributeNameException {
 		List<ElementEntity> filteredElements;
 		
@@ -228,6 +234,27 @@ public class ElementServiceDummy implements IElementService {
 		
 		return filteredElements;
 
+	}
+
+	@Override
+	public List<ElementEntity> getAllElements(Pageable page)
+			throws InvalidPageSizeRequestException, InvalidPageRequestException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public List<ElementEntity> getAllElementsNearBy(double x, double y, double distance, Pageable page)
+			throws InvalidDistanceValueException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public List<ElementEntity> getAllElementsByAttributeAndValue(String attribute, String value, Pageable page)
+			throws InvalidAttributeNameException {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }

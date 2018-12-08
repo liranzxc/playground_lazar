@@ -73,7 +73,7 @@ public class UserServiceJPA implements IUserService {
 //		
 //	}
 
-	@Override
+	/*@Override
 	@Transactional(readOnly = true)
 	public List<UserEntity> getAllUsers(int size, int page)
 			throws InvalidPageSizeRequestException, InvalidPageRequestException {
@@ -86,7 +86,7 @@ public class UserServiceJPA implements IUserService {
 				.limit(size).collect(Collectors.toList());
 		return list;
 	}
-
+*/
 //	@Override
 //	@Transactional
 //	public List<UserEntity> getAllDeletedUsers() {
