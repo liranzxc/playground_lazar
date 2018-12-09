@@ -182,7 +182,7 @@ public class UsersTest {
 		try {
 			rest.put(url + "/{playground}/{email}", userto, map);
 		}catch(Exception e) {
-			System.out.println(e.getClass());
+			//System.out.println(e.getClass());
 			throw new UserNotActivatedException();
 		}
 	}

@@ -31,7 +31,7 @@ public class ElementServiceJpa implements IElementService {
 	@Transactional
 	public void addNewElement(ElementEntity et) throws ElementAlreadyExistException {
 		String key = et.getKey();
-		System.err.println(key);
+		//System.err.println(key);
 		if (!this.dataBase.existsByKey(key)) {
 			this.dataBase.save(et);
 		} else {
@@ -43,7 +43,7 @@ public class ElementServiceJpa implements IElementService {
 	@Transactional
 	public void updateElement(ElementEntity et) throws ElementNotFoundException {
 		String key = et.getKey();
-		System.err.println(key);
+		//System.err.println(key);
 		if (this.dataBase.existsByKey(key)) {
 			this.dataBase.deleteByKey(key); // delete not updated element
 			this.dataBase.save(et); // save updated element

@@ -37,7 +37,7 @@ public class ActivityTest {
 	public void init() {
 
 		this.url = "http://localhost:" + port + "/playground/activites";
-		System.err.println(this.url);
+		//System.err.println(this.url);
 	}
 
 	// Feature 11

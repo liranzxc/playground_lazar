@@ -30,7 +30,7 @@ public class UserServiceJPA implements IUserService {
 	public void registerNewUser(UserEntity user) throws EmailAlreadyRegisteredException {
 		if (!dataBase.existsByEmail(user.getEmail())) {
 			user.setCode(generator.generateValidationCode());
-			System.err.println("Code for " + user.getEmail() + ": " + user.getCode()); // Prints the code to the
+			//System.err.println("Code for " + user.getEmail() + ": " + user.getCode()); // Prints the code to the
 																						// console
 			// generator.stopConsoleForCode(); //Used to halt the system so the code can be
 			// copied.
