@@ -1,6 +1,8 @@
 package com.example.demo.tests.user;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+
 import java.util.HashMap;
 import java.util.Map;
 
@@ -58,7 +60,7 @@ public class UsersTest {
 	
 
 	@Autowired
-	private IUserService userServices;
+	private IUserService userService;
 	
 	@PostConstruct
 	public void init() {
@@ -75,7 +77,7 @@ public class UsersTest {
 
 	@After
 	public void teardown() {
-		userServices.cleanup();
+		userService.cleanup();
 	}
 	
 	// Feature 1
@@ -89,6 +91,30 @@ public class UsersTest {
 		
 	}
 	
+	// Scenario 2: Test user registration fail because he is already exist in DB
+	@Test
+	public void TestNewUserFormFail() throws EmailAlreadyRegisteredException {
+
+		// Given: the user is already exist
+		UserEntity userEntityForDB = new UserEntity("demo@gmail.com", "playground_lazar", "username", "avatar",
+				types.Player.getType());
+		userService.registerNewUser(userEntityForDB);
+
+		// When:
+		boolean isSucceed = false;
+		UserTO testUser = new UserTO("name", "demo@gmail.com", "avatar.url", types.Player.getType(), false);
+
+		try {
+			UserTO user = this.rest.postForObject(this.url + "/", testUser, UserTO.class);
+		} catch (Exception e) {
+			isSucceed = true;
+		}
+
+		// Than:
+		assertTrue(isSucceed);
+
+	}
+	
 	
 	// Feature 2:
 	
@@ -97,10 +123,10 @@ public class UsersTest {
 	public void TestUserConfirmationByCode() throws EmailAlreadyRegisteredException, UserNotFoundException {
 		String testEmail = "demo@gmail.com";
 		UserTO testUser = new UserTO("name", testEmail , "avatar.url", types.Player.getType(), false);
-		userServices.registerNewUser(testUser.ToEntity());
+		userService.registerNewUser(testUser.ToEntity());
 		String code = null;
 		try {
-			code = userServices.getUser(testEmail).getCode();
+			code = userService.getUser(testEmail).getCode();
 		} catch (UserNotFoundException e) {
 			e.printStackTrace();
 		}
@@ -110,7 +136,7 @@ public class UsersTest {
 		map.put("code", code);
 		UserTO user = this.rest.getForObject(this.url + "/confirm/{playground}/{email}/{code}",
 				UserTO.class, map);
-		assertEquals(userServices.getUser(testEmail).getCode(), null);
+		assertEquals(userService.getUser(testEmail).getCode(), null);
 
 	}
 
@@ -138,7 +164,7 @@ public class UsersTest {
 		map.put("playground", "playground_lazar");
 		map.put("email", "demo@gmail.com");
 		UserTO user = new UserTO("tal", "demo@gmail.com", "anAvatr", types.Manager.getType(), true);
-		userServices.registerNewUser(user.ToEntity());
+		userService.registerNewUser(user.ToEntity());
 		
 		//System.err.println(userServices.getAllUsers(5, 1));
 
@@ -157,9 +183,9 @@ public class UsersTest {
 		map.put("email", "demo@gmail.com");
 		UserTO userto = new UserTO("demo", "demo@gmail.com", "DOG", types.Manager.getType(), true);
 		UserEntity et = userto.ToEntity();
-		userServices.registerNewUser(et);
+		userService.registerNewUser(et);
 		et.setCode(null);
-		userServices.updateUserInfo(et);
+		userService.updateUserInfo(et);
 		userto.setAvatar("CAT");
 		rest.put(url + "/{playground}/{email}", userto, map);
 		assertEquals(userto.getAvatar(), "CAT");
@@ -175,9 +201,9 @@ public class UsersTest {
 		map.put("email", "liran@gmail.com");
 		UserTO userto = new UserTO("liranzxc", "liran@gmail.com", "DOG", types.Manager.getType(), true);
 		UserEntity et = userto.ToEntity();
-		userServices.registerNewUser(et);
+		userService.registerNewUser(et);
 		et.setCode("C0D3");
-		userServices.updateUserInfo(et);
+		userService.updateUserInfo(et);
 		userto.setAvatar("CAT");
 		try {
 			rest.put(url + "/{playground}/{email}", userto, map);
