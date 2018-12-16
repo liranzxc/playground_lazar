@@ -431,19 +431,4 @@ public class ElementTest {
 
 		assertTrue(success);
 	}
-
-//	@Test
-//	public void LiranTestPagantion() throws ElementAlreadyExistException, InvalidPageSizeRequestException, InvalidPageRequestException {
-//		
-//
-//		for(int i= 0 ; i< 30;i++) {
-//			this.elementService.addNewElement(demo_entities[i]);
-//		}
-//		
-//		List<ElementEntity> list = this.elementService.getAllElements(PageRequest.of(1, 3, Sort.by("id")));
-//		
-//		list.forEach(System.err::println);
-//		
-//
-//	}
 }

@@ -80,7 +80,10 @@ public class UsersTest {
 		userService.cleanup();
 	}
 	
-	// Feature 1
+	
+	///////////////
+	// Feature 1 //
+	///////////////
 	
 	// Scenario 1: Test user registration
 	@Test
@@ -116,7 +119,9 @@ public class UsersTest {
 	}
 	
 	
-	// Feature 2:
+	///////////////
+	// Feature 2 //
+	///////////////
 	
 	// Scenario 1: User confirmation Success
 	@Test
@@ -137,12 +142,12 @@ public class UsersTest {
 		UserTO user = this.rest.getForObject(this.url + "/confirm/{playground}/{email}/{code}",
 				UserTO.class, map);
 		assertEquals(userService.getUser(testEmail).getCode(), null);
-
 	}
 
 	// Scenario 2: User confirm with wrong code
 	@Test(expected=InvalidConfirmationCodeException.class)
 	public void TestInvalidCodeThrowsException() throws InvalidConfirmationCodeException {
+		
 		String code = "12345"; //since code is a 4-char string, this will always cause an InvalidConfirmationCodeException.
 		try
 		{
