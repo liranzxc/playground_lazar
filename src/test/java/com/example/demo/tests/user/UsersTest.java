@@ -19,13 +19,13 @@ import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.web.client.RestTemplate;
 
-import com.example.demo.classes.exceptions.EmailAlreadyRegisteredException;
-import com.example.demo.classes.exceptions.InvalidConfirmationCodeException;
-import com.example.demo.classes.exceptions.UserNotActivatedException;
-import com.example.demo.classes.exceptions.UserNotFoundException;
-import com.example.demo.classes.to.UserTO;
-import com.example.demo.classes.entities.UserEntity;
-import com.example.demo.services.userservices.IUserService;
+import com.example.demo.user.UserService;
+import com.example.demo.user.UserEntity;
+import com.example.demo.user.UserTO;
+import com.example.demo.user.exceptions.EmailAlreadyRegisteredException;
+import com.example.demo.user.exceptions.InvalidConfirmationCodeException;
+import com.example.demo.user.exceptions.UserNotActivatedException;
+import com.example.demo.user.exceptions.UserNotFoundException;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
@@ -57,10 +57,8 @@ public class UsersTest {
 
 	};
 
-	
-
 	@Autowired
-	private IUserService userService;
+	private UserService userService;
 	
 	@PostConstruct
 	public void init() {
