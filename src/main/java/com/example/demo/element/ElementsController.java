@@ -28,11 +28,10 @@ public class ElementsController {
 
 	private ElementService elementService;
 	
+	
 	@Autowired
-	public ElementsController(ElementService elementService) {
-		
+	public void setElementService(ElementService elementService) {
 		this.elementService = elementService;
-		// TODO Auto-generated constructor stub
 	}
 
 	// TODO this public static final is giving an error when uploading server

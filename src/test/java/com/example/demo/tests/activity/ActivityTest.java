@@ -25,6 +25,8 @@ public class ActivityTest {
 	private int port;
 	private String url;
 
+	
+	
 	RestTemplate rest = new RestTemplate();
 
 	@PostConstruct
@@ -43,6 +45,9 @@ public class ActivityTest {
 		params.add("email", "demo@gmail.com");
 		
 		ActivityTO activtyTo = new ActivityTO();
+		
+		activtyTo.setType("transport"); // add type
+		
 		activtyTo.setId("1");
 		Object result =rest.postForObject( url+"/{userPlayground}/{email}", activtyTo, ActivityTO.class,params);
 

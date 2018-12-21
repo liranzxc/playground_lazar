@@ -22,8 +22,14 @@ public class ElementServiceJpa implements ElementService {
 	private static int ID = 0;
 	
 	
-	@Autowired
+	
 	private ElementRepository dataBase;
+	
+	
+	@Autowired
+	public void setDataBase(ElementRepository dataBase) {
+		this.dataBase = dataBase;
+	}
 
 	@Override
 	@Transactional

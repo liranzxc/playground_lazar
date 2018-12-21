@@ -43,6 +43,7 @@ public class ElementEntity {
 	//@GeneratedValue(strategy=GenerationType.AUTO)
 	private int id;
 		
+	
 	public ElementEntity(String playground, String id, double x, double y, String name, Date creationDate, Date expireDate, String type,
 			Map<String, Object> attributes, String creatorPlayground, String creatorEmail) {
 		super();

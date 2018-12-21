@@ -19,12 +19,14 @@ public class UserServiceJPA implements UserService {
 	private GeneratorService generator;
 	
 	@Autowired
-	public UserServiceJPA(UserRepository dataBase,GeneratorService generator) {
-		// TODO Auto-generated constructor stub
-		
+	public void setDataBase(UserRepository dataBase) {
 		this.dataBase = dataBase;
+	}
+	@Autowired
+	public void setGenerator(GeneratorService generator) {
 		this.generator = generator;
 	}
+	
 
 	@Override
 	@Transactional

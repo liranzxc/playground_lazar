@@ -15,12 +15,12 @@ public class ActivitesController {
 	
 	private ActivityRepository activityRepository;
 	
+	
+	
 	@Autowired
-	public ActivitesController(ActivityRepository activityRepository) {
-		// TODO Auto-generated constructor stub
+	public void setActivityRepository(ActivityRepository activityRepository) {
 		this.activityRepository = activityRepository;
 	}
-	
 	// activites controller
 
 	// 11. go to some activity and do something and return object

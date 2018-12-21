@@ -10,14 +10,11 @@ public class ActivityServiceImpl implements ActivityService {
 
 	private ActivityRepository dataBase;
 	
-	
-	/// auto wired like its !! with setter
 	@Autowired
-	public ActivityServiceImpl(ActivityRepository dataBase) {
-		// TODO Auto-generated constructor stub
-		
+	public void setDataBase(ActivityRepository dataBase) {
 		this.dataBase = dataBase;
 	}
+	
 	
 	@Override
 	public void addNewActivity(ActivityEntity entity) throws ActivityAlreadyExistException {

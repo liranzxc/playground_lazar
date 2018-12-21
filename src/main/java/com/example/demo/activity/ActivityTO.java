@@ -13,6 +13,7 @@ public class ActivityTO {
 		private String type;
 		private String playerPlayground;
 		private String playerEmail;
+	
 		
 		public ActivityTO() {
 			super();

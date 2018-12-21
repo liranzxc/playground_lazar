@@ -150,11 +150,15 @@ public class ElementTest {
 	}
 	
 
+	
 	// Scenario 3
 	@Test(expected = ElementAlreadyExistException.class)
-	public void createElementWhenElementAlreadyExist() throws ElementAlreadyExistException {
+	public void createElementWhenElementAlreadyExist() throws ElementAlreadyExistException, InterruptedException {
 		// given
+	
 		this.elementService.addNewElement(demo_entity);
+		
+		Thread.sleep(2000); // upload user on cloud - take time
 
 		// when
 		String usrPlayground = "playground_lazar";
@@ -164,8 +168,7 @@ public class ElementTest {
 		try {
 			this.restTemplate.postForObject(this.url + "/{userPlayground}/{email}", eto, ElementTO.class, usrPlayground,
 					email);
-
-			
+			System.out.println("pass");
 		} catch (Exception e) {
 			throw new ElementAlreadyExistException();
 		}
