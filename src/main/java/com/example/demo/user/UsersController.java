@@ -1,18 +1,11 @@
 package com.example.demo.user;
 
-import java.util.Arrays;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Random;
-import java.util.stream.Collectors;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.demo.user.exceptions.EmailAlreadyRegisteredException;
@@ -26,12 +19,19 @@ public class UsersController {
 	//FOR TEST ONLY!
 	private String TEST_CODE = "1234";
 	
-	@Autowired
 	private UserService userService;
+	
+	@Autowired
+	public UsersController(UserService userService)
+	{
+		this.userService = userService;
+	}
+	
 	
 	public String getTEST_CODE() {
 		return TEST_CODE;
 	}
+	
 	
 
 	
@@ -111,9 +111,4 @@ public class UsersController {
 		return userService;
 	}
 	
-//	public List<UserEntity> CreateUserDB()
-//	{
-//		return new LinkedList<UserEntity>(Arrays.asList(new UserEntity("lirannh@gmail.com", "play", "liran", "dog",types.Player.getAction(), false),
-//				new UserEntity("aviv@gmail.com", "player2", "aviv", "fish",types.Player.getAction(), false)));
-//	}
 }

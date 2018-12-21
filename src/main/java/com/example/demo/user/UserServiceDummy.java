@@ -1,24 +1,15 @@
 package com.example.demo.user;
 
-import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.stream.Collectors;
 
-import javax.annotation.PostConstruct;
-
-import org.springframework.stereotype.Service;
-
-import com.example.demo.application.exceptions.InvalidPageRequestException;
-import com.example.demo.application.exceptions.InvalidPageSizeRequestException;
-import com.example.demo.user.exceptions.InvalidEmailException;
 import com.example.demo.user.exceptions.UserNotFoundException;
 
 //@Service
 public class UserServiceDummy implements UserService{
 
 	private Map<String, UserEntity> allRegisteredUsers = new ConcurrentHashMap<>();;
-	private Map<String, UserEntity> deletedUsers = new ConcurrentHashMap<>();
+	//private Map<String, UserEntity> deletedUsers = new ConcurrentHashMap<>();
 	
 	
 	

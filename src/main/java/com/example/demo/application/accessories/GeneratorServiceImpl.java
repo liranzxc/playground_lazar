@@ -1,7 +1,6 @@
 package com.example.demo.application.accessories;
 
 import java.util.Random;
-import java.util.Scanner;
 
 import org.springframework.stereotype.Service;
 

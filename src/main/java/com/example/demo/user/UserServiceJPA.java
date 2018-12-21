@@ -1,17 +1,10 @@
 package com.example.demo.user;
 
-import java.util.List;
-import java.util.stream.Collectors;
-import java.util.stream.StreamSupport;
-
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.example.demo.application.accessories.GeneratorService;
-import com.example.demo.application.exceptions.InvalidPageRequestException;
-import com.example.demo.application.exceptions.InvalidPageSizeRequestException;
 import com.example.demo.user.exceptions.EmailAlreadyRegisteredException;
 import com.example.demo.user.exceptions.UserNotFoundException;
 
@@ -19,11 +12,19 @@ import com.example.demo.user.exceptions.UserNotFoundException;
 public class UserServiceJPA implements UserService {
 	private String playgroundName = "playground_lazar";
 	
-	@Autowired
+	
 	private UserRepository dataBase;
 
-	@Autowired
+	
 	private GeneratorService generator;
+	
+	@Autowired
+	public UserServiceJPA(UserRepository dataBase,GeneratorService generator) {
+		// TODO Auto-generated constructor stub
+		
+		this.dataBase = dataBase;
+		this.generator = generator;
+	}
 
 	@Override
 	@Transactional

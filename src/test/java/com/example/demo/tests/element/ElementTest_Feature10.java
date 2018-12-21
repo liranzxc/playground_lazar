@@ -3,24 +3,24 @@ package com.example.demo.tests.element;
 import static org.junit.Assert.assertTrue;
 
 import java.util.ArrayList;
-
 import java.util.Date;
+
 import javax.annotation.PostConstruct;
+
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-import org.springframework.boot.web.server.LocalServerPort;
-
-import org.springframework.web.client.RestTemplate;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
+import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.web.client.RestTemplate;
 
 import com.example.demo.element.ElementEntity;
-import com.example.demo.element.ElementTO;
 import com.example.demo.element.ElementService;
+import com.example.demo.element.ElementTO;
 import com.example.demo.element.Location;
 import com.example.demo.element.exceptions.ElementAlreadyExistException;
 

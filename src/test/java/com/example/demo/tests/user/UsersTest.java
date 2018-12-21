@@ -19,8 +19,9 @@ import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.web.client.RestTemplate;
 
-import com.example.demo.user.UserService;
+import com.example.demo.user.TypesEnumUser.types;
 import com.example.demo.user.UserEntity;
+import com.example.demo.user.UserService;
 import com.example.demo.user.UserTO;
 import com.example.demo.user.exceptions.EmailAlreadyRegisteredException;
 import com.example.demo.user.exceptions.InvalidConfirmationCodeException;
@@ -39,23 +40,6 @@ public class UsersTest {
 	
 	private RestTemplate rest;
 	
-	private enum types {
-
-		Player("player"), Manager("manger");
-		// declaring private variable for getting values
-		private String action;
-
-		// getter method
-		public String getType() {
-			return this.action;
-		}
-
-		// enum constructor - cannot be public or protected
-		private types(String action) {
-			this.action = action;
-		}
-
-	};
 
 	@Autowired
 	private UserService userService;
@@ -101,6 +85,7 @@ public class UsersTest {
 				types.Player.getType());
 		userService.registerNewUser(userEntityForDB);
 
+		
 		// When:
 		boolean isSucceed = false;
 		UserTO testUser = new UserTO("name", "demo@gmail.com", "avatar.url", types.Player.getType(), false);

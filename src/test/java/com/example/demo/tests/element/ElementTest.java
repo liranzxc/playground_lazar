@@ -2,32 +2,25 @@ package com.example.demo.tests.element;
 
 import static org.junit.Assert.assertTrue;
 
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Date;
-import java.util.List;
 
 import javax.annotation.PostConstruct;
+
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-import org.springframework.boot.web.server.LocalServerPort;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Sort;
-import org.springframework.web.client.RestTemplate;
-
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
+import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.web.client.RestTemplate;
 
-import com.example.demo.application.exceptions.InvalidPageRequestException;
-import com.example.demo.application.exceptions.InvalidPageSizeRequestException;
 import com.example.demo.element.ElementEntity;
-import com.example.demo.element.ElementTO;
 import com.example.demo.element.ElementService;
 import com.example.demo.element.ElementServiceJpa;
+import com.example.demo.element.ElementTO;
 import com.example.demo.element.Location;
 import com.example.demo.element.exceptions.ElementAlreadyExistException;
 import com.example.demo.element.exceptions.ElementNotFoundException;
@@ -155,6 +148,7 @@ public class ElementTest {
 			throw new InvalidEmailException("cant create an element with invalid email: " + email);
 		}
 	}
+	
 
 	// Scenario 3
 	@Test(expected = ElementAlreadyExistException.class)
@@ -171,6 +165,7 @@ public class ElementTest {
 			this.restTemplate.postForObject(this.url + "/{userPlayground}/{email}", eto, ElementTO.class, usrPlayground,
 					email);
 
+			
 		} catch (Exception e) {
 			throw new ElementAlreadyExistException();
 		}

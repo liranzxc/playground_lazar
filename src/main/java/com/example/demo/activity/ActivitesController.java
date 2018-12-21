@@ -13,8 +13,13 @@ import org.springframework.web.bind.annotation.RestController;
 public class ActivitesController {
 
 	
+	private ActivityRepository activityRepository;
+	
 	@Autowired
-	ActivityRepository activityRepository;
+	public ActivitesController(ActivityRepository activityRepository) {
+		// TODO Auto-generated constructor stub
+		this.activityRepository = activityRepository;
+	}
 	
 	// activites controller
 

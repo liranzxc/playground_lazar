@@ -1,11 +1,6 @@
 package com.example.demo.user;
 
-import java.util.List;
-
-import com.example.demo.application.exceptions.InvalidPageRequestException;
-import com.example.demo.application.exceptions.InvalidPageSizeRequestException;
 import com.example.demo.user.exceptions.EmailAlreadyRegisteredException;
-import com.example.demo.user.exceptions.InvalidEmailException;
 import com.example.demo.user.exceptions.UserNotFoundException;
 
 public interface UserService {
