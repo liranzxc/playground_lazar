@@ -10,6 +10,4 @@ public interface ElementRepository extends MongoRepository<ElementEntity, String
 	public Optional<ElementEntity> findByKey(String key);
 	public void deleteByKey(String key);
 	
-
-
 	}

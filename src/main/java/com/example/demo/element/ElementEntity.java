@@ -22,12 +22,12 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 //@Table(name = "ELEMENTS")
 public class ElementEntity {
 
-	private static int ID = 0;
+
 	
 	public ElementEntity() {
 		super();
-		this.id = ID++;
-		this.key = "playground_lazar" + "@@" + id;
+		this.id = -1;
+		this.key = "playground_lazar" + "@@" + this.id; //TODO do we need an empty contructor?
 	}
 
 
@@ -45,33 +45,11 @@ public class ElementEntity {
 	
 	//@GeneratedValue(strategy=GenerationType.AUTO)
 	private int id;
-	
-
-	public ElementEntity(String playground, Location location, String name, Date creationDate,
-			Date expireDate, String type, Map<String, Object> attributes, String creatorPlayground,
-			String creatorEmail) {
-
-		super();
-		this.id = ID++;
-		this.key = id +"@@" +playground ;
 		
-		this.x = location.getX();
-		this.y = location.getY();
-		this.name = name;
-		this.creationDate = creationDate;
-		this.expireDate = expireDate;
-		this.type = type;
-		this.attributes = attributes;
-		this.creatorPlayground = creatorPlayground;
-		this.creatorEmail = creatorEmail;
-	}
-
-	
-	
 	public ElementEntity(String playground, String id, double x, double y, String name, Date creationDate, Date expireDate, String type,
 			Map<String, Object> attributes, String creatorPlayground, String creatorEmail) {
 		super();
-		this.key = id + "@@" + playground;
+		this.key = createKeyFromIdAndPlayground(id, playground);
 		this.x = x;
 		this.y = y;
 		this.name = name;
@@ -83,8 +61,6 @@ public class ElementEntity {
 		this.creatorEmail = creatorEmail;
 		this.id = Integer.parseInt(id);
 	}
-
-
 
 	@Id
 	public String getKey() {
@@ -214,20 +190,9 @@ public class ElementEntity {
 		return "ElementEntity [playground=" + getPlayground() + ", id=" + getId() +", key=" + getKey() + ", x=" + x + ", y=" + y + ", name=" + name
 				+ ", creationDate=" + creationDate + ", expireDate=" + expireDate + ", type=" + type + ", attributes="
 				+ attributes + ", creatorPlayground=" + creatorPlayground + ", creatorEmail=" + creatorEmail + "]";
+	}	
+	
+	public static String createKeyFromIdAndPlayground(String id, String playground) {
+		return id + "@@" + playground;
 	}
-
-
-
-	public static void zeroID() {
-		ElementEntity.ID = 0;
-	}
-//	public String getDatabaseKey() {
-//		String key = this.playground + this.id;
-//		return key;
-//	}
-	
-	
-	
-	//public String toString
-	
 }
