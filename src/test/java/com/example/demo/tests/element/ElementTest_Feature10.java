@@ -18,12 +18,11 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import com.example.demo.classes.Location;
-import com.example.demo.classes.entities.ElementEntity;
-import com.example.demo.classes.exceptions.ElementAlreadyExistException;
-
-import com.example.demo.classes.to.ElementTO;
-import com.example.demo.services.elementservices.IElementService;
+import com.example.demo.element.ElementEntity;
+import com.example.demo.element.ElementTO;
+import com.example.demo.element.ElementService;
+import com.example.demo.element.Location;
+import com.example.demo.element.exceptions.ElementAlreadyExistException;
 
 
 @RunWith(SpringRunner.class)
@@ -51,7 +50,7 @@ public class ElementTest_Feature10 {
 	//private ObjectMapper jsonMapper;
 
 	@Autowired
-	private IElementService elementService;
+	private ElementService elementService;
 
 	@PostConstruct
 	public void init() {

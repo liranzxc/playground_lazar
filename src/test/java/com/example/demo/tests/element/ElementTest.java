@@ -22,16 +22,16 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import com.example.demo.classes.Location;
-import com.example.demo.classes.entities.ElementEntity;
-import com.example.demo.classes.exceptions.ElementAlreadyExistException;
-import com.example.demo.classes.exceptions.ElementNotFoundException;
-import com.example.demo.classes.exceptions.InvalidDistanceValueException;
-import com.example.demo.classes.exceptions.InvalidEmailException;
-import com.example.demo.classes.exceptions.InvalidPageRequestException;
-import com.example.demo.classes.exceptions.InvalidPageSizeRequestException;
-import com.example.demo.classes.to.ElementTO;
-import com.example.demo.services.elementservices.IElementService;
+import com.example.demo.application.exceptions.InvalidPageRequestException;
+import com.example.demo.application.exceptions.InvalidPageSizeRequestException;
+import com.example.demo.element.ElementEntity;
+import com.example.demo.element.ElementTO;
+import com.example.demo.element.ElementService;
+import com.example.demo.element.Location;
+import com.example.demo.element.exceptions.ElementAlreadyExistException;
+import com.example.demo.element.exceptions.ElementNotFoundException;
+import com.example.demo.element.exceptions.InvalidDistanceValueException;
+import com.example.demo.user.exceptions.InvalidEmailException;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
@@ -69,7 +69,7 @@ public class ElementTest {
 	// private ObjectMapper jsonMapper;
 
 	@Autowired
-	private IElementService elementService;
+	private ElementService elementService;
 
 	@PostConstruct
 	public void init() {
