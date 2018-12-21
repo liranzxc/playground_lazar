@@ -62,21 +62,26 @@ public class ElementTest_Feature10 {
 
 	@Before
 	public void setup() throws InterruptedException {
-		
-		this.demo_entity = new ElementEntity("playground_lazar", new Location(0, 1), "demo", new Date(), null, "demo type", null,
-				"Aviv", "demo@gmail.com");
-		
+		Location demo_entity_location = new Location(0,1);
+		this.demo_entity = new ElementEntity(
+				"playground_lazar", "0", demo_entity_location.getX(), demo_entity_location.getY()
+				,"demo", new Date(), null, "demo type", null, "Aviv", "demo@gmail.com");
 		/*
-		 * Create 10 element entities more in array for more tests.
-		 * we used sleep method for getting different time-stamps.
+		 * Create numOfDemoEntities element entities more in array for more tests. we used sleep method
+		 * for getting different time-stamps.
 		 */
+		Location demo_entities_locaiton = new Location();
 		demo_entities = new ElementEntity[this.numOfEntities];
-		for(int i = 0; i < this.numOfEntities; i++) {
-			Thread.sleep(50);
-			this.demo_entities[i] = new ElementEntity("playground_lazar", new Location(), "demo", new Date(), null, "demo type", null,
-					"Aviv", "demo@gmail.com");
+		for (int i = 0; i < this.numOfEntities; i++) {
+			try {
+				Thread.sleep(20);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+			this.demo_entities[i] = new ElementEntity(
+					"playground_lazar", (i+1)+"", demo_entities_locaiton.getX(), demo_entities_locaiton.getY()
+					,"demo", new Date(), null, "demo type", null, "Aviv", "demo@gmail.com");
 		}
-		
 	}
 
 	@After

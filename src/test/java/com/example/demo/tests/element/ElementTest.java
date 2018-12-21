@@ -27,6 +27,7 @@ import com.example.demo.application.exceptions.InvalidPageSizeRequestException;
 import com.example.demo.element.ElementEntity;
 import com.example.demo.element.ElementTO;
 import com.example.demo.element.ElementService;
+import com.example.demo.element.ElementServiceJpa;
 import com.example.demo.element.Location;
 import com.example.demo.element.exceptions.ElementAlreadyExistException;
 import com.example.demo.element.exceptions.ElementNotFoundException;
@@ -77,14 +78,17 @@ public class ElementTest {
 		this.url = "http://localhost:" + port + "/playground/elements";
 
 		//System.err.println(this.url);
-		ElementEntity.zeroID();
-		this.demo_entity = new ElementEntity("playground_lazar", new Location(0, 1), "demo", new Date(), null,
-				"demo type", null, "Aviv", "demo@gmail.com");
+		Location demo_entity_location = new Location(0,1);
+		this.demo_entity = new ElementEntity(
+				"playground_lazar", "1", demo_entity_location.getX(), demo_entity_location.getY()
+				,"demo", new Date(), null, "demo type", null, "Aviv", "demo@gmail.com");
+		
 
 		/*
 		 * Create numOfDemoEntities element entities more in array for more tests. we used sleep method
 		 * for getting different time-stamps.
 		 */
+		Location demo_entities_locaiton = new Location();
 		demo_entities = new ElementEntity[numOfDemoEntities];
 		for (int i = 0; i < this.numOfDemoEntities; i++) {
 			try {
@@ -92,8 +96,9 @@ public class ElementTest {
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}
-			this.demo_entities[i] = new ElementEntity("playground_lazar"+i, new Location(), "demo",
-					new Date(), null, "demo type", null, "Aviv", "demo@gmail.com");
+			this.demo_entities[i] = new ElementEntity(
+					"playground_lazar", (i+2)+"", demo_entities_locaiton.getX(), demo_entities_locaiton.getY()
+					,"demo", new Date(), null, "demo type", null, "Aviv", "demo@gmail.com");
 		}
 	}
 
@@ -101,6 +106,7 @@ public class ElementTest {
 
 	@Before
 	public void setup() throws InterruptedException {
+		ElementServiceJpa.setIDToZero(); // reset the ID to 0 after each test
 	}
 	
 	@After
@@ -187,6 +193,8 @@ public class ElementTest {
 		String email = "demo@gmail.com";
 		String playground = eto.getPlayground();
 		String id = eto.getId();
+		
+		System.err.println("id = " + id + " playground = " + playground);
 
 		// when
 		this.restTemplate.put(this.url + "/{userPlayground}/{email}/{playground}/{id}", eto, userPlayground, email,
