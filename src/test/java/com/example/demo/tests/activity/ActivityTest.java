@@ -21,7 +21,7 @@ import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 
-import com.example.demo.classes.to.ActivityTO;
+import com.example.demo.activity.ActivityTO;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
@@ -37,24 +37,24 @@ public class ActivityTest {
 	public void init() {
 
 		this.url = "http://localhost:" + port + "/playground/activites";
-		System.err.println(this.url);
+		//System.err.println(this.url);
 	}
 
-	// 12 
+	// Feature 11
 	@Test
 	public void Test_Send_Activity_To_Do_Something_and_return_Some_Object() {
 		
 		MultiValueMap<String, String> params= new LinkedMultiValueMap<>();
-		params.add("userPlayground", "liranplayground");
-		params.add("email", "liran@gmail.com");
+		params.add("userPlayground", "playground_lazar");
+		params.add("email", "demo@gmail.com");
 		
 		ActivityTO activtyTo = new ActivityTO();
-		activtyTo.setId("1234");
+		activtyTo.setId("1");
 		Object result =rest.postForObject( url+"/{userPlayground}/{email}", activtyTo, ActivityTO.class,params);
 
 		ActivityTO actual = ActivityTO.class.cast(result);
 
-		assertThat(actual.getId(),equalTo("1234"));
+		assertThat(actual.getId(),equalTo("1"));
 
 	}
 }

@@ -1,6 +1,8 @@
 package com.example.demo.tests.user;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+
 import java.util.HashMap;
 import java.util.Map;
 
@@ -17,13 +19,13 @@ import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.web.client.RestTemplate;
 
-import com.example.demo.classes.exceptions.EmailAlreadyRegisteredException;
-import com.example.demo.classes.exceptions.InvalidConfirmationCodeException;
-import com.example.demo.classes.exceptions.UserNotActivatedException;
-import com.example.demo.classes.exceptions.UserNotFoundException;
-import com.example.demo.classes.to.UserTO;
-import com.example.demo.classes.entities.UserEntity;
-import com.example.demo.services.userservices.IUserService;
+import com.example.demo.user.UserService;
+import com.example.demo.user.UserEntity;
+import com.example.demo.user.UserTO;
+import com.example.demo.user.exceptions.EmailAlreadyRegisteredException;
+import com.example.demo.user.exceptions.InvalidConfirmationCodeException;
+import com.example.demo.user.exceptions.UserNotActivatedException;
+import com.example.demo.user.exceptions.UserNotFoundException;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
@@ -55,10 +57,8 @@ public class UsersTest {
 
 	};
 
-	
-
 	@Autowired
-	private IUserService userServices;
+	private UserService userService;
 	
 	@PostConstruct
 	public void init() {
@@ -75,10 +75,15 @@ public class UsersTest {
 
 	@After
 	public void teardown() {
-		userServices.cleanup();
+		userService.cleanup();
 	}
 	
-	// 1. Test user registration
+	
+	///////////////
+	// Feature 1 //
+	///////////////
+	
+	// Scenario 1: Test user registration
 	@Test
 	public void TestNewUserForm() {
 		//When I POST /playground/users
@@ -87,37 +92,65 @@ public class UsersTest {
 		
 	}
 	
+	// Scenario 2: Test user registration fail because he is already exist in DB
+	@Test
+	public void TestNewUserFormFail() throws EmailAlreadyRegisteredException {
+
+		// Given: the user is already exist
+		UserEntity userEntityForDB = new UserEntity("demo@gmail.com", "playground_lazar", "username", "avatar",
+				types.Player.getType());
+		userService.registerNewUser(userEntityForDB);
+
+		// When:
+		boolean isSucceed = false;
+		UserTO testUser = new UserTO("name", "demo@gmail.com", "avatar.url", types.Player.getType(), false);
+
+		try {
+			UserTO user = this.rest.postForObject(this.url + "/", testUser, UserTO.class);
+		} catch (Exception e) {
+			isSucceed = true;
+		}
+
+		// Than:
+		assertTrue(isSucceed);
+
+	}
 	
-	// 2.a Test user confirmation
+	
+	///////////////
+	// Feature 2 //
+	///////////////
+	
+	// Scenario 1: User confirmation Success
 	@Test
 	public void TestUserConfirmationByCode() throws EmailAlreadyRegisteredException, UserNotFoundException {
-		String testEmail = "mail@something.com";
+		String testEmail = "demo@gmail.com";
 		UserTO testUser = new UserTO("name", testEmail , "avatar.url", types.Player.getType(), false);
-		userServices.registerNewUser(testUser.ToEntity());
+		userService.registerNewUser(testUser.ToEntity());
 		String code = null;
 		try {
-			code = userServices.getUser(testEmail).getCode();
+			code = userService.getUser(testEmail).getCode();
 		} catch (UserNotFoundException e) {
 			e.printStackTrace();
 		}
 		Map<String, String> map = new HashMap<String, String>();
 		map.put("playground", "playground_lazar");
-		map.put("email", "mail@something.com");
+		map.put("email", "demo@gmail.com");
 		map.put("code", code);
 		UserTO user = this.rest.getForObject(this.url + "/confirm/{playground}/{email}/{code}",
 				UserTO.class, map);
-		assertEquals(userServices.getUser(testEmail).getCode(), null);
-
+		assertEquals(userService.getUser(testEmail).getCode(), null);
 	}
 
-	// 2.b Test Code exception
+	// Scenario 2: User confirm with wrong code
 	@Test(expected=InvalidConfirmationCodeException.class)
 	public void TestInvalidCodeThrowsException() throws InvalidConfirmationCodeException {
-		String code = "0"; //since code is a 4-char string, this will always cause an InvalidConfirmationCodeException.
+		
+		String code = "12345"; //since code is a 4-char string, this will always cause an InvalidConfirmationCodeException.
 		try
 		{
 			UserTO user = this.rest.getForObject(this.url + "/confirm/{playground}/{email}/{code}",
-					UserTO.class, "playground_lazar", "address@mail.end", code);
+					UserTO.class, "playground_lazar", "demo@gmail.com", code);
 		}
 		catch (Exception e) {
 			//System.out.println(e.getClass());
@@ -126,14 +159,15 @@ public class UsersTest {
 	
 	}
 	
-	// 3. Test user log in successfully 
+	// Feature 3
+	// Scenario 1: Test user log in successfully 
 	@Test
 	public void TestUserLoginSuccessfully() throws Exception {
 		Map<String, String> map = new HashMap<String, String>();
 		map.put("playground", "playground_lazar");
-		map.put("email", "address@mail.end");
-		UserTO user = new UserTO("tal", "address@mail.end", "anAvatr", types.Manager.getType(), true);
-		userServices.registerNewUser(user.ToEntity());
+		map.put("email", "demo@gmail.com");
+		UserTO user = new UserTO("tal", "demo@gmail.com", "anAvatr", types.Manager.getType(), true);
+		userService.registerNewUser(user.ToEntity());
 		
 		//System.err.println(userServices.getAllUsers(5, 1));
 
@@ -143,24 +177,26 @@ public class UsersTest {
 		assertEquals(user.getEmail(), actual.getEmail());
 	}
 	
-	// 4.a Test update user
+	// Feature 4
+	// Scenario 1: Test update user
 	@Test
 	public void TestUpdateUserFromDB() throws EmailAlreadyRegisteredException, UserNotFoundException {
 		Map<String, String> map = new HashMap<String, String>();
 		map.put("playground", "playground_lazar");
-		map.put("email", "liranh@gmail.com");
-		UserTO userto = new UserTO("liranzxc", "liranh@gmail.com", "DOG", types.Manager.getType(), true);
+		map.put("email", "demo@gmail.com");
+		UserTO userto = new UserTO("demo", "demo@gmail.com", "DOG", types.Manager.getType(), true);
 		UserEntity et = userto.ToEntity();
-		userServices.registerNewUser(et);
+		userService.registerNewUser(et);
 		et.setCode(null);
-		userServices.updateUserInfo(et);
+		userService.updateUserInfo(et);
 		userto.setAvatar("CAT");
 		rest.put(url + "/{playground}/{email}", userto, map);
 		assertEquals(userto.getAvatar(), "CAT");
 	}
 
 	
-	// 4.b Test that guest cannot update details
+	// Scenario 2: Test that guest cannot update details
+	
 	@Test(expected=UserNotActivatedException.class)
 	public void TestUnactivatedUserThrowsExceptionWhenUpdatingDetails() throws EmailAlreadyRegisteredException, UserNotFoundException, UserNotActivatedException {
 		Map<String, String> map = new HashMap<String, String>();
@@ -168,14 +204,14 @@ public class UsersTest {
 		map.put("email", "liran@gmail.com");
 		UserTO userto = new UserTO("liranzxc", "liran@gmail.com", "DOG", types.Manager.getType(), true);
 		UserEntity et = userto.ToEntity();
-		userServices.registerNewUser(et);
+		userService.registerNewUser(et);
 		et.setCode("C0D3");
-		userServices.updateUserInfo(et);
+		userService.updateUserInfo(et);
 		userto.setAvatar("CAT");
 		try {
 			rest.put(url + "/{playground}/{email}", userto, map);
 		}catch(Exception e) {
-			System.out.println(e.getClass());
+			//System.out.println(e.getClass());
 			throw new UserNotActivatedException();
 		}
 	}
