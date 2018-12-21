@@ -83,7 +83,7 @@ public class UsersTest {
 	// Feature 1 //
 	///////////////
 	
-	// Scenario 1: Test user registration
+	// Scenario 1: Test user registration success
 	@Test
 	public void TestNewUserForm() {
 		//When I POST /playground/users

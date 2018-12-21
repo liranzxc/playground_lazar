@@ -106,18 +106,36 @@ public class ElementsController {
 	// this method checks if there is a '@' in the name and there is something
 	// before it and after it
 	private boolean verifiedEmail(String email) {
-		if (email.length() < 3) {
+		String[] emailParts = email.split("@");
+		
+		if(emailParts.length != 2
+				|| emailParts[0].length() < 3) {
+			System.err.println("Email illigal!!");
 			return false;
 		}
-
-		// iterate from (1- (n-1)) letters, no need the first and last chars, '@' should
-		// be in the middle
-		for (int i = 1; i < email.length() - 1; i++) {
-			if (email.charAt(i) == '@') {
-				return true;
-			}
+		
+		String[] emailTailParts = emailParts[1].split("\\.");
+		
+		if (emailTailParts.length < 2 
+				|| emailTailParts[0].isEmpty()
+				|| emailTailParts[1].isEmpty()) {
+			return false;
 		}
-		return false;
+		
+		return true;
+		
+//		if (email.length() < 3) {
+//			return false;
+//		}
+//
+//		// iterate from (1- (n-1)) letters, no need the first and last chars, '@' should
+//		// be in the middle
+//		for (int i = 1; i < email.length() - 1; i++) {
+//			if (email.charAt(i) == '@') {
+//				return true;
+//			}
+//		}
+//		return false;
 	}
 
 	/*
