@@ -1,22 +1,16 @@
 package com.example.demo.user;
 
-import java.util.Arrays;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Random;
-import java.util.stream.Collectors;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.demo.user.exceptions.EmailAlreadyRegisteredException;
 import com.example.demo.user.exceptions.InvalidConfirmationCodeException;
+import com.example.demo.user.exceptions.InvalidEmailException;
 import com.example.demo.user.exceptions.UserNotActivatedException;
 import com.example.demo.user.exceptions.UserNotFoundException;
 
@@ -26,18 +20,25 @@ public class UsersController {
 	//FOR TEST ONLY!
 	private String TEST_CODE = "1234";
 	
-	@Autowired
 	private UserService userService;
+	
+	
+	@Autowired
+	public void setUserService(UserService userService) {
+		this.userService = userService;
+	}
+	
 	
 	public String getTEST_CODE() {
 		return TEST_CODE;
 	}
 	
+	
 
 	
 	//1. Register a new user.
 	@RequestMapping(value="/", method=RequestMethod.POST)
-	public UserTO registerFromForm(@RequestBody UserTO userForm) throws EmailAlreadyRegisteredException {
+	public UserTO registerFromForm(@RequestBody UserTO userForm) throws EmailAlreadyRegisteredException, InvalidEmailException {
 		this.userService.registerNewUser(userForm.ToEntity());
 		return userForm;
 	}
@@ -54,7 +55,11 @@ public class UsersController {
 				if (code.equals(user.getCode())) {
 					//UserTO validatedUser = new UserTO(userService.getUser(email));
 					user.setCode(null);
-					userService.updateUserInfo(user);
+					try {
+						userService.updateUserInfo(user);
+					} catch (InvalidEmailException e) { //This case should not happen, because we only update the user's code.
+						e.printStackTrace();
+					}
 					return new UserTO(user);
 				}
 				else
@@ -77,7 +82,7 @@ public class UsersController {
 	@RequestMapping(value="/{playground}/{email}" , method=RequestMethod.PUT,consumes=MediaType.APPLICATION_JSON_VALUE)
 	public void updateUserByPlaygroundAndEmail
 	(@PathVariable(name="email") String email, 
-	@PathVariable(name="playground") String playground , @RequestBody UserTO updatedDetails) throws UserNotFoundException, UserNotActivatedException
+	@PathVariable(name="playground") String playground , @RequestBody UserTO updatedDetails) throws UserNotFoundException, UserNotActivatedException, InvalidEmailException
 	{
 //		List<UserEntity> mydb = CreateUserDB();
 //		
@@ -111,9 +116,4 @@ public class UsersController {
 		return userService;
 	}
 	
-//	public List<UserEntity> CreateUserDB()
-//	{
-//		return new LinkedList<UserEntity>(Arrays.asList(new UserEntity("lirannh@gmail.com", "play", "liran", "dog",types.Player.getAction(), false),
-//				new UserEntity("aviv@gmail.com", "player2", "aviv", "fish",types.Player.getAction(), false)));
-//	}
 }

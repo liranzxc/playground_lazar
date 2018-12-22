@@ -7,7 +7,6 @@ import javax.persistence.Id;
 import javax.persistence.Transient;
 
 import org.springframework.data.mongodb.core.mapping.Document;
-import org.springframework.stereotype.Component;
 
 @Entity
 @Document

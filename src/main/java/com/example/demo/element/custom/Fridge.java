@@ -4,7 +4,6 @@ import java.util.Date;
 import java.util.Map;
 
 import com.example.demo.element.ElementEntity;
-import com.example.demo.element.Location;
 
 public class Fridge extends ElementEntity{
 

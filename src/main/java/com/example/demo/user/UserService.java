@@ -1,17 +1,13 @@
 package com.example.demo.user;
 
-import java.util.List;
-
-import com.example.demo.application.exceptions.InvalidPageRequestException;
-import com.example.demo.application.exceptions.InvalidPageSizeRequestException;
 import com.example.demo.user.exceptions.EmailAlreadyRegisteredException;
 import com.example.demo.user.exceptions.InvalidEmailException;
 import com.example.demo.user.exceptions.UserNotFoundException;
 
 public interface UserService {
 
-	public void registerNewUser(UserEntity user) throws EmailAlreadyRegisteredException;
-	public void updateUserInfo(UserEntity user) throws UserNotFoundException;
+	public void registerNewUser(UserEntity user) throws EmailAlreadyRegisteredException, InvalidEmailException;
+	public void updateUserInfo(UserEntity user) throws UserNotFoundException, InvalidEmailException;
 	public UserEntity getUser(String email) throws UserNotFoundException;
 	//public void deleteUser(String email) throws UserNotFoundException; //Currently not needed
 	//public List<UserEntity> getAllUsers(int size, int page) throws InvalidPageSizeRequestException, InvalidPageRequestException;

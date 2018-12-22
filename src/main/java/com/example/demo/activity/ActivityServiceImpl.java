@@ -1,13 +1,20 @@
 package com.example.demo.activity;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import com.example.demo.activity.exceptions.ActivityAlreadyExistException;
 
+@Service
 public class ActivityServiceImpl implements ActivityService {
 
-	@Autowired
 	private ActivityRepository dataBase;
+	
+	@Autowired
+	public void setDataBase(ActivityRepository dataBase) {
+		this.dataBase = dataBase;
+	}
+	
 	
 	@Override
 	public void addNewActivity(ActivityEntity entity) throws ActivityAlreadyExistException {

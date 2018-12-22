@@ -13,9 +13,14 @@ import org.springframework.web.bind.annotation.RestController;
 public class ActivitesController {
 
 	
-	@Autowired
-	ActivityRepository activityRepository;
+	private ActivityRepository activityRepository;
 	
+	
+	
+	@Autowired
+	public void setActivityRepository(ActivityRepository activityRepository) {
+		this.activityRepository = activityRepository;
+	}
 	// activites controller
 
 	// 11. go to some activity and do something and return object

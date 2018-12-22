@@ -3,7 +3,6 @@ package com.example.demo.user;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 

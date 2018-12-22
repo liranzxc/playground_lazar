@@ -8,7 +8,6 @@ import java.util.stream.Collectors;
 import javax.annotation.PostConstruct;
 
 import org.springframework.data.domain.Pageable;
-import org.springframework.stereotype.Service;
 
 import com.example.demo.application.exceptions.InvalidPageRequestException;
 import com.example.demo.application.exceptions.InvalidPageSizeRequestException;
@@ -20,7 +19,7 @@ import com.example.demo.element.exceptions.InvalidDistanceValueException;
 //@Service
 
 
-/// dont user Dummy Service anymore !!
+/// don't use Dummy Service anymore !!
 public class ElementServiceDummy implements ElementService {
 	
 	private Map<String, ElementEntity> entities;

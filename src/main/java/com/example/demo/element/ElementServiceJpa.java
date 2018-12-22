@@ -2,14 +2,11 @@ package com.example.demo.element;
 
 import java.util.List;
 import java.util.stream.Collectors;
-import java.util.stream.StreamSupport;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
-import org.springframework.data.domain.Sort.Direction;
 import org.springframework.stereotype.Service;
-
 import org.springframework.transaction.annotation.Transactional;
 
 import com.example.demo.aop.MyLog;
@@ -26,8 +23,14 @@ public class ElementServiceJpa implements ElementService {
 	private static int ID = 0;
 	
 	
-	@Autowired
+	
 	private ElementRepository dataBase;
+	
+	
+	@Autowired
+	public void setDataBase(ElementRepository dataBase) {
+		this.dataBase = dataBase;
+	}
 
 	@Override
 	@Transactional

@@ -1,22 +1,10 @@
 package com.example.demo.element;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.stream.Collector;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
-
-import javax.naming.spi.DirStateFactory.Result;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -38,8 +26,13 @@ import com.example.demo.user.exceptions.InvalidEmailException;
 @RequestMapping(path = "/playground/elements")
 public class ElementsController {
 
-	@Autowired
 	private ElementService elementService;
+	
+	
+	@Autowired
+	public void setElementService(ElementService elementService) {
+		this.elementService = elementService;
+	}
 
 	// TODO this public static final is giving an error when uploading server
 	// Test element

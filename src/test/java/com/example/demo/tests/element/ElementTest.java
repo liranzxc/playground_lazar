@@ -3,25 +3,34 @@ package com.example.demo.tests.element;
 import static org.junit.Assert.assertTrue;
 
 import java.util.Date;
+<<<<<<< HEAD
 
+=======
+>>>>>>> ab01c8bff8526afb52ffc34195318c47fbe549de
 
 import javax.annotation.PostConstruct;
+
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+<<<<<<< HEAD
 import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.web.client.RestTemplate;
 
+=======
+>>>>>>> ab01c8bff8526afb52ffc34195318c47fbe549de
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
+import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.web.client.RestTemplate;
 
 import com.example.demo.element.ElementEntity;
-import com.example.demo.element.ElementTO;
 import com.example.demo.element.ElementService;
 import com.example.demo.element.ElementServiceJpa;
+import com.example.demo.element.ElementTO;
 import com.example.demo.element.Location;
 import com.example.demo.element.exceptions.ElementAlreadyExistException;
 import com.example.demo.element.exceptions.ElementNotFoundException;
@@ -149,12 +158,21 @@ public class ElementTest {
 			throw new InvalidEmailException("cant create an element with invalid email: " + email);
 		}
 	}
+	
 
+	
 	// Scenario 3
 	@Test(expected = ElementAlreadyExistException.class)
-	public void createElementWhenElementAlreadyExist() throws ElementAlreadyExistException {
+	public void createElementWhenElementAlreadyExist() throws ElementAlreadyExistException, InterruptedException {
 		// given
+<<<<<<< HEAD
 		this.elementService.addElementFromOutside(demo_entity);
+=======
+	
+		this.elementService.addNewElement(demo_entity);
+		
+		Thread.sleep(2000); // upload user on cloud - take time
+>>>>>>> ab01c8bff8526afb52ffc34195318c47fbe549de
 
 		// when
 		String usrPlayground = "playground_lazar";
@@ -164,7 +182,7 @@ public class ElementTest {
 		try {
 			this.restTemplate.postForObject(this.url + "/{userPlayground}/{email}", eto, ElementTO.class, usrPlayground,
 					email);
-
+			System.out.println("pass");
 		} catch (Exception e) {
 			throw new ElementAlreadyExistException();
 		}

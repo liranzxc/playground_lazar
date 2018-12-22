@@ -1,33 +1,39 @@
 package com.example.demo.user;
 
-import java.util.List;
-import java.util.stream.Collectors;
-import java.util.stream.StreamSupport;
+import java.util.regex.Pattern;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.example.demo.application.accessories.GeneratorService;
-import com.example.demo.application.exceptions.InvalidPageRequestException;
-import com.example.demo.application.exceptions.InvalidPageSizeRequestException;
 import com.example.demo.user.exceptions.EmailAlreadyRegisteredException;
+import com.example.demo.user.exceptions.InvalidEmailException;
 import com.example.demo.user.exceptions.UserNotFoundException;
 
 @Service
 public class UserServiceJPA implements UserService {
 	private String playgroundName = "playground_lazar";
 	
-	@Autowired
 	private UserRepository dataBase;
 
-	@Autowired
 	private GeneratorService generator;
+	
+	@Autowired
+	public void setDataBase(UserRepository dataBase) {
+		this.dataBase = dataBase;
+	}
+	@Autowired
+	public void setGenerator(GeneratorService generator) {
+		this.generator = generator;
+	}
+	
 
 	@Override
 	@Transactional
-	public void registerNewUser(UserEntity user) throws EmailAlreadyRegisteredException {
+	public void registerNewUser(UserEntity user) throws EmailAlreadyRegisteredException, InvalidEmailException {
+		if (!isValidEmail(user.getEmail()))
+			throw new InvalidEmailException("The email " +user.getEmail()+" is invalid.");
 		if (!dataBase.existsByEmail(user.getEmail())) {
 			user.setCode(generator.generateValidationCode());
 			//System.err.println("Code for " + user.getEmail() + ": " + user.getCode()); // Prints the code to the
@@ -44,7 +50,9 @@ public class UserServiceJPA implements UserService {
 	
 	@Override
 	@Transactional
-	public void updateUserInfo(UserEntity user) throws UserNotFoundException {
+	public void updateUserInfo(UserEntity user) throws UserNotFoundException, InvalidEmailException {
+		if (!isValidEmail(user.getEmail()))
+			throw new InvalidEmailException("The email " +user.getEmail()+" is invalid.");
 		if (dataBase.existsByEmail(user.getEmail())) {
 			dataBase.save(user);
 		} else
@@ -94,7 +102,6 @@ public class UserServiceJPA implements UserService {
 //	@Override
 //	@Transactional
 //	public List<UserEntity> getAllDeletedUsers() {
-//		// TODO Auto-generated method stub
 //		return null;
 //	}
 
@@ -103,5 +110,9 @@ public class UserServiceJPA implements UserService {
 	public void cleanup() {
 		dataBase.deleteAll();
 	}
-
+	
+	public boolean isValidEmail(String email) {
+			return Pattern.matches("[_a-zA-Z1-9]+(\\.[A-Za-z0-9]*)*@[A-Za-z0-9]+\\.[A-Za-z0-9]+(\\.[A-Za-z0-9]*)*", email);
+	}
+	
 }
