@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.example.demo.user.exceptions.EmailAlreadyRegisteredException;
 import com.example.demo.user.exceptions.InvalidConfirmationCodeException;
 import com.example.demo.user.exceptions.InvalidEmailException;
+import com.example.demo.user.exceptions.InvalidRoleException;
 import com.example.demo.user.exceptions.UserNotActivatedException;
 import com.example.demo.user.exceptions.UserNotFoundException;
 
@@ -38,7 +39,7 @@ public class UsersController {
 	
 	//1. Register a new user.
 	@RequestMapping(value="/", method=RequestMethod.POST)
-	public UserTO registerFromForm(@RequestBody UserTO userForm) throws EmailAlreadyRegisteredException, InvalidEmailException {
+	public UserTO registerFromForm(@RequestBody UserTO userForm) throws EmailAlreadyRegisteredException, InvalidEmailException, InvalidRoleException {
 		this.userService.registerNewUser(userForm.ToEntity());
 		return userForm;
 	}
@@ -51,7 +52,7 @@ public class UsersController {
 			@PathVariable("playground") String playground, 
 			@PathVariable("email") String email, 
 			@PathVariable("code") String code) throws InvalidConfirmationCodeException, UserNotFoundException {
-				UserEntity user = userService.getUser(email);
+				UserEntity user = userService.getUser(email, playground);
 				if (code.equals(user.getCode())) {
 					//UserTO validatedUser = new UserTO(userService.getUser(email));
 					user.setCode(null);
@@ -73,7 +74,7 @@ public class UsersController {
 	public UserEntity logIn
 	(@PathVariable("playground") String playground,
 	 @PathVariable("email") String email) throws UserNotFoundException {
-		UserEntity user = userService.getUser(email);
+		UserEntity user = userService.getUser(email, playground);
 		return user;
 	}
 
@@ -100,10 +101,10 @@ public class UsersController {
 //				mydb.add(user);
 //
 //				System.out.println("User Update");
-		if (userService.getUser(email).getCode()!=null)
+		if (userService.getUser(email, playground).getCode()!=null)
 			throw new UserNotActivatedException("The user " + email +" is not yet validated!");
 		else {
-			UserEntity user = userService.getUser(email);
+			UserEntity user = userService.getUser(email,playground);
 			user.setAvatar(updatedDetails.getAvatar());
 			user.setUsername(updatedDetails.getUsername());
 			user.setRole(updatedDetails.getRole());

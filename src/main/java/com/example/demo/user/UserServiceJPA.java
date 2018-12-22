@@ -7,8 +7,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.example.demo.application.accessories.GeneratorService;
+import com.example.demo.user.TypesEnumUser.types;
 import com.example.demo.user.exceptions.EmailAlreadyRegisteredException;
 import com.example.demo.user.exceptions.InvalidEmailException;
+import com.example.demo.user.exceptions.InvalidRoleException;
 import com.example.demo.user.exceptions.UserNotFoundException;
 
 @Service
@@ -31,9 +33,12 @@ public class UserServiceJPA implements UserService {
 
 	@Override
 	@Transactional
-	public void registerNewUser(UserEntity user) throws EmailAlreadyRegisteredException, InvalidEmailException {
+	public void registerNewUser(UserEntity user) throws EmailAlreadyRegisteredException, InvalidEmailException, InvalidRoleException {
 		if (!isValidEmail(user.getEmail()))
 			throw new InvalidEmailException("The email " +user.getEmail()+" is invalid.");
+		if (!isValidRole(user.getRole())){
+			throw new InvalidRoleException("The entered role: " +user.getRole() +" is not valid!");
+		}
 		if (!dataBase.existsByEmail(user.getEmail())) {
 			user.setCode(generator.generateValidationCode());
 			//System.err.println("Code for " + user.getEmail() + ": " + user.getCode()); // Prints the code to the
@@ -62,10 +67,10 @@ public class UserServiceJPA implements UserService {
 
 	@Override
 	@Transactional(readOnly = true)
-	public UserEntity getUser(String email) throws UserNotFoundException {
+	public UserEntity getUser(String email, String playground) throws UserNotFoundException {
 		if (dataBase.existsByEmail(email)) {
 			UserEntity user = dataBase.findByEmail(email).get();
-			if (user.getPlayground().equals(playgroundName))
+			if (playground.equals(playgroundName))
 				return dataBase.findByEmail(email).get();
 			else
 				throw new UserNotFoundException("The user with id " + email +" and playground " + playgroundName + " not found.");
@@ -114,5 +119,13 @@ public class UserServiceJPA implements UserService {
 	public boolean isValidEmail(String email) {
 			return Pattern.matches("[_a-zA-Z1-9]+(\\.[A-Za-z0-9]*)*@[A-Za-z0-9]+\\.[A-Za-z0-9]+(\\.[A-Za-z0-9]*)*", email);
 	}
+	
+	public boolean isValidRole(String role) {
+		for (types enumRole : types.values()) {
+			if (role.equals(enumRole.getType()))
+					return true;
+		}
+		return false;
+}
 	
 }

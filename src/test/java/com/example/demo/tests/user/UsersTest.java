@@ -1,6 +1,7 @@
 package com.example.demo.tests.user;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 
 import java.util.HashMap;
@@ -26,6 +27,7 @@ import com.example.demo.user.UserTO;
 import com.example.demo.user.exceptions.EmailAlreadyRegisteredException;
 import com.example.demo.user.exceptions.InvalidConfirmationCodeException;
 import com.example.demo.user.exceptions.InvalidEmailException;
+import com.example.demo.user.exceptions.InvalidRoleException;
 import com.example.demo.user.exceptions.UserNotActivatedException;
 import com.example.demo.user.exceptions.UserNotFoundException;
 
@@ -77,9 +79,10 @@ public class UsersTest {
 		
 	}
 	
-	// Scenario 2: Test user registration fail because he is already exist in DB
+	
+	// Scenario 2: Create a new User form when the user (which means his email) exists in the playground.
 	@Test
-	public void TestNewUserFormFail() throws EmailAlreadyRegisteredException, InvalidEmailException {
+	public void TestNewUserFormFail() throws EmailAlreadyRegisteredException, InvalidEmailException, InvalidRoleException {
 
 		// Given: the user is already exist
 		UserEntity userEntityForDB = new UserEntity("demo@gmail.com", "playground_lazar", "username", "avatar",
@@ -102,6 +105,19 @@ public class UsersTest {
 
 	}
 	
+	// Scenario 3: Invalid Role on user creation throws Exception
+	@Test(expected=Exception.class) // = status <> 2xx
+	public void InvalidRoleThrowsException() {
+		//Given...
+		
+		//When
+		UserTO testUser = new UserTO("name", "demo@gmail.com", "avatar.url", "Servant" , false);
+		
+		UserTO user = this.rest.postForObject(this.url + "/", testUser, UserTO.class);
+		//Then: ^Exception^
+
+	}
+	
 	
 	///////////////
 	// Feature 2 //
@@ -109,13 +125,14 @@ public class UsersTest {
 	
 	// Scenario 1: User confirmation Success
 	@Test
-	public void TestUserConfirmationByCode() throws EmailAlreadyRegisteredException, UserNotFoundException, InvalidEmailException {
+	public void TestUserConfirmationByCode() throws EmailAlreadyRegisteredException, UserNotFoundException, InvalidEmailException, InvalidRoleException {
+		//Given
 		String testEmail = "demo@gmail.com";
 		UserTO testUser = new UserTO("name", testEmail , "avatar.url", types.Player.getType(), false);
 		userService.registerNewUser(testUser.ToEntity());
 		String code = null;
 		try {
-			code = userService.getUser(testEmail).getCode();
+			code = userService.getUser(testEmail,"playground_lazar").getCode();
 		} catch (UserNotFoundException e) {
 			e.printStackTrace();
 		}
@@ -123,21 +140,37 @@ public class UsersTest {
 		map.put("playground", "playground_lazar");
 		map.put("email", "demo@gmail.com");
 		map.put("code", code);
+		
+		//When
 		UserTO user = this.rest.getForObject(this.url + "/confirm/{playground}/{email}/{code}",
 				UserTO.class, map);
-		assertEquals(userService.getUser(testEmail).getCode(), null);
+		//Then
+		assertEquals(userService.getUser(testEmail,"playground_lazar").getCode(), null);
 	}
 
 	// Scenario 2: User confirm with wrong code
 	@Test(expected=InvalidConfirmationCodeException.class)
 	public void TestInvalidCodeThrowsException() throws InvalidConfirmationCodeException {
-		
+		//Given
+		String testEmail = "demo@gmail.com";
+		UserTO testUser = new UserTO("name", testEmail , "avatar.url", types.Player.getType(), false);
+		try {
+			userService.registerNewUser(testUser.ToEntity());
+		} catch (EmailAlreadyRegisteredException | InvalidEmailException | InvalidRoleException e1) {
+			e1.printStackTrace();
+		}
 		String code = "12345"; //since code is a 4-char string, this will always cause an InvalidConfirmationCodeException.
+		Map<String, String> map = new HashMap<String, String>();
+		map.put("playground", "playground_lazar");
+		map.put("email", "demo@gmail.com");
+		map.put("code", code);
+		//When
 		try
 		{
 			UserTO user = this.rest.getForObject(this.url + "/confirm/{playground}/{email}/{code}",
 					UserTO.class, "playground_lazar", "demo@gmail.com", code);
 		}
+		//Then
 		catch (Exception e) {
 			//System.out.println(e.getClass());
 			throw new InvalidConfirmationCodeException();
@@ -145,10 +178,22 @@ public class UsersTest {
 	
 	}
 	
+	// Scenario 3: User tried to confirm when the database is empty.
+	@Test(expected=Exception.class) //should be UserNotFoundException.class
+	public void TestConfirmationWithoutUserCauseException() {
+		//Given
+		
+		//When
+		UserTO user = this.rest.getForObject(this.url + "/confirm/{playground}/{email}/{code}",UserTO.class, "playground_lazar", "demo@gmail.com", "1234");
+		//Then: ^Exception^
+	}
+	
+	
 	// Feature 3
 	// Scenario 1: Test user log in successfully 
 	@Test
 	public void TestUserLoginSuccessfully() throws Exception {
+		//Given
 		Map<String, String> map = new HashMap<String, String>();
 		map.put("playground", "playground_lazar");
 		map.put("email", "demo@gmail.com");
@@ -157,16 +202,50 @@ public class UsersTest {
 		
 		//System.err.println(userServices.getAllUsers(5, 1));
 
+		//When
 		UserEntity actual = this.rest.getForObject(this.url + "/login/{playground}/{email}",
 				UserEntity.class, map);
 		
+		//Then
 		assertEquals(user.getEmail(), actual.getEmail());
+		assertEquals(UserEntity.class, actual.getClass());
+	}
+	
+	//Scenario 2: User tries to login with invalid playground.
+	@Test(expected=Exception.class)
+	public void TestUserTriesToLoginWithInvalidPlayground() throws EmailAlreadyRegisteredException, InvalidEmailException, InvalidRoleException {
+		//Given
+		Map<String, String> map = new HashMap<String, String>();
+		map.put("playground", "playground_tomy");
+		map.put("email", "demo@gmail.com");
+		UserTO user = new UserTO("tal", "demo@gmail.com", "anAvatr", types.Manager.getType(), true);
+		userService.registerNewUser(user.ToEntity());
+		//When
+		UserEntity actual = this.rest.getForObject(this.url + "/login/{playground}/{email}",
+				UserEntity.class, map);
+		//Then ^Exception^
+	}
+	
+	//Scenario 3: User tries to login with invalid email
+	@Test(expected=Exception.class) // should be InvalidEmailException
+	public void TestUserLoginWithInvalidEmail() throws EmailAlreadyRegisteredException, InvalidEmailException, InvalidRoleException {
+		//Given
+		Map<String, String> map = new HashMap<String, String>();
+		map.put("playground", "playground_lazar");
+		map.put("email", "gogo@gmail.com");
+		UserTO user = new UserTO("tal", "demo@gmail.com", "anAvatr", types.Manager.getType(), true);
+		userService.registerNewUser(user.ToEntity());
+		//When
+		UserEntity actual = this.rest.getForObject(this.url + "/login/{playground}/{email}",
+				UserEntity.class, map);
+		//Then ^Exception^
 	}
 	
 	// Feature 4
 	// Scenario 1: Test update user
 	@Test
-	public void TestUpdateUserFromDB() throws EmailAlreadyRegisteredException, UserNotFoundException, InvalidEmailException {
+	public void TestUpdateUserFromDB() throws EmailAlreadyRegisteredException, UserNotFoundException, InvalidEmailException, InvalidRoleException {
+		//Given
 		Map<String, String> map = new HashMap<String, String>();
 		map.put("playground", "playground_lazar");
 		map.put("email", "demo@gmail.com");
@@ -176,15 +255,18 @@ public class UsersTest {
 		et.setCode(null);
 		userService.updateUserInfo(et);
 		userto.setAvatar("CAT");
+		//When
 		rest.put(url + "/{playground}/{email}", userto, map);
+		//Then
 		assertEquals(userto.getAvatar(), "CAT");
 	}
 
-	
+		
 	// Scenario 2: Test that guest cannot update details
 	
 	@Test(expected=UserNotActivatedException.class)
-	public void TestUnactivatedUserThrowsExceptionWhenUpdatingDetails() throws EmailAlreadyRegisteredException, UserNotFoundException, UserNotActivatedException, InvalidEmailException {
+	public void TestUnactivatedUserThrowsExceptionWhenUpdatingDetails() throws EmailAlreadyRegisteredException, UserNotFoundException, UserNotActivatedException, InvalidEmailException, InvalidRoleException {
+		//Given
 		Map<String, String> map = new HashMap<String, String>();
 		map.put("playground", "playground_lazar");
 		map.put("email", "liran@gmail.com");
@@ -194,11 +276,33 @@ public class UsersTest {
 		et.setCode("C0D3");
 		userService.updateUserInfo(et);
 		userto.setAvatar("CAT");
+		//When
 		try {
 			rest.put(url + "/{playground}/{email}", userto, map);
 		}catch(Exception e) {
+		//Then
 			//System.out.println(e.getClass());
 			throw new UserNotActivatedException();
 		}
 	}
+	
+	//Scenario 3: Update a user when the user is not exist in databse 
+	@Test(expected=Exception.class)
+	public void TestUnexistedUserThrowsException() throws EmailAlreadyRegisteredException, UserNotFoundException, InvalidEmailException, InvalidRoleException {
+		//Given
+		Map<String, String> map = new HashMap<String, String>();
+		map.put("playground", "playground_lazar");
+		map.put("email", "gogo@gmail.com");
+		UserTO userto = new UserTO("demo", "demo@gmail.com", "DOG", types.Manager.getType(), true);
+		UserEntity et = userto.ToEntity();
+		userService.registerNewUser(et);
+		et.setCode(null);
+		userService.updateUserInfo(et);
+		userto.setAvatar("CAT");
+		//When
+		rest.put(url + "/{playground}/{email}", userto, map);
+		//Then ^Exception^
+
+	}
+
 }
