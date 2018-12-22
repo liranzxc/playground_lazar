@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.example.demo.user.exceptions.EmailAlreadyRegisteredException;
 import com.example.demo.user.exceptions.InvalidConfirmationCodeException;
+import com.example.demo.user.exceptions.InvalidEmailException;
 import com.example.demo.user.exceptions.UserNotActivatedException;
 import com.example.demo.user.exceptions.UserNotFoundException;
 
@@ -37,7 +38,7 @@ public class UsersController {
 	
 	//1. Register a new user.
 	@RequestMapping(value="/", method=RequestMethod.POST)
-	public UserTO registerFromForm(@RequestBody UserTO userForm) throws EmailAlreadyRegisteredException {
+	public UserTO registerFromForm(@RequestBody UserTO userForm) throws EmailAlreadyRegisteredException, InvalidEmailException {
 		this.userService.registerNewUser(userForm.ToEntity());
 		return userForm;
 	}
@@ -54,7 +55,11 @@ public class UsersController {
 				if (code.equals(user.getCode())) {
 					//UserTO validatedUser = new UserTO(userService.getUser(email));
 					user.setCode(null);
-					userService.updateUserInfo(user);
+					try {
+						userService.updateUserInfo(user);
+					} catch (InvalidEmailException e) { //This case should not happen, because we only update the user's code.
+						e.printStackTrace();
+					}
 					return new UserTO(user);
 				}
 				else
@@ -77,7 +82,7 @@ public class UsersController {
 	@RequestMapping(value="/{playground}/{email}" , method=RequestMethod.PUT,consumes=MediaType.APPLICATION_JSON_VALUE)
 	public void updateUserByPlaygroundAndEmail
 	(@PathVariable(name="email") String email, 
-	@PathVariable(name="playground") String playground , @RequestBody UserTO updatedDetails) throws UserNotFoundException, UserNotActivatedException
+	@PathVariable(name="playground") String playground , @RequestBody UserTO updatedDetails) throws UserNotFoundException, UserNotActivatedException, InvalidEmailException
 	{
 //		List<UserEntity> mydb = CreateUserDB();
 //		
