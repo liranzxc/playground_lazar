@@ -2,18 +2,14 @@ package com.example.demo.tests.element;
 
 import static org.junit.Assert.assertTrue;
 
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Date;
-import java.util.List;
+
 
 import javax.annotation.PostConstruct;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.boot.web.server.LocalServerPort;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Sort;
 import org.springframework.web.client.RestTemplate;
 
 import org.junit.runner.RunWith;
@@ -22,8 +18,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import com.example.demo.application.exceptions.InvalidPageRequestException;
-import com.example.demo.application.exceptions.InvalidPageSizeRequestException;
 import com.example.demo.element.ElementEntity;
 import com.example.demo.element.ElementTO;
 import com.example.demo.element.ElementService;
@@ -160,7 +154,7 @@ public class ElementTest {
 	@Test(expected = ElementAlreadyExistException.class)
 	public void createElementWhenElementAlreadyExist() throws ElementAlreadyExistException {
 		// given
-		this.elementService.addNewElement(demo_entity);
+		this.elementService.addElementFromOutside(demo_entity);
 
 		// when
 		String usrPlayground = "playground_lazar";

@@ -255,4 +255,9 @@ public class ElementServiceDummy implements ElementService {
 		return null;
 	}
 
+	@Override
+	public void addElementFromOutside(ElementEntity demo_entity) {
+		// TODO Auto-generated method stub
+	}
+
 }

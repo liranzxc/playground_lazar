@@ -25,5 +25,8 @@ public interface ElementService{
 	public List<ElementEntity> getAllElementsByAttributeAndValue(String attribute, String value,Pageable page) throws InvalidAttributeNameException;
 	
 	public void cleanup();
+	
+	// Special for Gherkin Test
+	public void addElementFromOutside(ElementEntity demo_entity) throws ElementAlreadyExistException;
 
 }

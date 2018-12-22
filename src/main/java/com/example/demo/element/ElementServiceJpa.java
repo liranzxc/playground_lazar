@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 
 import org.springframework.transaction.annotation.Transactional;
 
+import com.example.demo.aop.MyLog;
 import com.example.demo.application.exceptions.InvalidPageRequestException;
 import com.example.demo.application.exceptions.InvalidPageSizeRequestException;
 import com.example.demo.element.exceptions.ElementAlreadyExistException;
@@ -30,6 +31,7 @@ public class ElementServiceJpa implements ElementService {
 
 	@Override
 	@Transactional
+	@MyLog  // TODO
 	public void addNewElement(ElementEntity et) throws ElementAlreadyExistException {
 		int newID = ++ID;
 		String key = ElementEntity.createKeyFromIdAndPlayground(newID+"", et.getPlayground());
@@ -169,6 +171,21 @@ public class ElementServiceJpa implements ElementService {
 	
 	public static void setIDToZero() {
 		ID = 0;
+	}
+
+	// Special for checking
+	@Override
+	public void addElementFromOutside(ElementEntity et) throws ElementAlreadyExistException {
+		String key = ElementEntity.createKeyFromIdAndPlayground(et.getId(), et.getPlayground());
+		//System.err.println("inside createElement Service setting key to:  = " + key);
+		
+		et.setKey(key);
+		
+		if (!this.dataBase.existsByKey(key)) {
+			this.dataBase.save(et);
+		} else {
+			throw new ElementAlreadyExistException();
+		}
 	}
 
 }
