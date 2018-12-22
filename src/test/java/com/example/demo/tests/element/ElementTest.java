@@ -3,22 +3,16 @@ package com.example.demo.tests.element;
 import static org.junit.Assert.assertTrue;
 
 import java.util.Date;
-<<<<<<< HEAD
 
-=======
->>>>>>> ab01c8bff8526afb52ffc34195318c47fbe549de
 
 import javax.annotation.PostConstruct;
 
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-<<<<<<< HEAD
 import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.web.client.RestTemplate;
 
-=======
->>>>>>> ab01c8bff8526afb52ffc34195318c47fbe549de
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -165,14 +159,12 @@ public class ElementTest {
 	@Test(expected = ElementAlreadyExistException.class)
 	public void createElementWhenElementAlreadyExist() throws ElementAlreadyExistException, InterruptedException {
 		// given
-<<<<<<< HEAD
+
 		this.elementService.addElementFromOutside(demo_entity);
-=======
 	
 		this.elementService.addNewElement(demo_entity);
 		
 		Thread.sleep(2000); // upload user on cloud - take time
->>>>>>> ab01c8bff8526afb52ffc34195318c47fbe549de
 
 		// when
 		String usrPlayground = "playground_lazar";

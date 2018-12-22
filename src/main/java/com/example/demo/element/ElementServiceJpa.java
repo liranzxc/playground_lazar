@@ -34,7 +34,7 @@ public class ElementServiceJpa implements ElementService {
 
 	@Override
 	@Transactional
-	@MyLog  // TODO
+	@MyLog 
 	public void addNewElement(ElementEntity et) throws ElementAlreadyExistException {
 		int newID = ++ID;
 		String key = ElementEntity.createKeyFromIdAndPlayground(newID+"", et.getPlayground());
@@ -51,6 +51,7 @@ public class ElementServiceJpa implements ElementService {
 
 	@Override
 	@Transactional
+	@MyLog
 	public void updateElement(ElementEntity et) throws ElementNotFoundException {
 		String key = et.getKey();
 		//System.err.println(key);
@@ -66,6 +67,7 @@ public class ElementServiceJpa implements ElementService {
 
 	@Override
 	@Transactional(readOnly = true)
+	@MyLog
 	public ElementEntity getElement(String playground, String id) throws ElementNotFoundException {
 		String key = ElementEntity.createKeyFromIdAndPlayground(id, playground);
 		if (this.dataBase.existsByKey(key)) {
@@ -77,6 +79,7 @@ public class ElementServiceJpa implements ElementService {
 
 	@Override
 	@Transactional
+	@MyLog
 	public void deleteElement(String playground, String id) {
 		String key = ElementEntity.createKeyFromIdAndPlayground(id, playground);
 		if (this.dataBase.existsByKey(key)) {
@@ -86,6 +89,7 @@ public class ElementServiceJpa implements ElementService {
 
 	@Override
 	@Transactional(readOnly = true)
+	@MyLog
 	public List<ElementEntity> getAllElements() {
 		List<ElementEntity> list = this.dataBase.findAll(Sort.by("id")).stream().collect(Collectors.toList());
 
@@ -94,6 +98,7 @@ public class ElementServiceJpa implements ElementService {
 
 	@Override
 	@Transactional(readOnly = true)
+	@MyLog
 	public List<ElementEntity> getAllElements(Pageable page)
 			throws InvalidPageSizeRequestException, InvalidPageRequestException {
 
@@ -110,6 +115,7 @@ public class ElementServiceJpa implements ElementService {
 
 	@Override
 	@Transactional(readOnly = true)
+	@MyLog
 	public List<ElementEntity> getAllElementsNearBy(double x, double y, double distance, Pageable page)
 			throws InvalidDistanceValueException {
 
@@ -126,6 +132,7 @@ public class ElementServiceJpa implements ElementService {
 
 	@Override
 	@Transactional(readOnly = true)
+	@MyLog
 	public List<ElementEntity> getAllElementsByAttributeAndValue(String attribute, String value,Pageable page)
 			throws InvalidAttributeNameException {
 		List<ElementEntity> filteredElements;
@@ -152,6 +159,7 @@ public class ElementServiceJpa implements ElementService {
 
 	@Override
 	@Transactional
+	@MyLog
 	public void cleanup() {
 		this.dataBase.deleteAll();
 	}
