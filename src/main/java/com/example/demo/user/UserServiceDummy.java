@@ -25,7 +25,7 @@ public class UserServiceDummy implements UserService{
 	}
 
 	@Override
-	public UserEntity getUser(String email) throws UserNotFoundException {
+	public UserEntity getUser(String email, String playground) throws UserNotFoundException {
 		if(this.allRegisteredUsers.containsKey(email)) {
 			return allRegisteredUsers.get(email);
 		}
