@@ -10,6 +10,7 @@ import com.example.demo.element.exceptions.ElementAlreadyExistException;
 import com.example.demo.element.exceptions.ElementNotFoundException;
 import com.example.demo.element.exceptions.InvalidAttributeNameException;
 import com.example.demo.element.exceptions.InvalidDistanceValueException;
+import com.example.demo.user.exceptions.InvalidEmailException;
 
 public interface ElementService{
 
@@ -26,7 +27,6 @@ public interface ElementService{
 	
 	public void cleanup();
 	
-	// Special for Gherkin Test
 	public void addElementFromOutside(ElementEntity demo_entity) throws ElementAlreadyExistException;
 
 }

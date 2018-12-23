@@ -17,7 +17,7 @@ public class LoggerAspect {
 
 	private Log log = LogFactory.getLog(LoggerAspect.class);
 	
-//	@Before("@annotation(com.example.demo.aop.MyLog)")
+	@Before("@annotation(com.example.demo.aop.MyLog)")
 	public void log (JoinPoint joinPoint) {
 		String className = joinPoint.getTarget().getClass().getSimpleName();
 		String methodName = joinPoint.getSignature().getName();
@@ -30,8 +30,7 @@ public class LoggerAspect {
 		String className = joinPoint.getTarget().getClass().getSimpleName();
 		String methodName = joinPoint.getSignature().getName();
 		String methodSignature = className + "." + methodName + "()";
-//		System.err.println(methodSignature + " - start");
-		log.info(methodSignature + " - start");
+
 		
 		try {
 			Object rv = joinPoint.proceed();

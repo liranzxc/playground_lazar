@@ -17,9 +17,7 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
-import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.test.context.junit4.SpringRunner;
-import org.springframework.web.client.RestTemplate;
 
 import com.example.demo.element.ElementEntity;
 import com.example.demo.element.ElementService;
@@ -161,10 +159,6 @@ public class ElementTest {
 		// given
 
 		this.elementService.addElementFromOutside(demo_entity);
-	
-		this.elementService.addNewElement(demo_entity);
-		
-		Thread.sleep(2000); // upload user on cloud - take time
 
 		// when
 		String usrPlayground = "playground_lazar";

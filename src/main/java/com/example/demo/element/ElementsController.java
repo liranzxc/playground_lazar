@@ -34,13 +34,6 @@ public class ElementsController {
 		this.elementService = elementService;
 	}
 
-	// TODO this public static final is giving an error when uploading server
-	// Test element
-	// public static final ElementTO DEMO_ELEMENT_TO =
-	// new ElementTO("playground_lazar", "1", new Location(0, 0), "Demo", new
-	// Date("12.03.18"), null, "TEST", new TreeMap<String,Object>(), "playGround",
-	// "demp777@gmail.com");
-
 	/*
 	 * Feature 5:
 	 */
@@ -92,44 +85,10 @@ public class ElementsController {
 	public ElementTO getElement(@PathVariable("userPlayground") String userPlayground,
 			@PathVariable("email") String email, @PathVariable("playground") String playground,
 			@PathVariable("id") String id) throws ElementNotFoundException {
-		// TODO add pagination
 		return new ElementTO(this.elementService.getElement(playground, id));
 	}
 
-	// this method checks if there is a '@' in the name and there is something
-	// before it and after it
-	private boolean verifiedEmail(String email) {
-		String[] emailParts = email.split("@");
-		
-		if(emailParts.length != 2
-				|| emailParts[0].length() < 3) {
-			System.err.println("Email illigal!!");
-			return false;
-		}
-		
-		String[] emailTailParts = emailParts[1].split("\\.");
-		
-		if (emailTailParts.length < 2 
-				|| emailTailParts[0].isEmpty()
-				|| emailTailParts[1].isEmpty()) {
-			return false;
-		}
-		
-		return true;
-		
-//		if (email.length() < 3) {
-//			return false;
-//		}
-//
-//		// iterate from (1- (n-1)) letters, no need the first and last chars, '@' should
-//		// be in the middle
-//		for (int i = 1; i < email.length() - 1; i++) {
-//			if (email.charAt(i) == '@') {
-//				return true;
-//			}
-//		}
-//		return false;
-	}
+	
 
 	/*
 	 * Feature 8:
@@ -145,17 +104,7 @@ public class ElementsController {
 		List<ElementEntity> mylist = elementService.getAllElements(PageRequest.of(page, size,Sort.by("id")));
 
 		return mylist.stream().map(ElementTO::new).collect(Collectors.toList()).toArray(new ElementTO[0]);
-
-		// old code .. better code up - liran nachman
-
-		/*
-		 * ArrayList<ElementTO> result = new ArrayList<>(mylist.size()); for
-		 * (ElementEntity elementEntity : elementService.getAllElements()) {
-		 * result.add(new ElementTO(elementEntity)); }
-		 * 
-		 * return result.toArray(new ElementTO[result.size()]); // Transfer to array //
-		 * TODO: pagination
-		 */ }
+	}
 
 	/*
 	 * Feature 9:
@@ -172,21 +121,6 @@ public class ElementsController {
 		if (distance < 0.0)
 			throw new InvalidDistanceValueException("Distance must be equal or higher from 0");
 
-//		List<ElementEntity> allElementEntities = elementService.getAllElements(size, page);
-//		
-//		ArrayList<ElementEntity> allNearElementEntities = 
-//				allElementEntities.stream()  // transfer 
-//				.filter(  // filter by predicate
-//						e -> getDistanceBetween(e.getLocation(), new Location(x, y)) <= distance)
-//				.collect(Collectors.toCollection(ArrayList::new));  // transfer to array
-//		
-//		allNearElementEntities.trimToSize();
-//		
-//		ElementTO[] allNearElementsTO = new ElementTO[allNearElementEntities.size()];
-//		for(int i = 0; i < allNearElementsTO.length; i++) {
-//			allNearElementsTO[i] = new ElementTO(allNearElementEntities.get(i));
-//		}
-//		
 		List<ElementEntity> nearBy = this.elementService.getAllElementsNearBy(x, y, distance,
 				PageRequest.of(page, size,Sort.by("id")));
 
@@ -194,9 +128,6 @@ public class ElementsController {
 
 	}
 
-	private double getDistanceBetween(Location l1, Location l2) {
-		return Math.sqrt(Math.pow(l1.getX() - l2.getX(), 2) + Math.pow(l1.getY() - l2.getY(), 2));
-	}
 
 	/*
 	 * Feature 10:
@@ -220,11 +151,27 @@ public class ElementsController {
 			throw new InvalidPageRequestException("Page index must be at least 0");
 		}
 
-		
-		/// better
 		return this.elementService.getAllElementsByAttributeAndValue(attributeName, value, PageRequest.of(page, size,Sort.by("id")))
 				.stream().map(ElementTO::new).collect(Collectors.toList()).toArray(new ElementTO[0]);
 
+	}
+	
+	// this method checks if there is a '@' in the name and there is something
+	// before it and after it
+	private boolean verifiedEmail(String email) {
+		String[] emailParts = email.split("@");
+
+		if (emailParts.length != 2 || emailParts[0].length() < 3) {
+			return false;
+		}
+
+		String[] emailTailParts = emailParts[1].split("\\.");
+
+		if (emailTailParts.length < 2 || emailTailParts[0].isEmpty() || emailTailParts[1].isEmpty()) {
+			return false;
+		}
+
+		return true;
 	}
 
 }

@@ -22,8 +22,6 @@ public class ElementServiceJpa implements ElementService {
 
 	private static int ID = 0;
 	
-	
-	
 	private ElementRepository dataBase;
 	
 	
@@ -35,7 +33,8 @@ public class ElementServiceJpa implements ElementService {
 	@Override
 	@Transactional
 	@MyLog 
-	public void addNewElement(ElementEntity et) throws ElementAlreadyExistException {
+	public void addNewElement(ElementEntity et) throws ElementAlreadyExistException{
+		
 		int newID = ++ID;
 		String key = ElementEntity.createKeyFromIdAndPlayground(newID+"", et.getPlayground());
 		System.err.println("inside createElement Service setting key to:  = " + key);
@@ -48,13 +47,30 @@ public class ElementServiceJpa implements ElementService {
 			throw new ElementAlreadyExistException();
 		}
 	}
+	
+	
+	@Override
+	@Transactional
+	@MyLog 
+	public void addElementFromOutside(ElementEntity et) throws ElementAlreadyExistException {
+		String key = et.getKey();
+		//System.err.println("inside createElement Service setting key to:  = " + key);
+		
+		et.setKey(key);
+		
+		if (!this.dataBase.existsByKey(key)) {
+			this.dataBase.save(et);
+		} else {
+			throw new ElementAlreadyExistException();
+		}
+	}
+
 
 	@Override
 	@Transactional
 	@MyLog
 	public void updateElement(ElementEntity et) throws ElementNotFoundException {
 		String key = et.getKey();
-		//System.err.println(key);
 		if (this.dataBase.existsByKey(key)) {
 			this.dataBase.deleteByKey(key); // delete not updated element
 			this.dataBase.save(et); // save updated element
@@ -62,7 +78,6 @@ public class ElementServiceJpa implements ElementService {
 			
 			throw new ElementNotFoundException();
 		}
-
 	}
 
 	@Override
@@ -92,7 +107,6 @@ public class ElementServiceJpa implements ElementService {
 	@MyLog
 	public List<ElementEntity> getAllElements() {
 		List<ElementEntity> list = this.dataBase.findAll(Sort.by("id")).stream().collect(Collectors.toList());
-
 		return list;
 	}
 
@@ -108,7 +122,6 @@ public class ElementServiceJpa implements ElementService {
 			throw new InvalidPageRequestException();
 
 		List<ElementEntity> list = this.dataBase.findAll(page).getContent();
-
 
 		return list;
 	}
@@ -130,6 +143,9 @@ public class ElementServiceJpa implements ElementService {
 
 	}
 
+	
+	
+	//TODO insteas get all elements and filter, do filter inside database
 	@Override
 	@Transactional(readOnly = true)
 	@MyLog
@@ -184,19 +200,5 @@ public class ElementServiceJpa implements ElementService {
 		ID = 0;
 	}
 
-	// Special for checking
-	@Override
-	public void addElementFromOutside(ElementEntity et) throws ElementAlreadyExistException {
-		String key = ElementEntity.createKeyFromIdAndPlayground(et.getId(), et.getPlayground());
-		//System.err.println("inside createElement Service setting key to:  = " + key);
-		
-		et.setKey(key);
-		
-		if (!this.dataBase.existsByKey(key)) {
-			this.dataBase.save(et);
-		} else {
-			throw new ElementAlreadyExistException();
-		}
-	}
-
+	
 }
