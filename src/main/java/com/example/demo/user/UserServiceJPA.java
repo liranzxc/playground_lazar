@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.example.demo.aop.MyLog;
 import com.example.demo.application.accessories.GeneratorService;
 import com.example.demo.user.exceptions.EmailAlreadyRegisteredException;
 import com.example.demo.user.exceptions.InvalidEmailException;
@@ -31,6 +32,7 @@ public class UserServiceJPA implements UserService {
 
 	@Override
 	@Transactional
+	@MyLog
 	public void registerNewUser(UserEntity user) throws EmailAlreadyRegisteredException, InvalidEmailException {
 		if (!isValidEmail(user.getEmail()))
 			throw new InvalidEmailException("The email " +user.getEmail()+" is invalid.");
@@ -50,6 +52,7 @@ public class UserServiceJPA implements UserService {
 	
 	@Override
 	@Transactional
+	@MyLog
 	public void updateUserInfo(UserEntity user) throws UserNotFoundException, InvalidEmailException {
 		if (!isValidEmail(user.getEmail()))
 			throw new InvalidEmailException("The email " +user.getEmail()+" is invalid.");
@@ -62,6 +65,7 @@ public class UserServiceJPA implements UserService {
 
 	@Override
 	@Transactional(readOnly = true)
+	@MyLog
 	public UserEntity getUser(String email) throws UserNotFoundException {
 		if (dataBase.existsByEmail(email)) {
 			UserEntity user = dataBase.findByEmail(email).get();
@@ -107,11 +111,12 @@ public class UserServiceJPA implements UserService {
 
 	@Override
 	@Transactional
+	@MyLog
 	public void cleanup() {
 		dataBase.deleteAll();
 	}
 	
-	public boolean isValidEmail(String email) {
+	private boolean isValidEmail(String email) {
 			return Pattern.matches("[_a-zA-Z1-9]+(\\.[A-Za-z0-9]*)*@[A-Za-z0-9]+\\.[A-Za-z0-9]+(\\.[A-Za-z0-9]*)*", email);
 	}
 	
