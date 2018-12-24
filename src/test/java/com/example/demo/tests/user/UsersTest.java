@@ -189,7 +189,10 @@ public class UsersTest {
 	}
 	
 	
-	// Feature 3
+	///////////////
+	// Feature 3 //
+	///////////////
+	
 	// Scenario 1: Test user log in successfully 
 	@Test
 	public void TestUserLoginSuccessfully() throws Exception {
@@ -241,7 +244,10 @@ public class UsersTest {
 		//Then ^Exception^
 	}
 	
-	// Feature 4
+	///////////////
+	// Feature 4 //
+	///////////////
+	
 	// Scenario 1: Test update user
 	@Test
 	public void TestUpdateUserFromDB() throws EmailAlreadyRegisteredException, UserNotFoundException, InvalidEmailException, InvalidRoleException {
