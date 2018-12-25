@@ -9,4 +9,5 @@ public interface ActivityService {
 	
 	public void addNewActivity(ActivityEntity entity) throws ActivityAlreadyExistException;
 	public List<ActivityEntity> getAllActivitiesByTypes(String type, Pageable pageable);
+	public void cleanUp();
 }

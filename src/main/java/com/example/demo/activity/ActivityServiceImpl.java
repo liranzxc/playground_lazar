@@ -71,4 +71,11 @@ public class ActivityServiceImpl implements ActivityService {
 		return list;
 	}
 
+
+
+	@Override
+	public void cleanUp() {
+		this.dataBase.deleteAll();
+	}
+
 }
