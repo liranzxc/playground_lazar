@@ -16,6 +16,7 @@ public class ActivityServiceImpl implements ActivityService {
 	private ActivityRepository dataBase;
 	private ApplicationContext spring;
 	private ObjectMapper jackson;
+	private static int Id = 0;
 	
 	@Autowired
 	public void setDataBase(ActivityRepository dataBase) {
@@ -25,8 +26,9 @@ public class ActivityServiceImpl implements ActivityService {
 	
 	@Override
 	public void addNewActivity(ActivityEntity entity) throws ActivityAlreadyExistException {
-		String id = entity.getId();
-		if(!this.dataBase.existsById(id)) {
+		entity.setKey(ActivityEntity.generateKey("playground_lazar", ""+Id++));
+		String key = entity.getKey();
+		if(!this.dataBase.existsByKey(key)) {
 			if (!entity.getType().isEmpty()) {
 				try {
 					String type = entity.getType();
@@ -35,7 +37,6 @@ public class ActivityServiceImpl implements ActivityService {
 					PlaygroundPlugin plugin = (PlaygroundPlugin) this.spring.getBean(theClass);
 					Object activity = plugin.invokeOperation(entity);
 					
-					@SuppressWarnings("unchecked")
 					Map<String, Object> rvMap = this.jackson.readValue(
 							this.jackson.writeValueAsString(activity),
 							Map.class);
@@ -50,13 +51,6 @@ public class ActivityServiceImpl implements ActivityService {
 			throw new ActivityAlreadyExistException("Activity already exists");
 		}
 		
-	}
-
-	@Override
-	public void removeActivity(String activityID) {
-		if(this.dataBase.existsById(activityID)) {
-			this.dataBase.deleteById(activityID);
-		}
 	}
 
 }
