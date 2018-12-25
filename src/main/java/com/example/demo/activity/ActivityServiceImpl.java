@@ -1,13 +1,17 @@
 package com.example.demo.activity;
 
+import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import com.example.demo.activity.exceptions.ActivityAlreadyExistException;
 import com.example.demo.activity.plugins.PlaygroundPlugin;
+import com.example.demo.element.ElementEntity;
+import com.example.demo.element.exceptions.InvalidAttributeNameException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 @Service
@@ -45,12 +49,20 @@ public class ActivityServiceImpl implements ActivityService {
 					throw new RuntimeException(); //cause the user to get http 500 error
 				}
 			}
+			System.err.println("done saving activity entity");
 			this.dataBase.save(entity);
 		}
 		else {
 			throw new ActivityAlreadyExistException("Activity already exists");
 		}
 		
+	}
+
+
+	@Override
+	public List<ActivityEntity> getAllActivitiesByTypes(String type, Pageable pageable) {
+		List<ActivityEntity> list = dataBase.findByType(type, pageable);
+		return list;
 	}
 
 }
