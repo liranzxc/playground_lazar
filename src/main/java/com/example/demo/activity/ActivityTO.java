@@ -81,7 +81,7 @@ public class ActivityTO {
 		private Map<String,Object> attributes;
 
 		public ActivityEntity ToEntity() {
-			// TODO Auto-generated method stub
-			return new ActivityEntity(this);
+			return new ActivityEntity(playground, id, elementPlayground, elementId, type, playerPlayground, playerEmail, attributes);
 		}
+		
 }

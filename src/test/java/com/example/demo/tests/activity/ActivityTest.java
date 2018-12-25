@@ -3,6 +3,9 @@ package com.example.demo.tests.activity;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.junit.Assert.assertThat;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import javax.annotation.PostConstruct;
 
 import org.junit.Test;
@@ -55,5 +58,21 @@ public class ActivityTest {
 
 		assertThat(actual.getId(),equalTo("1"));
 
+	}
+	
+	
+	@Test
+	public void AddActivity() {
+		//Given
+		Map <String,Object> map = new HashMap<String,Object>();
+		map.put("op", "tal");
+		map.put("message", "this is a test");
+		ActivityTO activity = new ActivityTO("playground_lazar", "0", "playground_lazar", "1", "BoardPost" , "playground_lazar", "asdfsd", map);
+		
+		MultiValueMap<String, String> params= new LinkedMultiValueMap<>();
+		params.add("userPlayground", "playground_lazar");
+		params.add("email", "demo@gmail.com");
+		//When
+		Object result =rest.postForObject( url+"/{userPlayground}/{email}", activity, ActivityTO.class, params );
 	}
 }
