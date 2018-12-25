@@ -103,7 +103,7 @@ public class ElementTest_Feature10 {
 	// scenario 1 - NAME
 	@Test
 	public void findOneElementByHisNameSuccessfulyInDatabaseWithOneElement() throws ElementAlreadyExistException {
-		
+
 		// Given:
 		this.elementService.addNewElement(this.demo_entity);
 
@@ -112,6 +112,32 @@ public class ElementTest_Feature10 {
 		String email = "aviv@gmail.com";
 		String attributeName = "name";
 		String value = this.demo_entity.getName();
+
+		// Than:
+		ElementTO[] allElements = this.restTemplate.getForObject(
+				this.url + "/{userPlayground}/{email}/search/{attributeName}/{value}", ElementTO[].class,
+				userPlayground, email, attributeName, value);
+
+		boolean success = false;
+
+		if (allElements.length == 1 && allElements[0].equals(new ElementTO(this.demo_entity)))
+			success = true;
+
+		assertTrue(success);
+	}
+
+	// scenario 1 - TYPE
+	@Test
+	public void findOneElementByHisTypeSuccessfulyInDatabaseWithOneElement() throws ElementAlreadyExistException {
+
+		// Given:
+		this.elementService.addNewElement(this.demo_entity);
+
+		// When:
+		String userPlayground = "playground_lazar";
+		String email = "aviv@gmail.com";
+		String attributeName = "type";
+		String value = this.demo_entity.getType();
 
 		// Than:
 		ElementTO[] allElements = this.restTemplate.getForObject(
@@ -160,13 +186,45 @@ public class ElementTest_Feature10 {
 		assertTrue(success);
 	}
 
+	// scenario 2 - TYPE
+	@Test
+	public void findElementByTypeSuccessfulyInDatabaseWithTwentyElements() throws ElementAlreadyExistException {
+		// Given: 20 element entities in database (and one is the target)
+		for (ElementEntity e : this.demo_entities) {
+			if (Integer.parseInt(e.getId()) == 6) {
+				e.setType("demo_target"); // the test
+			}
+			this.elementService.addNewElement(e);
+		}
+
+		// When:
+		String userPlayground = "playground_lazar";
+		String email = "aviv@gmail.com";
+		String attributeName = "type";
+		String value = "demo_target";
+
+		// Than:
+		ElementTO[] allElements = this.restTemplate.getForObject(
+				this.url + "/{userPlayground}/{email}/search/{attributeName}/{value}", ElementTO[].class,
+				userPlayground, email, attributeName, value);
+
+		boolean success = false;
+		// System.err.println("Num of elements: " + allElements.length);
+
+		System.err.println(allElements[0]);
+		if (allElements.length == 1 && allElements[0].getType().equals(value))
+			success = true;
+
+		assertTrue(success);
+	}
+
 	// scenario 3 - NAME
 	@Test
-	public void findFiveElementsByNameSuccessfulyInDatabaseWithTenElement() throws ElementAlreadyExistException {
-		// Given: 10 element entities in database (which 5 of them are the targets)
+	public void findFiveElementsByNameSuccessfulyInDatabaseWithTwentyElement() throws ElementAlreadyExistException {
+		// Given: 20 element entities in database (which 5 of them are the targets)
 
 		for (int i = 0; i < this.demo_entities.length; i++) {
-			if(i < 5) {
+			if (i < 5) {
 				demo_entities[i].setName("demo_target");
 			}
 			this.elementService.addNewElement(demo_entities[i]);
@@ -188,9 +246,9 @@ public class ElementTest_Feature10 {
 		if (allElements.length != 5) {
 			success = false;
 		}
-		
-		for(int i = 0; i < allElements.length; i++) {
-			if(!value.equals(allElements[i].getName())) {
+
+		for (int i = 0; i < allElements.length; i++) {
+			if (!value.equals(allElements[i].getName())) {
 				success = false;
 			}
 		}
@@ -198,12 +256,73 @@ public class ElementTest_Feature10 {
 		assertTrue(success);
 	}
 
-	
-	
-
-// scenario 5
+	// scenario 3 - TYPE
 	@Test
-	public void findNoElementByTypeInDatabaseWithTenElement() throws ElementAlreadyExistException {
+	public void findFiveElementsByTypeSuccessfulyInDatabaseWithTwentyElements() throws ElementAlreadyExistException {
+		// Given: 10 element entities in database (which 5 of them are the targets)
+
+		for (int i = 0; i < this.demo_entities.length; i++) {
+			if (i < 5) {
+				demo_entities[i].setType("demo_target");
+			}
+			this.elementService.addNewElement(demo_entities[i]);
+		}
+
+		// When:
+		String userPlayground = "playground_lazar";
+		String email = "aviv@gmail.com";
+		String attributeName = "type";
+		String value = "demo_target";
+
+		// Than:
+		ElementTO[] allElements = this.restTemplate.getForObject(
+				this.url + "/{userPlayground}/{email}/search/{attributeName}/{value}", ElementTO[].class,
+				userPlayground, email, attributeName, value);
+
+		boolean success = true;
+
+		if (allElements.length != 5) {
+			success = false;
+		}
+
+		for (int i = 0; i < allElements.length; i++) {
+			if (!value.equals(allElements[i].getType())) {
+				success = false;
+			}
+		}
+
+		assertTrue(success);
+	}
+
+	// scenario 4
+	@Test
+	public void findElementFailedByInvalidAttributeNameInDatabaseWithOneElement() throws ElementAlreadyExistException {
+		// Given:
+		this.elementService.addNewElement(this.demo_entity);
+
+		// When:
+		String userPlayground = "playground_lazar";
+		String email = "aviv@gmail.com";
+		String attributeName = "attack";
+		String value = "1";
+
+		// Than:
+		boolean success = false;
+
+		try {
+			ElementTO[] allElements = this.restTemplate.getForObject(
+					this.url + "/{userPlayground}/{email}/search/{attributeName}/{value}", ElementTO[].class,
+					userPlayground, email, attributeName, value);
+		} catch (Exception e) {
+			success = true;
+		}
+
+		assertTrue(success);
+	}
+
+	// scenario 5 - Type
+	@Test
+	public void findNoElementByTypeInDatabaseWithTwentyElements() throws ElementAlreadyExistException {
 
 		// Given:
 		ArrayList<ElementEntity> demo_targets = new ArrayList<>();
@@ -233,18 +352,45 @@ public class ElementTest_Feature10 {
 		assertTrue(success);
 	}
 
-	// scenario 6
+	// scenario 5 - Name
 	@Test
-	public void findTenElementsByTypeSuccessfulyInDatabaseWithTenElement() throws ElementAlreadyExistException {
-		// Given: 10 element entities in database (which 5 of them are the targets)
+	public void findNoElementByNameInDatabaseWithTwentyElements() throws ElementAlreadyExistException {
+
+		// Given:
 		ArrayList<ElementEntity> demo_targets = new ArrayList<>();
 
-		int counter = 0;
 		for (ElementEntity e : this.demo_entities) {
-			counter++;
+			this.elementService.addNewElement(e);
+		}
 
+		demo_targets.trimToSize();
+
+		// When:
+		String userPlayground = "playground_lazar";
+		String email = "aviv@gmail.com";
+		String attributeName = "name";
+		String value = "no demo name"; // no such value in database
+
+		// Than:
+		boolean success = false;
+
+		ElementTO[] allElements = this.restTemplate.getForObject(
+				this.url + "/{userPlayground}/{email}/search/{attributeName}/{value}", ElementTO[].class,
+				userPlayground, email, attributeName, value);
+
+		if (allElements.length == 0)
+			success = true;
+
+		assertTrue(success);
+	}
+
+	// scenario 6 - Name
+	@Test
+	public void CheckDefaultPagination_findTenElementsByNameSuccessfulyInDatabaseWithTwentyElements() throws ElementAlreadyExistException {
+		ArrayList<ElementEntity> demo_targets = new ArrayList<>();
+
+		for (ElementEntity e : this.demo_entities) {
 			demo_targets.add(e);
-
 			this.elementService.addNewElement(e);
 		}
 		demo_targets.trimToSize();
@@ -260,7 +406,7 @@ public class ElementTest_Feature10 {
 				this.url + "/{userPlayground}/{email}/search/{attributeName}/{value}", ElementTO[].class,
 				userPlayground, email, attributeName, value);
 
-		boolean success1 = false;
+		boolean success = false;
 
 		System.err.println("elements TO got:");
 		for (ElementTO elementTO : allElements) {
@@ -268,11 +414,47 @@ public class ElementTest_Feature10 {
 		}
 
 		if (allElements.length == 10) {
-			success1 = true;
+			success = true;
 		}
 
-		assertTrue(success1);
+		assertTrue(success);
 	}
+	
+	// scenario 6 - Type
+		@Test
+		public void CheckDefaultPagination_findTenElementsByTypeSuccessfulyInDatabaseWithTwentyElements() throws ElementAlreadyExistException {
+			ArrayList<ElementEntity> demo_targets = new ArrayList<>();
+
+			for (ElementEntity e : this.demo_entities) {
+				demo_targets.add(e);
+				this.elementService.addNewElement(e);
+			}
+			demo_targets.trimToSize();
+
+			// When:
+			String userPlayground = "playground_lazar";
+			String email = "aviv@gmail.com";
+			String attributeName = "type";
+			String value = "demo type";
+
+			// Than:
+			ElementTO[] allElements = this.restTemplate.getForObject(
+					this.url + "/{userPlayground}/{email}/search/{attributeName}/{value}", ElementTO[].class,
+					userPlayground, email, attributeName, value);
+
+			boolean success = false;
+
+//			System.err.println("elements TO got:");
+//			for (ElementTO elementTO : allElements) {
+//				System.err.println(elementTO);
+//			}
+
+			if (allElements.length == 10) {
+				success = true;
+			}
+
+			assertTrue(success);
+		}
 
 	// scenario 7
 	@Test
@@ -316,159 +498,7 @@ public class ElementTest_Feature10 {
 
 		assertTrue(success1);
 	}
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
+
 	// TYPE
-	// scenario 1 - TYPE 
-		@Test
-		public void findOneElementByHisTypeSuccessfulyInDatabaseWithOneElement() throws ElementAlreadyExistException {
-			
-			// Given:
-			this.elementService.addNewElement(this.demo_entity);
 
-			// When:
-			String userPlayground = "playground_lazar";
-			String email = "aviv@gmail.com";
-			String attributeName = "type";
-			String value = this.demo_entity.getType();
-
-			// Than:
-			ElementTO[] allElements = this.restTemplate.getForObject(
-					this.url + "/{userPlayground}/{email}/search/{attributeName}/{value}", ElementTO[].class,
-					userPlayground, email, attributeName, value);
-
-			boolean success = false;
-
-			if (allElements.length == 1 && allElements[0].equals(new ElementTO(this.demo_entity)))
-				success = true;
-
-			assertTrue(success);
-		}
-		
-		// scenario 2 - TYPE
-		@Test
-		public void findElementByTypeSuccessfulyInDatabaseWithTwentyElements() throws ElementAlreadyExistException {
-			// Given: 10 element entities in database (and one is the target)
-			for (ElementEntity e : this.demo_entities) {
-				if (Integer.parseInt(e.getId()) == 6) {
-					e.setType("demo_target"); // the test
-				}
-				this.elementService.addNewElement(e);
-			}
-
-			// When:
-			String userPlayground = "playground_lazar";
-			String email = "aviv@gmail.com";
-			String attributeName = "type";
-			String value = "demo_target";
-
-			// Than:
-			ElementTO[] allElements = this.restTemplate.getForObject(
-					this.url + "/{userPlayground}/{email}/search/{attributeName}/{value}", ElementTO[].class,
-					userPlayground, email, attributeName, value);
-
-			boolean success = false;
-			// System.err.println("Num of elements: " + allElements.length);
-
-			System.err.println(allElements[0]);
-			if (allElements.length == 1 && allElements[0].getType().equals(value))
-				success = true;
-
-			assertTrue(success);
-		}
-		
-		// scenario 3 - TYPE
-		@Test
-		public void findFiveElementsByTypeSuccessfulyInDatabaseWithTwentyElements() throws ElementAlreadyExistException {
-			// Given: 10 element entities in database (which 5 of them are the targets)
-
-			for (int i = 0; i < this.demo_entities.length; i++) {
-				if(i < 5) {
-					demo_entities[i].setType("demo_target");
-				}
-				this.elementService.addNewElement(demo_entities[i]);
-			}
-
-			// When:
-			String userPlayground = "playground_lazar";
-			String email = "aviv@gmail.com";
-			String attributeName = "type";
-			String value = "demo_target";
-
-			// Than:
-			ElementTO[] allElements = this.restTemplate.getForObject(
-					this.url + "/{userPlayground}/{email}/search/{attributeName}/{value}", ElementTO[].class,
-					userPlayground, email, attributeName, value);
-
-			boolean success = true;
-
-			if (allElements.length != 5) {
-				success = false;
-			}
-			
-			for(int i = 0; i < allElements.length; i++) {
-				if(!value.equals(allElements[i].getType())) {
-					success = false;
-				}
-			}
-
-			assertTrue(success);
-		}
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		// scenario 4
-		@Test
-		public void findElementFailedByInvalidAttributeNameInDatabaseWithOneElement() throws ElementAlreadyExistException {
-			// Given:
-			this.elementService.addNewElement(this.demo_entity);
-
-			// When:
-			String userPlayground = "playground_lazar";
-			String email = "aviv@gmail.com";
-			String attributeName = "attack";
-			String value = "1";
-
-			// Than:
-			boolean success = false;
-
-			try {
-				ElementTO[] allElements = this.restTemplate.getForObject(
-						this.url + "/{userPlayground}/{email}/search/{attributeName}/{value}", ElementTO[].class,
-						userPlayground, email, attributeName, value);
-			} catch (Exception e) { 
-				success = true;
-			}
-
-			assertTrue(success);
-		}
-
-	
 }
