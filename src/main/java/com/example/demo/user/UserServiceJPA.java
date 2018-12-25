@@ -82,37 +82,6 @@ public class UserServiceJPA implements UserService {
 			throw new UserNotFoundException("The user with id " + email +" and playground " + playgroundName + " not found.");
 	}
 
-	// Not needed currently
-//	@Override
-//	@Transactional
-//	public void deleteUser(String email) throws UserNotFoundException {
-//		if (dataBase.existsById(null)) {
-//			dataBase.deleteById(null);
-//		}
-//		else
-//			throw new UserNotFoundException("The user " +email +" not found.");
-//		
-//	}
-
-	/*@Override
-	@Transactional(readOnly = true)
-	public List<UserEntity> getAllUsers(int size, int page)
-			throws InvalidPageSizeRequestException, InvalidPageRequestException {
-		if (size < 1)
-			throw new InvalidPageSizeRequestException();
-		if (page < 0)
-			throw new InvalidPageRequestException();
-
-		List<UserEntity> list = StreamSupport.stream(dataBase.findAll().spliterator(), false).skip(size * page)
-				.limit(size).collect(Collectors.toList());
-		return list;
-	}
-*/
-//	@Override
-//	@Transactional
-//	public List<UserEntity> getAllDeletedUsers() {
-//		return null;
-//	}
 
 	@Override
 	@Transactional
