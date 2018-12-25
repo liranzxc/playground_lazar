@@ -2,6 +2,8 @@ package com.example.demo.activity;
 
 import java.util.Map;
 
+import javax.annotation.PostConstruct;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Service;
@@ -19,10 +21,13 @@ public class ActivityServiceImpl implements ActivityService {
 	private static int Id = 0;
 	
 	@Autowired
-	public void setDataBase(ActivityRepository dataBase) {
+	public ActivityServiceImpl(ActivityRepository dataBase, ApplicationContext spring) {
 		this.dataBase = dataBase;
+		this.spring = spring;
+		this.jackson = new ObjectMapper();
 	}
-	
+
+
 	
 	@Override
 	public void addNewActivity(ActivityEntity entity) throws ActivityAlreadyExistException {
@@ -30,13 +35,14 @@ public class ActivityServiceImpl implements ActivityService {
 		String key = entity.getKey();
 		if(!this.dataBase.existsByKey(key)) {
 			if (!entity.getType().isEmpty()) {
+				System.err.println("type is: " + entity.getType());
 				try {
 					String type = entity.getType();
 					String className = "com.example.demo.activity.plugins." + type + "Plugin";
 					Class<?> theClass = Class.forName(className);
+					
 					PlaygroundPlugin plugin = (PlaygroundPlugin) this.spring.getBean(theClass);
 					Object activity = plugin.invokeOperation(entity);
-					
 					Map<String, Object> rvMap = this.jackson.readValue(
 							this.jackson.writeValueAsString(activity),
 							Map.class);

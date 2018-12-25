@@ -32,7 +32,6 @@ public class ActivitesController {
 	public Object GoToActivity(@RequestBody ActivityTO activity,
 			@PathVariable(name = "userPlayground") String userPlayground, 
 			@PathVariable(name = "email") String email) throws ActivityAlreadyExistException {
-			
 			service.addNewActivity(activity.ToEntity());
 		// just return activity for testing - Checked !
 		return activity;
