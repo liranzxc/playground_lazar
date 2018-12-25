@@ -4,6 +4,8 @@ import static org.junit.Assert.assertTrue;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 import javax.annotation.PostConstruct;
 
@@ -20,25 +22,27 @@ import org.springframework.web.client.RestTemplate;
 
 import com.example.demo.element.ElementEntity;
 import com.example.demo.element.ElementService;
+import com.example.demo.element.ElementServiceJpa;
 import com.example.demo.element.ElementTO;
 import com.example.demo.element.Location;
 import com.example.demo.element.exceptions.ElementAlreadyExistException;
-
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
 public class ElementTest_Feature10 {
 
-	private int numOfEntities = 10;
+	private int numOfEntities = 20;
 	private ElementEntity[] demo_entities;
 	private ElementEntity demo_entity;
 
 	/*
-	 * ====================================== READ ME ===================================================== 
+	 * ====================================== READ ME
+	 * =====================================================
 	 * 
-	 * In this test class i do: 
-	 * - GET /{userPlayground}/{email}/search/{attributeName}/{value} 	        I/O: --------- | ElementTO 
-	 * ====================================== READ ME  =====================================================
+	 * In this test class i do: - GET
+	 * /{userPlayground}/{email}/search/{attributeName}/{value} I/O: --------- |
+	 * ElementTO ====================================== READ ME
+	 * =====================================================
 	 */
 
 	@LocalServerPort
@@ -47,7 +51,7 @@ public class ElementTest_Feature10 {
 	private String url;
 
 	private RestTemplate restTemplate;
-	//private ObjectMapper jsonMapper;
+	// private ObjectMapper jsonMapper;
 
 	@Autowired
 	private ElementService elementService;
@@ -55,20 +59,15 @@ public class ElementTest_Feature10 {
 	@PostConstruct
 	public void init() {
 		this.restTemplate = new RestTemplate();
-	//	this.jsonMapper = new ObjectMapper();
+		// this.jsonMapper = new ObjectMapper();
 		this.url = "http://localhost:" + port + "/playground/elements";
 
-	}
-
-	@Before
-	public void setup() throws InterruptedException {
-		Location demo_entity_location = new Location(0,1);
-		this.demo_entity = new ElementEntity(
-				"playground_lazar", "0", demo_entity_location.getX(), demo_entity_location.getY()
-				,"demo", new Date(), null, "demo type", null, "Aviv", "demo@gmail.com");
+		Location demo_entity_location = new Location(0, 1);
+		this.demo_entity = new ElementEntity("playground_lazar", "0", demo_entity_location.getX(),
+				demo_entity_location.getY(), "demo", new Date(), null, "demo type", null, "Aviv", "demo@gmail.com");
 		/*
-		 * Create numOfDemoEntities element entities more in array for more tests. we used sleep method
-		 * for getting different time-stamps.
+		 * Create numOfDemoEntities element entities more in array for more tests. we
+		 * used sleep method for getting different time-stamps.
 		 */
 		Location demo_entities_locaiton = new Location();
 		demo_entities = new ElementEntity[this.numOfEntities];
@@ -78,18 +77,21 @@ public class ElementTest_Feature10 {
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}
-			this.demo_entities[i] = new ElementEntity(
-					"playground_lazar", (i+1)+"", demo_entities_locaiton.getX(), demo_entities_locaiton.getY()
-					,"demo", new Date(), null, "demo type", null, "Aviv", "demo@gmail.com");
+			this.demo_entities[i] = new ElementEntity("playground_lazar", (i + 1) + "", demo_entities_locaiton.getX(),
+					demo_entities_locaiton.getY(), "demo", new Date(), null, "demo type", null, "Aviv",
+					"demo@gmail.com");
 		}
+	}
+
+	@Before
+	public void setup() throws InterruptedException {
+		ElementServiceJpa.setIDToZero();
 	}
 
 	@After
 	public void teardown() {
 		this.elementService.cleanup();
 	}
-
-
 
 ////////////////
 // Feature 10 //
@@ -126,7 +128,7 @@ public class ElementTest_Feature10 {
 		// Given: 10 element entities in database (and one is the target)
 		ElementEntity demo_target = null;
 		for (ElementEntity e : this.demo_entities) {
-			if (Integer.parseInt(e.getId()) % 10 == 6) {
+			if (Integer.parseInt(e.getId()) == 6) {
 				e.setName("demo_target"); // the test
 				demo_target = e;
 			}
@@ -145,8 +147,9 @@ public class ElementTest_Feature10 {
 				userPlayground, email, attributeName, value);
 
 		boolean success = false;
-		//System.err.println("Num of elements: " + allElements.length);
+		// System.err.println("Num of elements: " + allElements.length);
 
+		System.err.println(allElements[0]);
 		if (allElements.length == 1 && allElements[0].equals(new ElementTO(demo_target)))
 			success = true;
 
@@ -259,6 +262,88 @@ public class ElementTest_Feature10 {
 
 		assertTrue(success);
 	}
-	
-	// TODO: Check pagination
+
+	// scenario 6
+	@Test
+	public void findTenElementsByTypeSuccessfulyInDatabaseWithTenElement() throws ElementAlreadyExistException {
+		// Given: 10 element entities in database (which 5 of them are the targets)
+		ArrayList<ElementEntity> demo_targets = new ArrayList<>();
+
+		int counter = 0;
+		for (ElementEntity e : this.demo_entities) {
+			counter++;
+
+			demo_targets.add(e);
+
+			this.elementService.addNewElement(e);
+		}
+		demo_targets.trimToSize();
+
+		// When:
+		String userPlayground = "playground_lazar";
+		String email = "aviv@gmail.com";
+		String attributeName = "name";
+		String value = "demo";
+
+		// Than:
+		ElementTO[] allElements = this.restTemplate.getForObject(
+				this.url + "/{userPlayground}/{email}/search/{attributeName}/{value}", ElementTO[].class,
+				userPlayground, email, attributeName, value);
+
+		boolean success1 = false;
+
+		System.err.println("elements TO got:");
+		for (ElementTO elementTO : allElements) {
+			System.err.println(elementTO);
+		}
+
+		if (allElements.length == 10) {
+			success1 = true;
+		}
+
+		assertTrue(success1);
+	}
+
+	// scenario 7
+	@Test
+	public void findTenElementsInPageOneByTypeSuccessfulyInDatabaseWithTenElement() throws ElementAlreadyExistException {
+		// Given: 10 element entities in database (which 5 of them are the targets)
+		for (ElementEntity e : this.demo_entities) {
+			this.elementService.addNewElement(e);
+		}
+
+		// When:
+		String userPlayground = "playground_lazar";
+		String email = "aviv@gmail.com";
+		String attributeName = "name";
+		String value = "demo";
+		int size = 7;
+		int page = 1;
+		
+		Map<String, Object> map = new HashMap<>();
+		map.put("userPlayground", userPlayground);
+		map.put("email", email);
+		map.put("attributeName", attributeName);
+		map.put("value", value);
+		map.put("size", 7);
+		map.put("page", 1);
+
+		// Than:
+		ElementTO[] allElements = this.restTemplate.getForObject(
+				this.url + "/{userPlayground}/{email}/search/{attributeName}/{value}?size={size}&page={page}", ElementTO[].class,
+				map);
+
+		boolean success1 = false;
+
+		System.err.println("elements TO got:");
+		for (ElementTO elementTO : allElements) {
+			System.err.println(elementTO);
+		}
+
+		if (allElements.length == size && allElements[0].getId().equals((size+1)+"")) {
+			success1 = true;
+		}
+
+		assertTrue(success1);
+	}
 }

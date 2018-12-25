@@ -150,7 +150,7 @@ public class ElementsController {
 		} else if (page < 0) {
 			throw new InvalidPageRequestException("Page index must be at least 0");
 		}
-
+		System.err.println("attribute name = " + attributeName + " value =  " + value);
 		return this.elementService.getAllElementsByAttributeAndValue(attributeName, value, PageRequest.of(page, size,Sort.by("id")))
 				.stream().map(ElementTO::new).collect(Collectors.toList()).toArray(new ElementTO[0]);
 

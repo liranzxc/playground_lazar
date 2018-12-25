@@ -154,4 +154,13 @@ public class ElementTO {
 		return false;
 		
 	}
+
+	@Override
+	public String toString() {
+		return "ElementTO [playground=" + playground + ", id=" + id + ", location=" + location + ", name=" + name
+				+ ", creationDate=" + creationDate + ", expireDate=" + expireDate + ", type=" + type + ", attributes="
+				+ attributes + ", creatorPlayground=" + creatorPlayground + ", creatorEmail=" + creatorEmail + "]";
+	}
+	
+	
 }

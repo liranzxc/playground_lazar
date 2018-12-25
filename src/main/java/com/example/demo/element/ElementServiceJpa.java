@@ -1,5 +1,7 @@
 package com.example.demo.element;
 
+import java.time.LocalDate;
+import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -96,9 +98,15 @@ public class ElementServiceJpa implements ElementService {
 	@Transactional
 	@MyLog
 	public void deleteElement(String playground, String id) {
+		
 		String key = ElementEntity.createKeyFromIdAndPlayground(id, playground);
 		if (this.dataBase.existsByKey(key)) {
-			this.dataBase.deleteByKey(key);
+			ElementEntity et = this.dataBase.findByKey(key).get();
+			et.setExpireDate(new Date()); // empty constructor give now date
+			
+			this.dataBase.deleteByKey(key);		
+			this.dataBase.save(et);
+			
 		}
 	}
 
@@ -106,8 +114,7 @@ public class ElementServiceJpa implements ElementService {
 	@Transactional(readOnly = true)
 	@MyLog
 	public List<ElementEntity> getAllElements() {
-		List<ElementEntity> list = this.dataBase.findAll(Sort.by("id")).stream().collect(Collectors.toList());
-		return list;
+		return this.dataBase.findAll(Sort.by("id"));
 	}
 
 	@Override
@@ -136,8 +143,11 @@ public class ElementServiceJpa implements ElementService {
 			throw new InvalidDistanceValueException(
 					"when searching elements who is near by, distance must be bigger or equal to 0");
 		} else {
-			List<ElementEntity> list = this.dataBase.findAll(page).getContent().stream()
-					.filter(ee -> isNear(ee, x, y, distance)).collect(Collectors.toList());
+			List<ElementEntity> list = this.dataBase.findAll().stream()
+					.filter(ee -> isNear(ee, x, y, distance))
+					.skip(page.getPageSize() * page.getPageNumber())
+					.limit(page.getPageSize())
+					.collect(Collectors.toList());
 			return list;
 		}
 
@@ -156,21 +166,21 @@ public class ElementServiceJpa implements ElementService {
 		switch (attribute) {
 
 		case "name": {
-			filteredElements = this.getAllElements().stream().filter(e -> e.getName().equals(value))
-					.collect(Collectors.toList());
-			break;
+	//		filteredElements = this.getAllElements().stream().filter(e -> e.getName().equals(value))
+	//				.collect(Collectors.toList());
+			System.err.println("inside jpaservice trying to find by name: " + attribute);
+			return this.dataBase.findByName(value, page);
+		//	break;
 		}
 		case "type": {
-			filteredElements = this.getAllElements().stream().filter(e -> e.getType().equals(value))
-					.collect(Collectors.toList());
-			break;
+			return this.dataBase.findByType(value, page);
 		}
 
 		default:
 			throw new InvalidAttributeNameException("Attribute Name does not exist in Element");
 		}
 
-		return filteredElements.stream().skip(page.getPageSize() * page.getPageNumber()).limit(page.getPageSize()).collect(Collectors.toList());
+		//return filteredElements.stream().skip(page.getPageSize() * page.getPageNumber()).limit(page.getPageSize()).collect(Collectors.toList());
 	}
 
 	@Override
