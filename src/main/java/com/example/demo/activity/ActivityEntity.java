@@ -13,13 +13,13 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 @Entity
 @Document
 public class ActivityEntity {
-		private String playground;
-		private String id;
 		private String elementPlayground;
 		private String elementId;
 		private String type;
 		private String playerPlayground;
 		private String playerEmail;
+		private String key;
+		private Map<String,Object> attributes;
 		
 		public ActivityEntity() {
 			super();
@@ -27,8 +27,7 @@ public class ActivityEntity {
 		public ActivityEntity(String playground, String id, String elementPlayground, String elementId, String type,
 				String playerPlayground, String playerEmail, Map<String, Object> attributes) {
 			super();
-			this.playground = playground;
-			this.id = id;
+			this.key = generateKey(playground, id);
 			this.elementPlayground = elementPlayground;
 			this.elementId = elementId;
 			this.type = type;
@@ -36,30 +35,7 @@ public class ActivityEntity {
 			this.playerEmail = playerEmail;
 			this.attributes = attributes;
 		}
-		public ActivityEntity(ActivityTO activityTO) {
-			// TODO Auto-generated constructor stub
-			this.id = activityTO.getId();
-			this.playground  = activityTO.getPlayground();
-			this.elementPlayground = activityTO.getElementPlayground();
-			this.elementId = activityTO.getElementId() ;
-			this.type = activityTO.getType();
-			this.playerPlayground = activityTO.getPlayerPlayground();
-			this.playerEmail = getPlayerEmail();
-			this.attributes = getAttributes();
-		}
-		public String getPlayground() {
-			return playground;
-		}
-		public void setPlayground(String playground) {
-			this.playground = playground;
-		}
-		@Id
-		public String getId() {
-			return id;
-		}
-		public void setId(String id) {
-			this.id = id;
-		}
+
 		public String getElementPlayground() {
 			return elementPlayground;
 		}
@@ -107,16 +83,22 @@ public class ActivityEntity {
 		}
 		
 		public String getJsonAttributes() {
-			return "a";
+			try {
+				return new ObjectMapper().writeValueAsString(this.attributes);
+			} catch (Exception e) {
+				throw new RuntimeException(e);
+			}
 		}
 		
-//		public String getJsonAttributes() {
-//			try {
-//				return new ObjectMapper().writeValueAsString(this.attributes);
-//			} catch (Exception e) {
-//				throw new RuntimeException(e);
-//			}
-//		}
+		@Id
+		public String getKey() {
+			return key;
+		}
+		public void setKey(String key) {
+			this.key = key;
+		}
+		public static String generateKey(String playground, String id) {
+			return id +"@@" +playground;
+		}
 		
-		private Map<String,Object> attributes;
 }

@@ -1,17 +1,17 @@
 package com.example.demo.activity.plugins.accessories;
 
 public class BoardMessage {
-	private String op;
+	private String poster;
 	private String message;
 	
 	public BoardMessage() {
 
 	}
 	public String getOp() {
-		return op;
+		return poster;
 	}
 	public void setOp(String op) {
-		this.op = op;
+		this.poster = op;
 	}
 	public String getMessage() {
 		return message;
