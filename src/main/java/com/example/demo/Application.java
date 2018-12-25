@@ -32,6 +32,9 @@ public class Application {
 	        			"playground_lazar", "username", "avatar", "role"));
 	        	userRepository.save(new UserEntity("Shay@gmail.com",
 	        			"playgrund", "username", "avatar", "role"));
+	        	
+	        	userRepository.save(new UserEntity("demo@gmail.com",
+	        			"demo", "username", "avatar", "role"));
 	        };
 	    }
 }

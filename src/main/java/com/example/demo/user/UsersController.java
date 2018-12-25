@@ -2,11 +2,13 @@ package com.example.demo.user;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
+import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.servlet.ModelAndView;
 
 import com.example.demo.user.exceptions.EmailAlreadyRegisteredException;
 import com.example.demo.user.exceptions.InvalidConfirmationCodeException;
@@ -15,7 +17,7 @@ import com.example.demo.user.exceptions.InvalidRoleException;
 import com.example.demo.user.exceptions.UserNotActivatedException;
 import com.example.demo.user.exceptions.UserNotFoundException;
 
-@RestController
+@Controller
 @RequestMapping("playground/users")
 public class UsersController {
 	//FOR TEST ONLY!
@@ -71,11 +73,25 @@ public class UsersController {
 	//3. Log in
 	
 	@RequestMapping(value="/login/{playground}/{email}", method=RequestMethod.GET)
-	public UserEntity logIn
+	public String logIn
 	(@PathVariable("playground") String playground,
 	 @PathVariable("email") String email) throws UserNotFoundException {
-		UserEntity user = userService.getUser(email, playground);
-		return user;
+		
+		
+		try {
+			UserEntity user = userService.getUser(email, playground);
+		
+			return "redirect:/welcomepage";
+					}
+		catch (Exception e) {
+			// TODO: handle exception
+		
+			return "redirect:/client";
+		}
+		
+
+		
+		
 	}
 
 	

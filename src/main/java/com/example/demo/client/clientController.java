@@ -13,5 +13,11 @@ public class clientController {
 	{
 		return "index";
 	}
+	
+	@RequestMapping(path="/welcomepage",method=RequestMethod.GET)
+	public String welcome()
+	{
+		return "welcomepage";
+	}
 
 }

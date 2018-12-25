@@ -197,7 +197,7 @@
           <br>
 
           <div class="container col-lg-3">
-          <form name="loginform" id="contactForm" novalidate="novalidate" action="###" method="POST">
+          <form id="contactForm" action="lsdlsd" novalidate="novalidate"  onsubmit="yourFunction()" method="GET">
 
               <div class="control-group">
                   <div class="form-group floating-label-form-group controls mb-0 pb-2">
@@ -256,7 +256,25 @@
       </a>
     </div>
 
-    <!-- Portfolio Modals -->
+    <script type="text/javascript">
+    
+    function yourFunction(){
+
+var email = $("#email").val();
+var Playground = $("#Playground").val();
+
+var your_form = document.getElementById('contactForm');
+
+var urlLink = "http://localhost:8080/playground/users/login/"+Playground+"/"+email;
+
+your_form.action = urlLink;
+
+
+
+
+}
+    
+    </script>
 
 
     <!-- Bootstrap core JavaScript -->
