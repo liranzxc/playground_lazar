@@ -8,6 +8,8 @@ import javax.persistence.Transient;
 
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 @Entity
 @Document
 public class ActivityEntity {
@@ -95,5 +97,26 @@ public class ActivityEntity {
 		public void setAttributes(Map<String, Object> attributes) {
 			this.attributes = attributes;
 		}
+		
+		public void setJsonAttributes(String jsonAttributes) {
+			try {
+				this.attributes = new ObjectMapper().readValue(jsonAttributes, Map.class);
+			} catch (Exception e) {
+				throw new RuntimeException(e);
+			}
+		}
+		
+		public String getJsonAttributes() {
+			return "a";
+		}
+		
+//		public String getJsonAttributes() {
+//			try {
+//				return new ObjectMapper().writeValueAsString(this.attributes);
+//			} catch (Exception e) {
+//				throw new RuntimeException(e);
+//			}
+//		}
+		
 		private Map<String,Object> attributes;
 }

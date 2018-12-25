@@ -29,7 +29,7 @@ public class Application {
 	        return args -> {
 	           
 	        	userRepository.save(new UserEntity("lirannh@gmail.com",
-	        			"playgrund", "username", "avatar", "role"));
+	        			"playground_lazar", "username", "avatar", "role"));
 	        	userRepository.save(new UserEntity("Shay@gmail.com",
 	        			"playgrund", "username", "avatar", "role"));
 	        };
