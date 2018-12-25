@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" 
+    xmlns:th="http://www.thymeleaf.org" 
+    xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3"
+    xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+
+
+  <head>
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>Aviv Lazar Team </title>
+
+    <!-- Bootstrap core CSS -->
+    <link href="vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Custom fonts for this template -->
+    <link href="vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
+    <link href="https://fonts.googleapis.com/css?family=Montserrat:400,700" rel="stylesheet" type="text/css">
+    <link href="https://fonts.googleapis.com/css?family=Lato:400,700,400italic,700italic" rel="stylesheet" type="text/css">
+
+    <!-- Plugin CSS -->
+    <link href="vendor/magnific-popup/magnific-popup.css" rel="stylesheet" type="text/css">
+
+    <!-- Custom styles for this template -->
+    <link href="css/freelancer.min.css" rel="stylesheet">
+
+  </head>
+
+  <body id="page-top">
+
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg bg-secondary fixed-top text-uppercase" id="mainNav">
+      <div class="container">
+        <a class="navbar-brand js-scroll-trigger" href="#page-top">Aviv Lazar Team</a>
+        <button class="navbar-toggler navbar-toggler-right text-uppercase bg-primary text-white rounded" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+          Menu
+          <i class="fas fa-bars"></i>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarResponsive">
+          <ul class="navbar-nav ml-auto">
+            <li class="nav-item mx-0 mx-lg-1">
+              <a class="nav-link py-3 px-0 px-lg-3 rounded js-scroll-trigger" href="#use">How To Use</a>
+            </li>
+            <li class="nav-item mx-0 mx-lg-1">
+              <a class="nav-link py-3 px-0 px-lg-3 rounded js-scroll-trigger" href="#tec">Technology Document</a>
+            </li>
+            <li class="nav-item mx-0 mx-lg-1">
+              <a class="nav-link py-3 px-0 px-lg-3 rounded js-scroll-trigger" href="#about">About</a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+
+    <!-- Header -->
+    <header class="masthead bg-primary text-white text-center">
+      <div class="container">
+        <img class="img-fluid mb-5 d-block mx-auto" src="img/profile.png" alt="">
+        <h1 class="text-uppercase mb-0">Aviv Lazar Team</h1>
+        <hr class="star-light">
+        <h2 class="font-weight-light mb-0">We love spring</h2>
+      </div>
+    </header>
+
+    <!-- use Section -->
+    <section id="use">
+        <div class="container">
+          <h2 class="text-center text-uppercase text-secondary mb-0">How to use</h2>
+          <hr class="star-dark mb-5">
+          <div class="row">
+            <div class="col-lg-8 mx-auto">
+              <!-- To configure the contact form email address, go to mail/contact_me.php and update the email address in the PHP file on line 19. -->
+              <!-- The form should work on most web servers, but if the form is not working you may need to configure your web server differently. -->
+              
+              <p class="lead"> Our project RestFul API manage users and mangers. <br>
+                   To login <a class="nav-link py-3 px-0 px-lg-3 rounded js-scroll-trigger" href="#login">Click here</a>
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+    <!-- tec Section -->
+    <section class="bg-primary text-white mb-0" id="tec">
+      <div class="container">
+        <h2 class="text-center text-uppercase text-white">Technology Document</h2>
+        <hr class="star-light mb-5">
+        <div class="row">
+          <div class="col-lg-4 ml-auto">
+            <p class="lead"> We used in top technology of spring project .</p>
+            <ul class="lead">
+
+              <li>Spring boot</li>
+              <li>Spring web</li>
+              <li>Spring Test</li>
+              <li>Junit</li>
+              <li>Gherkin</li>
+
+               
+                
+            </ul>
+          </div>
+          <div class="col-lg-4 mr-auto">
+            <p class="lead">Other technologies </p>
+
+            <ul class="lead">
+
+                <li>Hibernate</li>
+                <li>JDBC</li>
+                <li>Spring Test</li>
+                <li>Mongo database</li>
+                <li>MLab – mongo on cloud – free hosting</li>
+              </ul>
+
+          </div>
+        </div>
+        <div class="text-center mt-4">
+          <a class="btn btn-xl btn-outline-light" href="#">
+            <i class="fas fa-download mr-2"></i>
+            Join us!
+          </a>
+        </div>
+      </div>
+    </section>
+
+   
+
+     <!-- about  Grid Section -->
+     <section class="portfolio" id="about">
+        <div class="container">
+          <h2 class="text-center text-uppercase text-secondary mb-0">Our Team</h2>
+          <hr class="star-dark mb-5">
+          <div class="row">
+            
+            <div class="col-md-6 col-lg-3">
+              <a class="portfolio-item d-block mx-auto">
+                <div class="portfolio-item-caption d-flex position-absolute h-100 w-100">
+                  <div class="portfolio-item-caption-content my-auto w-100 text-center text-white">
+                    
+                  </div>
+                </div>
+                <img class="img-fluid" src="img/portfolio/aviv.jpg" alt="">
+                <p class="lead text-center">Aviv Lazar</p>
+              </a>
+            </div>
+
+            <div class="col-md-6 col-lg-3">
+                <a class="portfolio-item d-block mx-auto" >
+                  <div class="portfolio-item-caption d-flex position-absolute h-100 w-100">
+                    <div class="portfolio-item-caption-content my-auto w-100 text-center text-white">
+                     
+                    </div>
+                  </div>
+                  <img class="img-fluid" src="img/portfolio/liran.jpg" alt="">
+                  <p class="lead text-center">Liran Nachman</p>
+
+                </a>
+              </div>
+          
+              <div class="col-md-6 col-lg-3">
+                  <a class="portfolio-item d-block mx-auto">
+                    <div class="portfolio-item-caption d-flex position-absolute h-100 w-100">
+                      <div class="portfolio-item-caption-content my-auto w-100 text-center text-white">
+                       
+                      </div>
+                    </div>
+                    <img class="img-fluid" src="img/portfolio/shay.jpeg" alt="">
+                    <p class="lead text-center">Shay Rashinsky</p>
+
+                  </a>
+                </div>
+
+                <div class="col-md-6 col-lg-3">
+                    <a class="portfolio-item d-block mx-auto">
+                      <div class="portfolio-item-caption d-flex position-absolute h-100 w-100">
+                        <div class="portfolio-item-caption-content my-auto w-100 text-center text-white">
+                         
+                        </div>
+                      </div>
+                      <img class="img-fluid" src="img/portfolio/tal.jpg" alt="">
+                      <p class="lead text-center">Tal Israeli</p>
+  
+                    </a>
+                  </div>
+         
+              </div>
+
+            </div>
+      </section>
+
+      <section class="bg-primary text-white mb-0" id="login">
+          <h2 class="text-center text-uppercase  mb-0">Login</h2>
+          <br>
+
+          <div class="container col-lg-3">
+          <form name="loginform" id="contactForm" novalidate="novalidate" action="###" method="POST">
+
+              <div class="control-group">
+                  <div class="form-group floating-label-form-group controls mb-0 pb-2">
+                    <label>Email Address</label>
+                    <input class="form-control" id="email" type="email" placeholder="Email Address" required="required" data-validation-required-message="Please enter your email address.">
+                    <p class="help-block text-danger"></p>
+                  </div>
+                </div>
+              <div class="control-group">
+                <div class="form-group floating-label-form-group controls mb-0 pb-2">
+                  <label>Playground</label>
+                  <input class="form-control" id="Playground" type="text" placeholder="Playground" required="required" data-validation-required-message="Please enter your playground.">
+                  <p class="help-block text-danger"></p>
+                </div>
+              </div>
+              
+             
+              <br>
+              <div id="success"></div>
+              <div class="form-group text-center">
+                <button type="submit" class="btn btn-secondary btn-xl" id="sendlogin">Login</button>
+              </div>
+            </form>
+
+          </div>
+
+         
+        
+
+      </section>
+    <!-- Footer -->
+    <footer class="footer text-center">
+      <div class="container">
+        <div class="row">
+          
+          <div class="col-md-11">
+            <h4 class="text-uppercase mb-4">Spring boot project </h4>
+            <p class="lead mb-0"> We love Java   <br>  
+                <i class="fa fa-heart"></i>
+            </p>
+          </div>
+        </div>
+      </div>
+    </footer>
+
+    <div class="copyright py-4 text-center text-white">
+      <div class="container">
+        <small>Copyright &copy; liran nachman edit</small>
+       </div>
+    </div>
+
+    <!-- Scroll to Top Button (Only visible on small and extra-small screen sizes) -->
+    <div class="scroll-to-top d-lg-none position-fixed ">
+      <a class="js-scroll-trigger d-block text-center text-white rounded" href="#page-top">
+        <i class="fa fa-chevron-up"></i>
+      </a>
+    </div>
+
+    <!-- Portfolio Modals -->
+
+
+    <!-- Bootstrap core JavaScript -->
+    <script src="vendor/jquery/jquery.min.js"></script>
+    <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+
+    <!-- Plugin JavaScript -->
+    <script src="vendor/jquery-easing/jquery.easing.min.js"></script>
+    <!--<script src="vendor/magnific-popup/jquery.magnific-popup.min.js"></script> -->
+
+    <!-- Contact Form JavaScript -->
+    <script src="js/jqBootstrapValidation.js"></script>
+    <!-- <script src="js/contact_me.js"></script> -->
+
+    <!-- Custom scripts for this template -->
+    <script src="js/freelancer.min.js"></script>
+
+  </body>
+
+</html>
