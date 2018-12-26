@@ -19,5 +19,11 @@ public class clientController {
 	{
 		return "welcomepage";
 	}
+	@RequestMapping(path="/register",method=RequestMethod.GET)
+	public String register()
+	{
+		return "register2";
+	}
+
 
 }
