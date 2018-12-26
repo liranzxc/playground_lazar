@@ -11,12 +11,14 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.example.demo.aop.MyLog;
+import com.example.demo.aop.PermisionLog;
 import com.example.demo.application.exceptions.InvalidPageRequestException;
 import com.example.demo.application.exceptions.InvalidPageSizeRequestException;
 import com.example.demo.element.exceptions.ElementAlreadyExistException;
 import com.example.demo.element.exceptions.ElementNotFoundException;
 import com.example.demo.element.exceptions.InvalidAttributeNameException;
 import com.example.demo.element.exceptions.InvalidDistanceValueException;
+import com.example.demo.user.TypesEnumUser.Types;
 
 @Service
 public class ElementServiceJpa implements ElementService {
@@ -34,6 +36,7 @@ public class ElementServiceJpa implements ElementService {
 	@Override
 	@Transactional
 	@MyLog 
+	@PermisionLog(value={Types.Manager})
 	public void addNewElement(ElementEntity et) throws ElementAlreadyExistException{
 		
 		int newID = ++ID;
@@ -53,6 +56,7 @@ public class ElementServiceJpa implements ElementService {
 	@Override
 	@Transactional
 	@MyLog 
+	@PermisionLog(value={})  // niegther player nor manager have permision
 	public void addElementFromOutside(ElementEntity et) throws ElementAlreadyExistException {
 		String key = et.getKey();
 		//System.err.println("inside createElement Service setting key to:  = " + key);
@@ -70,6 +74,7 @@ public class ElementServiceJpa implements ElementService {
 	@Override
 	@Transactional
 	@MyLog
+	@PermisionLog(value={Types.Manager})
 	public void updateElement(ElementEntity et) throws ElementNotFoundException {
 		String key = et.getKey();
 		if (this.dataBase.existsByKey(key)) {
@@ -96,6 +101,7 @@ public class ElementServiceJpa implements ElementService {
 	@Override
 	@Transactional
 	@MyLog
+	@PermisionLog(value={Types.Manager})
 	public void deleteElement(String playground, String id) {
 		
 		String key = ElementEntity.createKeyFromIdAndPlayground(id, playground);
@@ -119,6 +125,7 @@ public class ElementServiceJpa implements ElementService {
 	@Override
 	@Transactional(readOnly = true)
 	@MyLog
+	@PermisionLog(value={Types.Manager})
 	public List<ElementEntity> getAllElementsManager(Pageable page)
 			throws InvalidPageSizeRequestException, InvalidPageRequestException {
 
@@ -135,6 +142,7 @@ public class ElementServiceJpa implements ElementService {
 	@Override
 	@Transactional(readOnly = true)
 	@MyLog
+	@PermisionLog(value={Types.Player})
 	public List<ElementEntity> getAllElementsPlayer(Pageable page)
 			throws InvalidPageSizeRequestException, InvalidPageRequestException {
 
@@ -151,6 +159,7 @@ public class ElementServiceJpa implements ElementService {
 	@Override
 	@Transactional(readOnly = true)
 	@MyLog
+	@PermisionLog(value={Types.Manager})
 	public List<ElementEntity> getAllElementsNearByManager(double x, double y, double distance, Pageable page)
 			throws InvalidDistanceValueException {
 
@@ -172,6 +181,7 @@ public class ElementServiceJpa implements ElementService {
 	@Override
 	@Transactional(readOnly = true)
 	@MyLog
+	@PermisionLog(value={Types.Player})
 	public List<ElementEntity> getAllElementsNearByPlayer(double x, double y, double distance, Pageable page)
 			throws InvalidDistanceValueException {
 
@@ -192,6 +202,7 @@ public class ElementServiceJpa implements ElementService {
 	@Override
 	@Transactional(readOnly = true)
 	@MyLog
+	@PermisionLog(value={Types.Manager})
 	public List<ElementEntity> getAllElementsByAttributeAndValueManager(String attribute, String value,Pageable page)
 			throws InvalidAttributeNameException {
 		switch (attribute) {
@@ -211,6 +222,7 @@ public class ElementServiceJpa implements ElementService {
 	@Override
 	@Transactional(readOnly = true)
 	@MyLog
+	@PermisionLog(value={Types.Player})
 	public List<ElementEntity> getAllElementsByAttributeAndValuePlayer(String attribute, String value,Pageable page)
 			throws InvalidAttributeNameException {
 		switch (attribute) {

@@ -7,8 +7,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.example.demo.aop.MyLog;
+import com.example.demo.aop.PermisionLog;
 import com.example.demo.application.accessories.GeneratorService;
-import com.example.demo.user.TypesEnumUser.types;
+import com.example.demo.user.TypesEnumUser.Types;
 import com.example.demo.user.exceptions.EmailAlreadyRegisteredException;
 import com.example.demo.user.exceptions.InvalidEmailException;
 import com.example.demo.user.exceptions.InvalidRoleException;
@@ -95,7 +96,7 @@ public class UserServiceJPA implements UserService {
 	}
 	
 	public boolean isValidRole(String role) {
-		for (types enumRole : types.values()) {
+		for (Types enumRole : Types.values()) {
 			if (role.equals(enumRole.getType()))
 					return true;
 		}
