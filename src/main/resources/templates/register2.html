@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml" 
     xmlns:th="http://www.thymeleaf.org" 
@@ -63,13 +64,14 @@
           <h1 class="text-uppercase mb-0">Register</h1>
           <hr class="star-light">
           <div class="container">
-              <form class="needs-validation" novalidate method="POST" action="playground/users/">
+          
+              <form th:object="${UserTo}" class="needs-validation" novalidate method="POST" action="playground/users/">
                 <div class="row">
                   
                   
                   <div class="col-md-6 mb-3">
                     <label for="username">User name</label>
-                    <input type="text" class="form-control" id="username" placeholder="username" value="" required>
+                    <input  type="text"  class="form-control"  th:field="*{username}" id="username" placeholder="username" value="" required>
                     <div class="invalid-feedback">
                       Valid username is required.
                     </div>
@@ -77,7 +79,7 @@
   
                   <div class="col-md-6 mb-3">
                           <label for="email">Email</label>
-                          <input type="email" class="form-control" id="email" placeholder="you@example.com">
+                          <input type="email" class="form-control" th:field="*{email}" id="email" placeholder="you@example.com">
                           <div class="invalid-feedback">
                             Please enter a valid email address for shipping updates.
                           </div>
@@ -85,7 +87,7 @@
 
                       <div class="col-md-5 mb-3">
                           <label for="role">Role</label>
-                          <select class="custom-select d-block w-100" id="role" required>
+                          <select th:field="*{role}"  class="custom-select d-block w-100" id="role" required>
                             <option value="player">Player</option>
                             <option value="manger" >Manger</option>
                           </select>

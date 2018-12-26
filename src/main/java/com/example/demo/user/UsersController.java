@@ -1,8 +1,12 @@
 package com.example.demo.user;
 
+import javax.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -41,9 +45,24 @@ public class UsersController {
 	
 	//1. Register a new user.
 	@RequestMapping(value="/", method=RequestMethod.POST)
-	public UserTO registerFromForm(@RequestBody UserTO userForm) throws EmailAlreadyRegisteredException, InvalidEmailException, InvalidRoleException {
-		this.userService.registerNewUser(userForm.ToEntity());
-		return userForm;
+	public String registerFromForm(@ModelAttribute UserTO userForm,Model model) throws EmailAlreadyRegisteredException, InvalidEmailException, InvalidRoleException, UserNotFoundException {
+				
+		try {
+			this.userService.registerNewUser(userForm.ToEntity());
+			model.addAttribute("user", this.userService.getUser(userForm.getEmail(), "playground_lazar"));
+		
+			return "redirect:/valid";
+		
+		}
+		catch (Exception e) {
+			// TODO: handle exception
+			
+			
+			return "redirect:/register";
+
+		}
+		
+		
 	}
 	
 	
