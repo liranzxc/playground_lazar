@@ -1,6 +1,5 @@
 package com.example.demo.element;
 
-import java.time.LocalDate;
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -120,7 +119,7 @@ public class ElementServiceJpa implements ElementService {
 	@Override
 	@Transactional(readOnly = true)
 	@MyLog
-	public List<ElementEntity> getAllElements(Pageable page)
+	public List<ElementEntity> getAllElementsManager(Pageable page)
 			throws InvalidPageSizeRequestException, InvalidPageRequestException {
 
 		if (page.getPageSize() < 1)
@@ -132,11 +131,27 @@ public class ElementServiceJpa implements ElementService {
 
 		return list;
 	}
+	
+	@Override
+	@Transactional(readOnly = true)
+	@MyLog
+	public List<ElementEntity> getAllElementsPlayer(Pageable page)
+			throws InvalidPageSizeRequestException, InvalidPageRequestException {
+
+		if (page.getPageSize() < 1)
+			throw new InvalidPageSizeRequestException();
+		if (page.getPageNumber() < 0)
+			throw new InvalidPageRequestException();
+
+		List<ElementEntity> list = this.dataBase.findByExpireDateGreaterThan(new Date(), page);
+
+		return list;
+	}
 
 	@Override
 	@Transactional(readOnly = true)
 	@MyLog
-	public List<ElementEntity> getAllElementsNearBy(double x, double y, double distance, Pageable page)
+	public List<ElementEntity> getAllElementsNearByManager(double x, double y, double distance, Pageable page)
 			throws InvalidDistanceValueException {
 
 		if (distance < 0) {
@@ -152,25 +167,37 @@ public class ElementServiceJpa implements ElementService {
 		}
 
 	}
-
 	
 	
-	//TODO insteas get all elements and filter, do filter inside database
 	@Override
 	@Transactional(readOnly = true)
 	@MyLog
-	public List<ElementEntity> getAllElementsByAttributeAndValue(String attribute, String value,Pageable page)
-			throws InvalidAttributeNameException {
-		List<ElementEntity> filteredElements;
+	public List<ElementEntity> getAllElementsNearByPlayer(double x, double y, double distance, Pageable page)
+			throws InvalidDistanceValueException {
 
+		if (distance < 0) {
+			throw new InvalidDistanceValueException(
+					"when searching elements who is near by, distance must be bigger or equal to 0");
+		} else {
+			List<ElementEntity> list = this.dataBase.findByExpireDateGreaterThan(new Date()).stream()
+					.filter(ee -> isNear(ee, x, y, distance))
+					.skip(page.getPageSize() * page.getPageNumber())
+					.limit(page.getPageSize())
+					.collect(Collectors.toList());
+			return list;
+		}
+	}
+
+	
+	@Override
+	@Transactional(readOnly = true)
+	@MyLog
+	public List<ElementEntity> getAllElementsByAttributeAndValueManager(String attribute, String value,Pageable page)
+			throws InvalidAttributeNameException {
 		switch (attribute) {
 
 		case "name": {
-	//		filteredElements = this.getAllElements().stream().filter(e -> e.getName().equals(value))
-	//				.collect(Collectors.toList());
-			System.err.println("inside jpaservice trying to find by name: " + attribute);
 			return this.dataBase.findByName(value, page);
-		//	break;
 		}
 		case "type": {
 			return this.dataBase.findByType(value, page);
@@ -179,8 +206,24 @@ public class ElementServiceJpa implements ElementService {
 		default:
 			throw new InvalidAttributeNameException("Attribute Name does not exist in Element");
 		}
+	}
+	
+	@Override
+	@Transactional(readOnly = true)
+	@MyLog
+	public List<ElementEntity> getAllElementsByAttributeAndValuePlayer(String attribute, String value,Pageable page)
+			throws InvalidAttributeNameException {
+		switch (attribute) {
 
-		//return filteredElements.stream().skip(page.getPageSize() * page.getPageNumber()).limit(page.getPageSize()).collect(Collectors.toList());
+		case "name": {
+			return this.dataBase.findByNameAndExpireDateGreaterThan(value, new Date() ,page);
+		}
+		case "type": {
+			return this.dataBase.findByTypeAndExpireDateGreaterThan(value, new Date() ,page);		}
+
+		default:
+			throw new InvalidAttributeNameException("Attribute Name does not exist in Element");
+		}
 	}
 
 	@Override

@@ -18,8 +18,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 @Document
 //@Table(name = "ELEMENTS")
 public class ElementEntity {
-
-
 	
 	public ElementEntity() {
 		super();

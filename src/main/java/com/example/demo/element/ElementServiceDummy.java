@@ -234,29 +234,50 @@ public class ElementServiceDummy implements ElementService {
 	}
 
 	@Override
-	public List<ElementEntity> getAllElements(Pageable page)
+	public void addElementFromOutside(ElementEntity demo_entity) {
+		// TODO Auto-generated method stub
+	}
+
+	@Override
+	public List<ElementEntity> getAllElementsPlayer(org.springframework.data.domain.Pageable page)
 			throws InvalidPageSizeRequestException, InvalidPageRequestException {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public List<ElementEntity> getAllElementsNearBy(double x, double y, double distance, Pageable page)
-			throws InvalidDistanceValueException {
+	public List<ElementEntity> getAllElementsManager(org.springframework.data.domain.Pageable page)
+			throws InvalidPageSizeRequestException, InvalidPageRequestException {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public List<ElementEntity> getAllElementsByAttributeAndValue(String attribute, String value, Pageable page)
+	public List<ElementEntity> getAllElementsNearByPlayer(double x, double y, double distance,
+			org.springframework.data.domain.Pageable page) throws InvalidDistanceValueException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public List<ElementEntity> getAllElementsNearByManager(double x, double y, double distance,
+			org.springframework.data.domain.Pageable page) throws InvalidDistanceValueException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public List<ElementEntity> getAllElementsByAttributeAndValueManager(String attribute, String value,
+			org.springframework.data.domain.Pageable page) throws InvalidAttributeNameException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public List<ElementEntity> getAllElementsByAttributeAndValuePlayer(String attribute, String value, Pageable page)
 			throws InvalidAttributeNameException {
 		// TODO Auto-generated method stub
 		return null;
-	}
-
-	@Override
-	public void addElementFromOutside(ElementEntity demo_entity) {
-		// TODO Auto-generated method stub
 	}
 
 }

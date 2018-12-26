@@ -101,7 +101,7 @@ public class ElementsController {
 			@RequestParam(name = "page", required = false, defaultValue = "0") int page)
 			throws InvalidPageSizeRequestException, InvalidPageRequestException {
 
-		List<ElementEntity> mylist = elementService.getAllElements(PageRequest.of(page, size,Sort.by("id")));
+		List<ElementEntity> mylist = elementService.getAllElementsManager(PageRequest.of(page, size,Sort.by("id")));
 
 		return mylist.stream().map(ElementTO::new).collect(Collectors.toList()).toArray(new ElementTO[0]);
 	}
@@ -121,7 +121,7 @@ public class ElementsController {
 		if (distance < 0.0)
 			throw new InvalidDistanceValueException("Distance must be equal or higher from 0");
 
-		List<ElementEntity> nearBy = this.elementService.getAllElementsNearBy(x, y, distance,
+		List<ElementEntity> nearBy = this.elementService.getAllElementsNearByManager(x, y, distance,
 				PageRequest.of(page, size,Sort.by("id")));
 
 		return nearBy.stream().map(ElementTO::new).collect(Collectors.toList()).toArray(new ElementTO[nearBy.size()]);
@@ -151,7 +151,7 @@ public class ElementsController {
 			throw new InvalidPageRequestException("Page index must be at least 0");
 		}
 		System.err.println("attribute name = " + attributeName + " value =  " + value);
-		return this.elementService.getAllElementsByAttributeAndValue(attributeName, value, PageRequest.of(page, size,Sort.by("id")))
+		return this.elementService.getAllElementsByAttributeAndValueManager(attributeName, value, PageRequest.of(page, size,Sort.by("id")))
 				.stream().map(ElementTO::new).collect(Collectors.toList()).toArray(new ElementTO[0]);
 
 	}

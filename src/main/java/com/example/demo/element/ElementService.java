@@ -10,7 +10,6 @@ import com.example.demo.element.exceptions.ElementAlreadyExistException;
 import com.example.demo.element.exceptions.ElementNotFoundException;
 import com.example.demo.element.exceptions.InvalidAttributeNameException;
 import com.example.demo.element.exceptions.InvalidDistanceValueException;
-import com.example.demo.user.exceptions.InvalidEmailException;
 
 public interface ElementService{
 
@@ -21,9 +20,18 @@ public interface ElementService{
 	public void deleteElement(String playground, String id);
 	
 	public List<ElementEntity> getAllElements();
-	public List<ElementEntity> getAllElements(Pageable page) throws InvalidPageSizeRequestException, InvalidPageRequestException;
-	public List<ElementEntity> getAllElementsNearBy(double x, double y, double distance, Pageable page) throws InvalidDistanceValueException;
-	public List<ElementEntity> getAllElementsByAttributeAndValue(String attribute, String value,Pageable page) throws InvalidAttributeNameException;
+	
+	public List<ElementEntity> getAllElementsPlayer(Pageable page) throws InvalidPageSizeRequestException, InvalidPageRequestException;
+	public List<ElementEntity> getAllElementsManager(Pageable page) throws InvalidPageSizeRequestException, InvalidPageRequestException;
+
+	
+	public List<ElementEntity> getAllElementsNearByPlayer(double x, double y, double distance, Pageable page) throws InvalidDistanceValueException;
+	public List<ElementEntity> getAllElementsNearByManager(double x, double y, double distance, Pageable page) throws InvalidDistanceValueException;
+
+	
+	public List<ElementEntity> getAllElementsByAttributeAndValuePlayer(String attribute, String value,Pageable page) throws InvalidAttributeNameException;
+	public List<ElementEntity> getAllElementsByAttributeAndValueManager(String attribute, String value,Pageable page) throws InvalidAttributeNameException;
+
 	
 	public void cleanup();
 	
