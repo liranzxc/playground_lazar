@@ -1,21 +1,21 @@
 package com.example.demo.activity;
 
 public class ActivityEnumTypes {
-		public enum Activities {
+	public enum Activities{
+		
+		BoardPost("BoardPost"), BoardRead("BoardRead"), CookOmelette("CookOmelette");
+		// declaring private variable for getting values
+		private String action;
 
-			//Any new activity name must be added here!
-			BoardPost("BoardPost"), BoardRead("BoardRead");
-			
-			private String actName;
-			
-			private Activities(String action) {
-				this.actName = action;
-			}
-			
-			
-			public String getActivityName() {
-				return this.actName;
-			}
+		// getter method
+		public String getActivityName() {
+			return this.action;
 		}
 
+		// enum constructor - cannot be public or protected
+		private Activities(String action) {
+			this.action = action;
+		}
+
+	};
 }

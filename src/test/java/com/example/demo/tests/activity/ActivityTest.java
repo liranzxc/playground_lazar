@@ -90,7 +90,7 @@ public class ActivityTest {
 		params.add("userPlayground", "playground_lazar");
 		params.add("email", "demo@gmail.com");
 		//When
-		Object result =rest.postForObject( url+"/{userPlayground}/{email}", activity, ActivityTO.class, params );
+		ActivityTO result =rest.postForObject( url+"/{userPlayground}/{email}", activity, ActivityTO.class, params );
 	}
 	
 	@Test
@@ -104,7 +104,7 @@ public class ActivityTest {
 		MultiValueMap<String, String> params= new LinkedMultiValueMap<>();
 		params.add("userPlayground", "playground_lazar");
 		params.add("email", "demo@gmail.com");
-		Object result =rest.postForObject( url+"/{userPlayground}/{email}", activity, ActivityTO.class, params );
+		ActivityTO result =rest.postForObject( url+"/{userPlayground}/{email}", activity, ActivityTO.class, params );
 		
 		//second message 
 		Map <String,Object> map1 = new HashMap<String,Object>();
@@ -114,7 +114,7 @@ public class ActivityTest {
 		MultiValueMap<String, String> params1= new LinkedMultiValueMap<>();
 		params1.add("userPlayground", "playground_lazar");
 		params1.add("email", "demo@gmail.com");
-		Object result1 =rest.postForObject( url+"/{userPlayground}/{email}", activity1, ActivityTO.class, params1 );
+		ActivityTO result1 =rest.postForObject( url+"/{userPlayground}/{email}", activity1, ActivityTO.class, params1 );
 		
 		
 		//When
@@ -125,7 +125,7 @@ public class ActivityTest {
 		MultiValueMap<String, String> params2= new LinkedMultiValueMap<>();
 		params2.add("userPlayground", "playground_lazar");
 		params2.add("email", "demo@gmail.com");
-		Object result2 =rest.postForObject( url+"/{userPlayground}/{email}", activity2, ActivityTO.class, params2 );
+		ActivityTO result2 =rest.postForObject( url+"/{userPlayground}/{email}", activity2, ActivityTO.class, params2 );
 		
 		//Then: should see the messages on console.
 		
@@ -143,7 +143,7 @@ public class ActivityTest {
 		params.add("userPlayground", "playground_lazar");
 		params.add("email", "demo@gmail.com");
 		//When
-		Object result =rest.postForObject( url+"/{userPlayground}/{email}", activity, ActivityTO.class, params );
+		ActivityTO result =rest.postForObject( url+"/{userPlayground}/{email}", activity, ActivityTO.class, params );
 		//Then ^ThrowsException^
 	}
 	
@@ -159,7 +159,7 @@ public class ActivityTest {
 		params.add("userPlayground", "playground_lazar");
 		params.add("email", "demo@gmail.com");
 		//When
-		Object result =rest.postForObject( url+"/{userPlayground}/{email}", activity, ActivityTO.class, params );
+		ActivityTO result =rest.postForObject( url+"/{userPlayground}/{email}", activity, ActivityTO.class, params );
 		//Then ^ThrowsException^
 	}
 	
@@ -173,8 +173,55 @@ public class ActivityTest {
 		MultiValueMap<String, String> params2= new LinkedMultiValueMap<>();
 		params2.add("userPlayground", "playground_lazar");
 		params2.add("email", "demo@gmail.com");
-		Object result2 =rest.postForObject( url+"/{userPlayground}/{email}", activity2, ActivityTO.class, params2 );
+		Object result =rest.postForObject( url+"/{userPlayground}/{email}", activity2, ActivityTO.class, params2 );
 		//Then Console prints an empty list.
+	}
+	
+	@Test
+	public void TestCookOmelete() {
+		//Given
+		//When
+		Map <String,Object> map = new HashMap<String,Object>();
+		map.put("eggSize", "medium");
+		ActivityTO activity = new ActivityTO("playground_lazar",  "playground_lazar", "1", Activities.CookOmelette.getActivityName() , "playground_lazar", "asdfsd", map);
+		MultiValueMap<String, String> params= new LinkedMultiValueMap<>();
+		params.add("userPlayground", "playground_lazar");
+		params.add("email", "demo@gmail.com");
+		ActivityTO result =rest.postForObject( url+"/{userPlayground}/{email}", activity, ActivityTO.class, params );
+		
+	}
+	
+	@Test
+	public void TestOmeletteEggSizes() {
+		//Given
+		//When
+		Map <String,Object> smallMap = new HashMap<String,Object>();
+		Map <String,Object> mediumMap = new HashMap<String,Object>();
+		Map <String,Object> largeMap = new HashMap<String,Object>();
+		Map <String,Object> xlargeMap = new HashMap<String,Object>();
+		smallMap.put("eggSize", "small");
+		mediumMap.put("eggSize", "medium");
+		largeMap.put("eggSize", "large");
+		xlargeMap.put("eggSize", "extraLarge");
+		ActivityTO activity = new ActivityTO("playground_lazar",  "playground_lazar", "1", Activities.CookOmelette.getActivityName() , "playground_lazar", "asdfsd", smallMap);
+		MultiValueMap<String, String> params= new LinkedMultiValueMap<>();
+		params.add("userPlayground", "playground_lazar");
+		params.add("email", "demo@gmail.com");
+		
+		ActivityTO result =rest.postForObject( url+"/{userPlayground}/{email}", activity, ActivityTO.class, params );
+		System.err.println(result.getAttributes());
+		
+		ActivityTO activity2 = new ActivityTO("playground_lazar",  "playground_lazar", "1", Activities.CookOmelette.getActivityName() , "playground_lazar", "asdfsd", mediumMap);
+		ActivityTO result2 =rest.postForObject( url+"/{userPlayground}/{email}", activity2, ActivityTO.class, params );
+		System.err.println(result2.getAttributes());
+		
+		ActivityTO activity3 = new ActivityTO("playground_lazar",  "playground_lazar", "1", Activities.CookOmelette.getActivityName() , "playground_lazar", "asdfsd", largeMap);
+		ActivityTO result3 =rest.postForObject( url+"/{userPlayground}/{email}", activity3, ActivityTO.class, params );
+		System.err.println(result3.getAttributes());
+		
+		ActivityTO activity4 = new ActivityTO("playground_lazar",  "playground_lazar", "1", Activities.CookOmelette.getActivityName() , "playground_lazar", "asdfsd", xlargeMap);
+		ActivityTO result4 =rest.postForObject( url+"/{userPlayground}/{email}", activity4, ActivityTO.class, params );
+		System.err.println(result4.getAttributes());
 	}
 	
 }
