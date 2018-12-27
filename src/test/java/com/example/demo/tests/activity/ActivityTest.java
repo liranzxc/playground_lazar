@@ -21,6 +21,7 @@ import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 
+import com.example.demo.activity.ActivityEnumTypes.Activities;
 import com.example.demo.activity.ActivityService;
 import com.example.demo.activity.ActivityTO;
 
@@ -78,12 +79,12 @@ public class ActivityTest {
 	
 	
 	@Test
-	public void AddActivity() {
+	public void AddBoardPostActivity() {
 		//Given
 		Map <String,Object> map = new HashMap<String,Object>();
-		map.put("poster", "tal");
-		map.put("message", "this is a test");
-		ActivityTO activity = new ActivityTO("playground_lazar", "0", "playground_lazar", "1", "BoardPost" , "playground_lazar", "asdfsd", map);
+		map.put("poster", "Tal");
+		map.put("message", "This is a test");
+		ActivityTO activity = new ActivityTO("playground_lazar", "playground_lazar", "1", Activities.BoardPost.getActivityName() , "playground_lazar", "asdfsd", map);
 		
 		MultiValueMap<String, String> params= new LinkedMultiValueMap<>();
 		params.add("userPlayground", "playground_lazar");
@@ -97,34 +98,83 @@ public class ActivityTest {
 		//Given
 		//first message
 		Map <String,Object> map = new HashMap<String,Object>();
-		map.put("poster", "tal");
-		map.put("message", "this is a test");
-		ActivityTO activity = new ActivityTO("playground_lazar", "0", "playground_lazar", "1", "BoardPost" , "playground_lazar", "asdfsd", map);
+		map.put("poster", "Tal");
+		map.put("message", "This is a test");
+		ActivityTO activity = new ActivityTO("playground_lazar",  "playground_lazar", "1", Activities.BoardPost.getActivityName() , "playground_lazar", "asdfsd", map);
 		MultiValueMap<String, String> params= new LinkedMultiValueMap<>();
 		params.add("userPlayground", "playground_lazar");
 		params.add("email", "demo@gmail.com");
 		Object result =rest.postForObject( url+"/{userPlayground}/{email}", activity, ActivityTO.class, params );
+		
 		//second message 
 		Map <String,Object> map1 = new HashMap<String,Object>();
-		map1.put("poster", "human");
-		map1.put("message", "a message");
-		ActivityTO activity1 = new ActivityTO("playground_lazar", "0", "playground_lazar", "1", "BoardPost" , "playground_lazar", "asdfsd", map1);
+		map1.put("poster", "Human");
+		map1.put("message", "Generic message");
+		ActivityTO activity1 = new ActivityTO("playground_lazar", "playground_lazar", "1", Activities.BoardPost.getActivityName() , "playground_lazar", "asdfsd", map1);
 		MultiValueMap<String, String> params1= new LinkedMultiValueMap<>();
-		params.add("userPlayground", "playground_lazar");
-		params.add("email", "demo@gmail.com");
+		params1.add("userPlayground", "playground_lazar");
+		params1.add("email", "demo@gmail.com");
 		Object result1 =rest.postForObject( url+"/{userPlayground}/{email}", activity1, ActivityTO.class, params1 );
 		
+		
+		//When
 		//read message
 		Map <String,Object> map2 = new HashMap<String,Object>();
-		map1.put("page", 0);
-		ActivityTO activity2 = new ActivityTO("playground_lazar", "0", "playground_lazar", "1", "BoardRead" , "playground_lazar", "asdfsd", map2);
+		map2.put("page", 0);
+		ActivityTO activity2 = new ActivityTO("playground_lazar",  "playground_lazar", "1", Activities.BoardRead.getActivityName() , "playground_lazar", "asdfsd", map2);
 		MultiValueMap<String, String> params2= new LinkedMultiValueMap<>();
-		params.add("userPlayground", "playground_lazar");
-		params.add("email", "demo@gmail.com");
+		params2.add("userPlayground", "playground_lazar");
+		params2.add("email", "demo@gmail.com");
 		Object result2 =rest.postForObject( url+"/{userPlayground}/{email}", activity2, ActivityTO.class, params2 );
 		
+		//Then: should see the messages on console.
 		
+	}
+	
+	@Test(expected = Exception.class) //status <> 2xx
+	public void ThrowWhenTypeIsNotExist() {
+		//Given
+		Map <String,Object> map = new HashMap<String,Object>();
+		map.put("attribute1", "Tal");
+		map.put("attribute2", "This is a test");
+		ActivityTO activity = new ActivityTO("playground_lazar", "playground_lazar", "1", "FinishTheProjectForUs" , "playground_lazar", "asdfsd", map);
 		
+		MultiValueMap<String, String> params= new LinkedMultiValueMap<>();
+		params.add("userPlayground", "playground_lazar");
+		params.add("email", "demo@gmail.com");
+		//When
+		Object result =rest.postForObject( url+"/{userPlayground}/{email}", activity, ActivityTO.class, params );
+		//Then ^ThrowsException^
+	}
+	
+	@Test(expected = Exception.class) //status <> 2xx
+	public void ThrowWhenAttributesAreInvalid() {
+		//Given
+		Map <String,Object> map = new HashMap<String,Object>();
+		map.put("attribute1", "Tal");
+		map.put("attribute2", "This is a test");
+		ActivityTO activity = new ActivityTO("playground_lazar", "playground_lazar", "1", Activities.BoardPost.toString() /*must be a valid type*/ , "playground_lazar", "asdfsd", map);
+		
+		MultiValueMap<String, String> params= new LinkedMultiValueMap<>();
+		params.add("userPlayground", "playground_lazar");
+		params.add("email", "demo@gmail.com");
+		//When
+		Object result =rest.postForObject( url+"/{userPlayground}/{email}", activity, ActivityTO.class, params );
+		//Then ^ThrowsException^
+	}
+	
+	@Test
+	public void ReadBoardWhenEmpty() {
+		//Given
+		//When
+		Map <String,Object> map2 = new HashMap<String,Object>();
+		map2.put("page", 0);
+		ActivityTO activity2 = new ActivityTO("playground_lazar",  "playground_lazar", "1", Activities.BoardRead.getActivityName() , "playground_lazar", "asdfsd", map2);
+		MultiValueMap<String, String> params2= new LinkedMultiValueMap<>();
+		params2.add("userPlayground", "playground_lazar");
+		params2.add("email", "demo@gmail.com");
+		Object result2 =rest.postForObject( url+"/{userPlayground}/{email}", activity2, ActivityTO.class, params2 );
+		//Then Console prints an empty list.
 	}
 	
 }

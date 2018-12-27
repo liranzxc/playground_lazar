@@ -39,7 +39,6 @@ public class ActivityServiceImpl implements ActivityService {
 		String key = entity.getKey();
 		if(!this.dataBase.existsByKey(key)) {
 			if (!entity.getType().isEmpty()) {
-				System.err.println("type is: " + entity.getType());
 				try {
 					String type = entity.getType();
 					String className = "com.example.demo.activity.plugins." + type + "Plugin";
@@ -55,7 +54,6 @@ public class ActivityServiceImpl implements ActivityService {
 					throw new RuntimeException(); //cause the user to get http 500 error
 				}
 			}
-			System.err.println("done saving activity entity");
 			this.dataBase.save(entity);
 		}
 		else {

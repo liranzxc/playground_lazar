@@ -24,7 +24,8 @@ public class ActivityEntity {
 		public ActivityEntity() {
 			super();
 		}
-		public ActivityEntity(String playground, String id, String elementPlayground, String elementId, String type,
+		
+		public ActivityEntity(String playground,String id, String elementPlayground, String elementId, String type,
 				String playerPlayground, String playerEmail, Map<String, Object> attributes) {
 			super();
 			this.key = generateKey(playground, id);
