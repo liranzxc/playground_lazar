@@ -1,5 +1,7 @@
 package com.example.demo.tests.aspects;
 
+import static org.junit.Assert.assertTrue;
+
 import java.util.Date;
 
 import javax.annotation.PostConstruct;
@@ -26,6 +28,7 @@ import com.example.demo.user.UserService;
 import com.example.demo.user.exceptions.EmailAlreadyRegisteredException;
 import com.example.demo.user.exceptions.InvalidEmailException;
 import com.example.demo.user.exceptions.InvalidRoleException;
+import com.example.demo.user.exceptions.UserNotFoundException;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
@@ -76,8 +79,7 @@ public class UserExistInDBAspectTests {
 	
 	
 	@Test
-	public void getElementWithLegalUser() throws EmailAlreadyRegisteredException, InvalidEmailException
-													, InvalidRoleException,ElementAlreadyExistException {
+	public void getElementWithLegalUser() {
 		
 		try {	
 			this.userService.registerNewUser(ueTest);
@@ -95,8 +97,42 @@ public class UserExistInDBAspectTests {
 		
 		ElementTO elementTOFromDB = this.restTemplate.getForObject(this.urlElements + "/{userPlayground}/{email}/{playground}/{id}",
 				ElementTO.class, userPlayground, email, playground, id);
-
 		
+		boolean success = false; 
+		if(elementTOFromDB.getPlayground().equals(eeTest.getPlayground()) && 
+				elementTOFromDB.getId().equals(eeTest.getId())) {
+			success = true;
+		}
+		
+		assertTrue(success);
+		
+	}
+	
+	
+	@Test(expected=UserNotFoundException.class)
+	public void getElementWithIlleagalUser() throws UserNotFoundException {
+		try {	
+			this.userService.registerNewUser(ueTest);
+			this.elementService.addNewElement(eeTest);
+		}
+		catch(Exception e) {
+			System.err.println(e.getMessage());
+		}
+		
+		ElementTO originalElementTO = new ElementTO(eeTest);
+		String userPlayground = "playground_lazar";
+		String badEmail = "123";
+		String playground = originalElementTO.getPlayground();
+		String id = originalElementTO.getId();
+		
+		
+		try {
+			this.restTemplate.getForObject(this.urlElements + "/{userPlayground}/{email}/{playground}/{id}",
+					ElementTO.class, userPlayground, badEmail, playground, id);
+		}
+		catch(Exception e) {
+			throw new UserNotFoundException("no user with this email");
+		}
 	}
 	
 	
