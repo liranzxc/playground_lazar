@@ -10,6 +10,7 @@ import org.springframework.data.domain.Sort.Direction;
 import org.springframework.stereotype.Component;
 
 import com.example.demo.activity.ActivityEntity;
+import com.example.demo.activity.ActivityEnumTypes.Activities;
 import com.example.demo.activity.ActivityRepository;
 import com.example.demo.activity.plugins.accessories.BoardMessage;
 import com.example.demo.activity.plugins.accessories.BoardMessagePage;
@@ -30,21 +31,22 @@ public class BoardReadPlugin implements PlaygroundPlugin{
 	@Override
 	public Object invokeOperation(ActivityEntity et) {
 		try {
-			BoardMessagePageable messagesPage = this.jackson.readValue(et.getJsonAttributes(), BoardMessagePageable.class);
+			BoardMessagePageable messagesPageable = this.jackson.readValue(et.getJsonAttributes(), BoardMessagePageable.class);
 			BoardMessagePage messagePage =  new BoardMessagePage(this.repository.findByType(
-					"BoardMessage",
-					PageRequest.of(messagesPage.getPage(), messagesPage.getSize(), Direction.ASC, "creationDate"))
+					Activities.BoardPost.getActivityName(),
+					PageRequest.of(messagesPageable.getPage(), messagesPageable.getSize(), Direction.ASC, "key"))
 					.stream()
 					.map(BoardReadPlugin::getMessageFromBoardMessage)
 					.collect(Collectors.toList()));
 			System.err.println(messagePage.getMessages());
 			return messagePage;
 		}catch(Exception e) {
+			e.printStackTrace();
 			throw new RuntimeException();
 		}
 	}
 	
-	public static String getMessageFromBoardMessage(ActivityEntity ac) {
-		return ac.getAttributes().get("poster").toString() +": " +ac.getAttributes().get("message").toString();
+	public static String getMessageFromBoardMessage(ActivityEntity et) {
+		return et.getAttributes().get("poster").toString() +": " +et.getAttributes().get("message").toString();
 	}
 }

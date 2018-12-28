@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.example.demo.aop.UserExistInDB;
 import com.example.demo.application.exceptions.InvalidPageRequestException;
 import com.example.demo.application.exceptions.InvalidPageSizeRequestException;
 import com.example.demo.element.exceptions.ElementAlreadyExistException;
@@ -80,6 +81,7 @@ public class ElementsController {
 	/*
 	 * Feature 7:
 	 */
+	@UserExistInDB
 	@RequestMapping(path = {
 			"/{userPlayground}/{email}/{playground}/{id}" }, method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
 	public ElementTO getElement(@PathVariable("userPlayground") String userPlayground,

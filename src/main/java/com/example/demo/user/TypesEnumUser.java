@@ -4,7 +4,7 @@ public class TypesEnumUser {
 		
 	public enum Types {
 
-		Player("player"), Manager("manger");
+		Player("Player"), Manager("Manager");
 		// declaring private variable for getting values
 		private String action;
 

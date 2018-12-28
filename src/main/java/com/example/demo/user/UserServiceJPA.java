@@ -37,6 +37,7 @@ public class UserServiceJPA implements UserService {
 	@Transactional
 	@MyLog
 	public void registerNewUser(UserEntity user) throws EmailAlreadyRegisteredException, InvalidEmailException, InvalidRoleException {
+		System.err.println("User Role in Service is: " + user.getRole());
 		if (!isValidEmail(user.getEmail()))
 			throw new InvalidEmailException("The email " +user.getEmail()+" is invalid.");
 		if (!isValidRole(user.getRole())){

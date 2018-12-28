@@ -6,8 +6,9 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class ActivityTO {
-		private String playground;
+		private static int ID = 0;
 		private String id;
+		private String playground;
 		private String elementPlayground;
 		private String elementId;
 		private String type;
@@ -18,11 +19,11 @@ public class ActivityTO {
 		public ActivityTO() {
 			super();
 		}
-		public ActivityTO(String playground, String id, String elementPlayground, String elementId, String type,
+		public ActivityTO(String playground, String elementPlayground, String elementId, String type,
 				String playerPlayground, String playerEmail, Map<String, Object> attributes) {
 			super();
 			this.playground = playground;
-			this.id = id;
+			this.id = ""+ID++;
 			this.elementPlayground = elementPlayground;
 			this.elementId = elementId;
 			this.type = type;
@@ -81,7 +82,7 @@ public class ActivityTO {
 		private Map<String,Object> attributes;
 
 		public ActivityEntity ToEntity() {
-			return new ActivityEntity(playground, id, elementPlayground, elementId, type, playerPlayground, playerEmail, attributes);
+			return new ActivityEntity(playground, ""+id ,elementPlayground, elementId, type, playerPlayground, playerEmail, attributes);
 		}
 		
 }

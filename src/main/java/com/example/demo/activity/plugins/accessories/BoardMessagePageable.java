@@ -5,7 +5,7 @@ public class BoardMessagePageable {
 	private int size;
 	
 	public BoardMessagePageable() {
-
+		this.size = 5;
 	}
 
 	public int getPage() {

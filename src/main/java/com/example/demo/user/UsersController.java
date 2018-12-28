@@ -46,7 +46,7 @@ public class UsersController {
 	//1. Register a new user.
 	@RequestMapping(value="/", method=RequestMethod.POST)
 	public String registerFromForm(@ModelAttribute UserTO userForm,Model model) throws EmailAlreadyRegisteredException, InvalidEmailException, InvalidRoleException, UserNotFoundException {
-				
+		System.err.println("User Role in Control is: " + userForm.getRole());
 		try {
 			this.userService.registerNewUser(userForm.ToEntity());
 			model.addAttribute("user", this.userService.getUser(userForm.getEmail(), "playground_lazar"));
