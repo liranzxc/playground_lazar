@@ -38,7 +38,6 @@ public class BoardReadPlugin implements PlaygroundPlugin{
 					.stream()
 					.map(BoardReadPlugin::getMessageFromBoardMessage)
 					.collect(Collectors.toList()));
-			System.err.println(messagePage.getMessages());
 			return messagePage;
 		}catch(Exception e) {
 			e.printStackTrace();

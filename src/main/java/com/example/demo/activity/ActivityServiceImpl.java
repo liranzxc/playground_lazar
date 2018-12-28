@@ -42,31 +42,17 @@ public class ActivityServiceImpl implements ActivityService {
 				try {
 					String type = entity.getType();
 					String className = "com.example.demo.activity.plugins." + type + "Plugin";
-					
-					
-					
+
 					Class<?> theClass = Class.forName(className);
-					
-					System.err.println("After theClass");
-					
 					PlaygroundPlugin plugin = (PlaygroundPlugin) this.spring.getBean(theClass);
-					System.err.println(plugin == null);
-					
-					System.err.println("After plugin");
-					
 					Object activity = plugin.invokeOperation(entity);
-					
-					System.err.println("After invoke");
 					
 					Map<String, Object> rvMap = this.jackson.readValue(
 							this.jackson.writeValueAsString(activity),
 							Map.class);
 					
-					
 					entity.getAttributes().putAll(rvMap);
 				} catch (Exception e) {
-					System.err.println(e.getMessage());
-					e.printStackTrace();
 					throw new RuntimeException(); //cause the user to get http 500 error
 				}
 			}

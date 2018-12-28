@@ -4,6 +4,7 @@ import java.util.Map;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.Lob;
 import javax.persistence.Transient;
 
 import org.springframework.data.mongodb.core.mapping.Document;
@@ -83,6 +84,7 @@ public class ActivityEntity {
 			}
 		}
 		
+		@Lob
 		public String getJsonAttributes() {
 			try {
 				return new ObjectMapper().writeValueAsString(this.attributes);

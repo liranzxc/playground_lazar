@@ -84,13 +84,14 @@ public class ActivityTest {
 		Map <String,Object> map = new HashMap<String,Object>();
 		map.put("poster", "Tal");
 		map.put("message", "This is a test");
-		ActivityTO activity = new ActivityTO("playground_lazar", "playground_lazar", "1", Activities.BoardPost.getActivityName() , "playground_lazar", "asdfsd", map);
+		ActivityTO activity = new ActivityTO("playground_lazar", "playground_lazar", "1", Activities.BoardPost.getActivityName(), "playground_lazar", "asdfsd", map);
 		
 		MultiValueMap<String, String> params= new LinkedMultiValueMap<>();
 		params.add("userPlayground", "playground_lazar");
 		params.add("email", "demo@gmail.com");
 		//When
 		ActivityTO result =rest.postForObject( url+"/{userPlayground}/{email}", activity, ActivityTO.class, params );
+		System.err.println(result.getAttributes());
 	}
 	
 	@Test
@@ -121,13 +122,14 @@ public class ActivityTest {
 		//read message
 		Map <String,Object> map2 = new HashMap<String,Object>();
 		map2.put("page", 0);
+		map2.put("size", 5);
 		ActivityTO activity2 = new ActivityTO("playground_lazar",  "playground_lazar", "1", Activities.BoardRead.getActivityName() , "playground_lazar", "asdfsd", map2);
 		MultiValueMap<String, String> params2= new LinkedMultiValueMap<>();
 		params2.add("userPlayground", "playground_lazar");
 		params2.add("email", "demo@gmail.com");
 		ActivityTO result2 =rest.postForObject( url+"/{userPlayground}/{email}", activity2, ActivityTO.class, params2 );
-		
 		//Then: should see the messages on console.
+		System.out.println(result2.getAttributes());
 		
 	}
 	

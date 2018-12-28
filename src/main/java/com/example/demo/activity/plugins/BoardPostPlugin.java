@@ -28,9 +28,7 @@ public class BoardPostPlugin implements PlaygroundPlugin {
 	@Override
 	public Object invokeOperation(ActivityEntity et) {
 		try {
-			System.err.println("Start invokeOperation");
 			BoardMessage message = this.jackson.readValue(et.getJsonAttributes(), BoardMessage.class);
-			System.err.println("After jkson");
 			return message;
 		} catch (Exception e) {
 			throw new RuntimeException();
