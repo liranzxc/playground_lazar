@@ -65,11 +65,8 @@ public class ActivityServiceImpl implements ActivityService {
 					
 					entity.getAttributes().putAll(rvMap);
 				} catch (Exception e) {
-<<<<<<< HEAD
 					System.err.println(e.getMessage());
-=======
 					e.printStackTrace();
->>>>>>> 031ae9f88a12b6825b226f481583943aca90be13
 					throw new RuntimeException(); //cause the user to get http 500 error
 				}
 			}
