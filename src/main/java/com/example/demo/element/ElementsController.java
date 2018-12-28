@@ -3,7 +3,10 @@ package com.example.demo.element;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import javax.validation.constraints.Email;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.MediaType;
@@ -14,7 +17,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.example.demo.aop.PermisionLog;
+import com.example.demo.aop.EmailValue;
 import com.example.demo.aop.UserExistInDB;
 import com.example.demo.application.exceptions.InvalidPageRequestException;
 import com.example.demo.application.exceptions.InvalidPageSizeRequestException;
@@ -22,7 +25,6 @@ import com.example.demo.element.exceptions.ElementAlreadyExistException;
 import com.example.demo.element.exceptions.ElementNotFoundException;
 import com.example.demo.element.exceptions.InvalidAttributeNameException;
 import com.example.demo.element.exceptions.InvalidDistanceValueException;
-import com.example.demo.user.TypesEnumUser.Types;
 import com.example.demo.user.exceptions.InvalidEmailException;
 
 @RestController
@@ -87,8 +89,9 @@ public class ElementsController {
 	@RequestMapping(path = {
 			"/{userPlayground}/{email}/{playground}/{id}" }, method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
 	public ElementTO getElement(@PathVariable("userPlayground") String userPlayground,
-			@PathVariable("email") String email, @PathVariable("playground") String playground,
+			@PathVariable("email")@EmailValue String email, @PathVariable("playground") String playground,
 			@PathVariable("id") String id) throws ElementNotFoundException {
+		verifiedEmail(email);
 		return new ElementTO(this.elementService.getElement(playground, id));
 	}
 
@@ -160,21 +163,9 @@ public class ElementsController {
 
 	}
 	
-	// this method checks if there is a '@' in the name and there is something
-	// before it and after it
-	private boolean verifiedEmail(String email) {
-		String[] emailParts = email.split("@");
-
-		if (emailParts.length != 2 || emailParts[0].length() < 3) {
-			return false;
-		}
-
-		String[] emailTailParts = emailParts[1].split("\\.");
-
-		if (emailTailParts.length < 2 || emailTailParts[0].isEmpty() || emailTailParts[1].isEmpty()) {
-			return false;
-		}
-
+	
+	public boolean verifiedEmail(String email) {
+		System.err.println("ElemenetController enter verfied email");
 		return true;
 	}
 

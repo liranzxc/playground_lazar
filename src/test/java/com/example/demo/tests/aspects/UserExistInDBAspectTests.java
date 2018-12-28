@@ -121,7 +121,7 @@ public class UserExistInDBAspectTests {
 		
 		ElementTO originalElementTO = new ElementTO(eeTest);
 		String userPlayground = "playground_lazar";
-		String badEmail = "123";
+		String badEmail = "123@123.com";
 		String playground = originalElementTO.getPlayground();
 		String id = originalElementTO.getId();
 		
