@@ -10,7 +10,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.example.demo.aop.MyLog;
+import com.example.demo.aop.ToLog;
 import com.example.demo.application.exceptions.InvalidPageRequestException;
 import com.example.demo.application.exceptions.InvalidPageSizeRequestException;
 import com.example.demo.element.exceptions.ElementAlreadyExistException;
@@ -33,12 +33,10 @@ public class ElementServiceJpa implements ElementService {
 
 	@Override
 	@Transactional
-	@MyLog 
+	@ToLog 
 	public void addNewElement(ElementEntity et) throws ElementAlreadyExistException{
-		
 		int newID = ++ID;
 		String key = ElementEntity.createKeyFromIdAndPlayground(newID+"", et.getPlayground());
-		System.err.println("inside createElement Service setting key to:  = " + key);
 		et.setKey(key);
 		
 		if (!this.dataBase.existsByKey(key)) {
@@ -52,10 +50,9 @@ public class ElementServiceJpa implements ElementService {
 	
 	@Override
 	@Transactional
-	@MyLog 
+	@ToLog 
 	public void addElementFromOutside(ElementEntity et) throws ElementAlreadyExistException {
 		String key = et.getKey();
-		//System.err.println("inside createElement Service setting key to:  = " + key);
 		
 		et.setKey(key);
 		
@@ -69,22 +66,33 @@ public class ElementServiceJpa implements ElementService {
 
 	@Override
 	@Transactional
-	@MyLog
+	@ToLog
 	public void updateElement(ElementEntity et) throws ElementNotFoundException {
 		String key = et.getKey();
 		if (this.dataBase.existsByKey(key)) {
 			this.dataBase.deleteByKey(key); // delete not updated element
 			this.dataBase.save(et); // save updated element
 		} else {
-			
 			throw new ElementNotFoundException();
 		}
 	}
 
 	@Override
 	@Transactional(readOnly = true)
-	@MyLog
-	public ElementEntity getElement(String playground, String id) throws ElementNotFoundException {
+	@ToLog
+	public ElementEntity getElementPlayer(String playground, String id) throws ElementNotFoundException {
+		String key = ElementEntity.createKeyFromIdAndPlayground(id, playground);
+		if (this.dataBase.existsByKey(key)) {
+			return this.dataBase.findAllByKeyAndExpireDateGreaterThanOrExpireDateIsNull(key, new Date()).get();
+		} else {
+			throw new ElementNotFoundException();
+		}
+	}
+
+	@Override
+	@Transactional(readOnly = true)
+	@ToLog
+	public ElementEntity getElementManager(String playground, String id) throws ElementNotFoundException {
 		String key = ElementEntity.createKeyFromIdAndPlayground(id, playground);
 		if (this.dataBase.existsByKey(key)) {
 			return this.dataBase.findByKey(key).get();
@@ -92,65 +100,51 @@ public class ElementServiceJpa implements ElementService {
 			throw new ElementNotFoundException();
 		}
 	}
-
+	
 	@Override
 	@Transactional
-	@MyLog
-	public void deleteElement(String playground, String id) {
-		
+	@ToLog
+	public void deleteElement(String playground, String id) {	
 		String key = ElementEntity.createKeyFromIdAndPlayground(id, playground);
 		if (this.dataBase.existsByKey(key)) {
 			ElementEntity et = this.dataBase.findByKey(key).get();
 			et.setExpireDate(new Date()); // empty constructor give now date
 			
 			this.dataBase.deleteByKey(key);		
-			this.dataBase.save(et);
-			
+			this.dataBase.save(et);	
 		}
 	}
 
 	@Override
 	@Transactional(readOnly = true)
-	@MyLog
+	@ToLog
 	public List<ElementEntity> getAllElements() {
 		return this.dataBase.findAll(Sort.by("id"));
 	}
 
 	@Override
 	@Transactional(readOnly = true)
-	@MyLog
+	@ToLog
 	public List<ElementEntity> getAllElementsManager(Pageable page)
 			throws InvalidPageSizeRequestException, InvalidPageRequestException {
 
-		if (page.getPageSize() < 1)
-			throw new InvalidPageSizeRequestException();
-		if (page.getPageNumber() < 0)
-			throw new InvalidPageRequestException();
-
-		List<ElementEntity> list = this.dataBase.findAll(page).getContent();
-
-		return list;
+		verifyPageable(page);
+		return this.dataBase.findAll(page).getContent();
 	}
 	
 	@Override
 	@Transactional(readOnly = true)
-	@MyLog
+	@ToLog
 	public List<ElementEntity> getAllElementsPlayer(Pageable page)
 			throws InvalidPageSizeRequestException, InvalidPageRequestException {
 
-		if (page.getPageSize() < 1)
-			throw new InvalidPageSizeRequestException();
-		if (page.getPageNumber() < 0)
-			throw new InvalidPageRequestException();
-
-		List<ElementEntity> list = this.dataBase.findByExpireDateGreaterThan(new Date(), page);
-
-		return list;
+		verifyPageable(page);
+		return this.dataBase.findAllByExpireDateGreaterThanOrExpireDateIsNull(new Date(), page);
 	}
 
 	@Override
 	@Transactional(readOnly = true)
-	@MyLog
+	@ToLog
 	public List<ElementEntity> getAllElementsNearByManager(double x, double y, double distance, Pageable page)
 			throws InvalidDistanceValueException {
 
@@ -168,10 +162,9 @@ public class ElementServiceJpa implements ElementService {
 
 	}
 	
-	
 	@Override
 	@Transactional(readOnly = true)
-	@MyLog
+	@ToLog
 	public List<ElementEntity> getAllElementsNearByPlayer(double x, double y, double distance, Pageable page)
 			throws InvalidDistanceValueException {
 
@@ -179,7 +172,7 @@ public class ElementServiceJpa implements ElementService {
 			throw new InvalidDistanceValueException(
 					"when searching elements who is near by, distance must be bigger or equal to 0");
 		} else {
-			List<ElementEntity> list = this.dataBase.findByExpireDateGreaterThan(new Date()).stream()
+			List<ElementEntity> list = this.dataBase.findAllByExpireDateGreaterThanOrExpireDateIsNull(new Date()).stream()
 					.filter(ee -> isNear(ee, x, y, distance))
 					.skip(page.getPageSize() * page.getPageNumber())
 					.limit(page.getPageSize())
@@ -188,19 +181,20 @@ public class ElementServiceJpa implements ElementService {
 		}
 	}
 
-	
 	@Override
 	@Transactional(readOnly = true)
-	@MyLog
+	@ToLog
 	public List<ElementEntity> getAllElementsByAttributeAndValueManager(String attribute, String value,Pageable page)
-			throws InvalidAttributeNameException {
+			throws InvalidAttributeNameException, InvalidPageSizeRequestException, InvalidPageRequestException {
+		verifyPageable(page);
+		
 		switch (attribute) {
 
 		case "name": {
-			return this.dataBase.findByName(value, page);
+			return this.dataBase.findAllByName(value, page);
 		}
 		case "type": {
-			return this.dataBase.findByType(value, page);
+			return this.dataBase.findAllByType(value, page);
 		}
 
 		default:
@@ -210,16 +204,20 @@ public class ElementServiceJpa implements ElementService {
 	
 	@Override
 	@Transactional(readOnly = true)
-	@MyLog
+	@ToLog
 	public List<ElementEntity> getAllElementsByAttributeAndValuePlayer(String attribute, String value,Pageable page)
-			throws InvalidAttributeNameException {
+			throws InvalidAttributeNameException, InvalidPageSizeRequestException, InvalidPageRequestException {
+		
+		verifyPageable(page);
+		
 		switch (attribute) {
 
 		case "name": {
-			return this.dataBase.findByNameAndExpireDateGreaterThan(value, new Date() ,page);
+			return this.dataBase.findAllByNameAndExpireDateGreaterThanOrExpireDateIsNull(value, new Date() ,page);
 		}
 		case "type": {
-			return this.dataBase.findByTypeAndExpireDateGreaterThan(value, new Date() ,page);		}
+			return this.dataBase.findAllByTypeAndExpireDateGreaterThanOrExpireDateIsNull(value, new Date() ,page);		
+		}
 
 		default:
 			throw new InvalidAttributeNameException("Attribute Name does not exist in Element");
@@ -228,11 +226,18 @@ public class ElementServiceJpa implements ElementService {
 
 	@Override
 	@Transactional
-	@MyLog
+	@ToLog
 	public void cleanup() {
 		this.dataBase.deleteAll();
 	}
 
+	
+	private void verifyPageable(Pageable page) throws InvalidPageSizeRequestException, InvalidPageRequestException {
+		if (page.getPageSize() < 1)
+			throw new InvalidPageSizeRequestException();
+		if (page.getPageNumber() < 0)
+			throw new InvalidPageRequestException();
+	}
 
 	private boolean isNear(ElementEntity et, double x, double y, double distance) {
 		double etX = et.getX();

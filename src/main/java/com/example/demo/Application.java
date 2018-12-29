@@ -24,17 +24,14 @@ public class Application {
 		System.err.println("sever is up");
 	}
 
-	 @Bean
-	    public CommandLineRunner run(UserRepository userRepository) throws Exception {
-	        return args -> {
-	           
-	        	userRepository.save(new UserEntity("lirannh@gmail.com",
-	        			"playground_lazar", "username", "avatar", "role"));
-	        	userRepository.save(new UserEntity("Shay@gmail.com",
-	        			"playgrund", "username", "avatar", "role"));
-	        	
-	        	userRepository.save(new UserEntity("demo@gmail.com",
-	        			"demo", "username", "avatar", "role"));
-	        };
-	    }
+	@Bean
+	public CommandLineRunner run(UserRepository userRepository) throws Exception {
+		return args -> {
+
+			userRepository.save(new UserEntity("lirannh@gmail.com", "playground_lazar", "username", "avatar", "role"));
+			userRepository.save(new UserEntity("Shay@gmail.com", "playgrund", "username", "avatar", "role"));
+
+			//userRepository.save(new UserEntity("demo@gmail.com", "demo", "username", "avatar", "role"));
+		};
+	}
 }

@@ -17,7 +17,7 @@ public class LoggerAspect {
 
 	private Log log = LogFactory.getLog(LoggerAspect.class);
 	
-	@Before("@annotation(com.example.demo.aop.MyLog)")
+	@Before("@annotation(com.example.demo.aop.ToLog)")
 	public void log (JoinPoint joinPoint) {
 		String className = joinPoint.getTarget().getClass().getSimpleName();
 		String methodName = joinPoint.getSignature().getName();
@@ -25,7 +25,7 @@ public class LoggerAspect {
 	}
 	
 	
-	@Around("@annotation(com.example.demo.aop.MyLog)")
+	@Around("@annotation(com.example.demo.aop.ToLog)")
 	public Object log (ProceedingJoinPoint joinPoint) throws Throwable {
 		String className = joinPoint.getTarget().getClass().getSimpleName();
 		String methodName = joinPoint.getSignature().getName();

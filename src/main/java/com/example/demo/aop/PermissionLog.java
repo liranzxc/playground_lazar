@@ -10,8 +10,5 @@ import com.example.demo.user.TypesEnumUser.Types;
 
 @Retention(RUNTIME)
 @Target(METHOD)
-public @interface PermisionLog {
-
-	Types[] value() default {};
-	
+public @interface PermissionLog {	
 }

@@ -6,8 +6,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.example.demo.aop.MyLog;
-import com.example.demo.aop.PermisionLog;
+import com.example.demo.aop.ToLog;
+import com.example.demo.aop.PermissionLog;
 import com.example.demo.application.accessories.GeneratorService;
 import com.example.demo.user.TypesEnumUser.Types;
 import com.example.demo.user.exceptions.EmailAlreadyRegisteredException;
@@ -35,7 +35,7 @@ public class UserServiceJPA implements UserService {
 
 	@Override
 	@Transactional
-	@MyLog
+	@ToLog
 	public void registerNewUser(UserEntity user) throws EmailAlreadyRegisteredException, InvalidEmailException, InvalidRoleException {
 		System.err.println("User Role in Service is: " + user.getRole());
 		System.err.println("User Email in Service is: " + user.getEmail());
@@ -60,7 +60,7 @@ public class UserServiceJPA implements UserService {
 	
 	@Override
 	@Transactional
-	@MyLog
+	@ToLog
 	public void updateUserInfo(UserEntity user) throws UserNotFoundException, InvalidEmailException {
 		if (!isValidEmail(user.getEmail()))
 			throw new InvalidEmailException("The email " +user.getEmail()+" is invalid.");
@@ -73,12 +73,12 @@ public class UserServiceJPA implements UserService {
 
 	@Override
 	@Transactional(readOnly = true)
-	@MyLog
+	@ToLog
 	public UserEntity getUser(String email, String playground) throws UserNotFoundException {
 		if (dataBase.existsByEmail(email)) {
 			//UserEntity user = dataBase.findByEmail(email).get();
 			if (playground.equals(playgroundName))
-				return dataBase.findByEmail(email).get();
+				return dataBase.findByEmail(email).get(); // null
 			else
 				throw new UserNotFoundException("The user with id " + email +" and playground " + playgroundName + " not found.");
 		} else
@@ -88,7 +88,7 @@ public class UserServiceJPA implements UserService {
 
 	@Override
 	@Transactional
-	@MyLog
+	@ToLog
 	public void cleanup() {
 		dataBase.deleteAll();
 	}

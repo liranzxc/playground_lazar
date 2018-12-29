@@ -21,12 +21,15 @@ import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.web.client.RestTemplate;
 
+import com.example.demo.aop.EmailValue;
 import com.example.demo.element.ElementEntity;
 import com.example.demo.element.ElementService;
 import com.example.demo.element.ElementServiceJpa;
 import com.example.demo.element.ElementTO;
 import com.example.demo.element.Location;
 import com.example.demo.element.exceptions.ElementAlreadyExistException;
+import com.example.demo.user.UserEntity;
+import com.example.demo.user.UserService;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
@@ -35,6 +38,9 @@ public class ElementTest_Feature10 {
 	private int numOfEntities = 20;
 	private ElementEntity[] demo_entities;
 	private ElementEntity demo_entity;
+
+	private UserEntity demo_user_player;
+	private UserEntity demo_user_manager;
 
 	/*
 	 * ====================================== READ ME
@@ -57,12 +63,19 @@ public class ElementTest_Feature10 {
 	@Autowired
 	private ElementService elementService;
 
+	@Autowired
+	private UserService userService;
+	
 	@PostConstruct
 	public void init() {
 		this.restTemplate = new RestTemplate();
 		// this.jsonMapper = new ObjectMapper();
 		this.url = "http://localhost:" + port + "/playground/elements";
 
+		
+		this.demo_user_manager = new UserEntity("demoManager@gmail.com", "playground_lazar", "mr.manajer", null, "Manager");
+		this.demo_user_player = new UserEntity("demoPlayer@gmail.com", "playground_lazar", "mr.palayer", null, "Player");
+		
 		Location demo_entity_location = new Location(0, 1);
 		this.demo_entity = new ElementEntity("playground_lazar", "0", demo_entity_location.getX(),
 				demo_entity_location.getY(), "demo", new Date(), null, "demo type", null, "Aviv", "demo@gmail.com");
@@ -86,12 +99,21 @@ public class ElementTest_Feature10 {
 
 	@Before
 	public void setup() throws InterruptedException {
-		ElementServiceJpa.setIDToZero();
+		ElementServiceJpa.setIDToZero(); // reset the ID to 0 after each test
+		
+		try {
+			this.userService.registerNewUser(demo_user_manager);
+			this.userService.registerNewUser(demo_user_player);
+		} catch (Exception e) {
+			System.err.println("ElementTest setup exception on registering users, exception is:");
+			System.err.println(e.getMessage());
+		}
 	}
 
 	@After
 	public void teardown() {
 		this.elementService.cleanup();
+		this.userService.cleanup();
 	}
 
 ////////////////
@@ -117,13 +139,11 @@ public class ElementTest_Feature10 {
 		this.elementService.addNewElement(this.demo_entity);
 
 		// When:
-		String userPlayground = "playground_lazar";
-		String email = "aviv@gmail.com";
 
 		// Than:
 		ElementTO[] allElements = this.restTemplate.getForObject(
 				this.url + "/{userPlayground}/{email}/search/{attributeName}/{value}", ElementTO[].class,
-				userPlayground, email, attributeName, value);
+				demo_user_manager.getPlayground(), demo_user_manager.getEmail(), attributeName, value);
 
 		boolean isSuccess = false;
 
@@ -145,15 +165,13 @@ public class ElementTest_Feature10 {
 		}
 
 		// When:
-		String userPlayground = "playground_lazar";
-		String email = "aviv@gmail.com";
 		String attributeName = "name";
 		String value = "demo_target";
 
 		// Than:
 		ElementTO[] allElements = this.restTemplate.getForObject(
 				this.url + "/{userPlayground}/{email}/search/{attributeName}/{value}", ElementTO[].class,
-				userPlayground, email, attributeName, value);
+				demo_user_manager.getPlayground(), demo_user_manager.getEmail() , attributeName, value);
 
 		boolean success = false;
 		// System.err.println("Num of elements: " + allElements.length);
@@ -177,15 +195,13 @@ public class ElementTest_Feature10 {
 		}
 
 		// When:
-		String userPlayground = "playground_lazar";
-		String email = "aviv@gmail.com";
 		String attributeName = "type";
 		String value = "demo_target";
 
 		// Than:
 		ElementTO[] allElements = this.restTemplate.getForObject(
 				this.url + "/{userPlayground}/{email}/search/{attributeName}/{value}", ElementTO[].class,
-				userPlayground, email, attributeName, value);
+				demo_user_manager.getPlayground(), demo_user_manager.getEmail(), attributeName, value);
 
 		boolean success = false;
 		// System.err.println("Num of elements: " + allElements.length);
@@ -210,15 +226,13 @@ public class ElementTest_Feature10 {
 		}
 
 		// When:
-		String userPlayground = "playground_lazar";
-		String email = "aviv@gmail.com";
 		String attributeName = "name";
 		String value = "demo_target";
 
 		// Than:
 		ElementTO[] allElements = this.restTemplate.getForObject(
 				this.url + "/{userPlayground}/{email}/search/{attributeName}/{value}", ElementTO[].class,
-				userPlayground, email, attributeName, value);
+				demo_user_manager.getPlayground(), demo_user_manager.getEmail(), attributeName, value);
 
 		boolean success = true;
 
@@ -231,7 +245,6 @@ public class ElementTest_Feature10 {
 				success = false;
 			}
 		}
-
 		assertTrue(success);
 	}
 
@@ -248,15 +261,13 @@ public class ElementTest_Feature10 {
 		}
 
 		// When:
-		String userPlayground = "playground_lazar";
-		String email = "aviv@gmail.com";
 		String attributeName = "type";
 		String value = "demo_target";
 
 		// Than:
 		ElementTO[] allElements = this.restTemplate.getForObject(
 				this.url + "/{userPlayground}/{email}/search/{attributeName}/{value}", ElementTO[].class,
-				userPlayground, email, attributeName, value);
+				demo_user_manager.getPlayground(), demo_user_manager.getEmail(), attributeName, value);
 
 		boolean success = true;
 
@@ -280,8 +291,6 @@ public class ElementTest_Feature10 {
 		this.elementService.addNewElement(this.demo_entity);
 
 		// When:
-		String userPlayground = "playground_lazar";
-		String email = "aviv@gmail.com";
 		String attributeName = "attack";
 		String value = "1";
 
@@ -289,9 +298,9 @@ public class ElementTest_Feature10 {
 		boolean success = false;
 
 		try {
-			ElementTO[] allElements = this.restTemplate.getForObject(
+			this.restTemplate.getForObject(
 					this.url + "/{userPlayground}/{email}/search/{attributeName}/{value}", ElementTO[].class,
-					userPlayground, email, attributeName, value);
+					demo_user_manager.getPlayground(), demo_user_manager.getEmail(), attributeName, value);
 		} catch (Exception e) {
 			success = true;
 		}
@@ -322,15 +331,14 @@ public class ElementTest_Feature10 {
 		demo_targets.trimToSize();
 
 		// When:
-		String userPlayground = "playground_lazar";
-		String email = "aviv@gmail.com";
+
 
 		// Than:
 		boolean success = false;
 
 		ElementTO[] allElements = this.restTemplate.getForObject(
 				this.url + "/{userPlayground}/{email}/search/{attributeName}/{value}", ElementTO[].class,
-				userPlayground, email, attributeName, value);
+				demo_user_manager.getPlayground(), demo_user_manager.getEmail(), attributeName, value);
 
 		if (allElements.length == 0)
 			success = true;
@@ -359,20 +367,13 @@ public class ElementTest_Feature10 {
 		}
 
 		// When:
-		String userPlayground = "playground_lazar";
-		String email = "aviv@gmail.com";
 
 		// Than:
 		ElementTO[] allElements = this.restTemplate.getForObject(
 				this.url + "/{userPlayground}/{email}/search/{attributeName}/{value}", ElementTO[].class,
-				userPlayground, email, attributeName, value);
+				demo_user_manager.getPlayground(), demo_user_manager.getEmail(), attributeName, value);
 
 		boolean success = true;
-
-//		System.err.println("elements TO got:");
-//		for (ElementTO elementTO : allElements) {
-//			System.err.println(elementTO);
-//		}
 
 		if (allElements.length != 10) {
 			success = false;
@@ -402,14 +403,12 @@ public class ElementTest_Feature10 {
 		}
 
 		// When:
-		String userPlayground = "playground_lazar";
-		String email = "aviv@gmail.com";
 		int size = 7;
 		int page = 1;
 
 		Map<String, Object> map = new HashMap<>();
-		map.put("userPlayground", userPlayground);
-		map.put("email", email);
+		map.put("userPlayground", demo_user_manager.getPlayground());
+		map.put("email", demo_user_manager.getEmail());
 		map.put("attributeName", attributeName);
 		map.put("value", value);
 		map.put("size", size);

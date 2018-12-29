@@ -25,6 +25,8 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.web.client.RestTemplate;
 
+import com.example.demo.application.exceptions.InvalidPageRequestException;
+import com.example.demo.application.exceptions.InvalidPageSizeRequestException;
 import com.example.demo.element.ElementEntity;
 import com.example.demo.element.ElementService;
 import com.example.demo.element.ElementServiceJpa;
@@ -99,7 +101,7 @@ public class ServiceOnlyTestsForDB {
 	}
 
 	@Test
-	public void findByNameForPlayer() throws ElementAlreadyExistException, InvalidAttributeNameException, InterruptedException {
+	public void findByNameForPlayer() throws ElementAlreadyExistException, InvalidAttributeNameException, InterruptedException, InvalidPageSizeRequestException, InvalidPageRequestException {
 		Date date1 = new Date(2050, 1, 1);
 		Date date2 = new Date(1000, 1, 1);
 		
