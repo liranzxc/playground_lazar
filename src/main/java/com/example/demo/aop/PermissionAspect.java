@@ -3,22 +3,22 @@ package com.example.demo.aop;
 import java.lang.annotation.Annotation;
 import java.util.regex.Pattern;
 
-import org.aspectj.lang.JoinPoint;
+import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.SoftException;
+import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
-import org.aspectj.lang.annotation.Before;
 import org.aspectj.lang.reflect.MethodSignature;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import com.example.demo.user.UserEntity;
 import com.example.demo.user.UserService;
 import com.example.demo.user.exceptions.InvalidEmailException;
 import com.example.demo.user.exceptions.UserNotFoundException;
 
-
 @Aspect
 @Component
-public class UserExistInDBAspect {
+public class PermissionAspect {
 
 	private UserService userService;
 	
@@ -27,17 +27,17 @@ public class UserExistInDBAspect {
 		this.userService = userService;
 	}
 	
-		
-	@Before("@annotation(com.example.demo.aop.UserExistInDB)")
-	public void verifyUser(JoinPoint jp) throws InvalidEmailException, UserNotFoundException {
-		Object[] args = jp.getArgs();	
-		MethodSignature signature = (MethodSignature) jp.getSignature();
+	
+	@Around("@annotation(com.example.demo.aop.PermissionLog)")
+	public Object getType(ProceedingJoinPoint  pjp) throws InvalidEmailException, UserNotFoundException {
+		Object[] args = pjp.getArgs();	
+		MethodSignature signature = (MethodSignature) pjp.getSignature();
 		String methodName = signature.getMethod().getName();
 		Class<?>[] parameterTypes = signature.getMethod().getParameterTypes();
 		
 		Annotation[][] annotations;
 		try {
-			annotations = jp.getTarget().getClass().getMethod(methodName, parameterTypes).getParameterAnnotations();
+			annotations = pjp.getTarget().getClass().getMethod(methodName, parameterTypes).getParameterAnnotations();
 		} catch (Exception e) {
 			throw new SoftException(e);
 		}
@@ -49,9 +49,15 @@ public class UserExistInDBAspect {
 	                Object email = args[i];
 	                if (email instanceof String) {
 	                	if(isAnEmail((String)email)) {
-	                		// TODO: change getUser!!!     		
-	                		this.userService.getUser((String)email, "playground_lazar");
-	                		return;
+	                		UserEntity et = this.userService.getUser((String)email, "playground_lazar");
+	                		String role = et.getRole();
+	                		args[i] = role;
+	                		try {
+								return pjp.proceed(args);
+							} catch (Throwable e) {
+								System.err.println("inside PermissionAspect proceed failed:");
+								System.err.println(e.getMessage());
+							}  		
 	                	}
 	                	else {
 	                		throw new InvalidEmailException("invalid email has been given");
@@ -60,13 +66,13 @@ public class UserExistInDBAspect {
 	            }
 	        }
 	    }
+	    
+	    throw new UserNotFoundException("no email has been found");
 	}
-	
-	
-	
 	
 	
 	private boolean isAnEmail(String email) {
 		return Pattern.matches("[_a-zA-Z1-9]+(\\.[A-Za-z0-9]*)*@[A-Za-z0-9]+\\.[A-Za-z0-9]+(\\.[A-Za-z0-9]*)*", email);
 	}
+	
 }

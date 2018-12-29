@@ -1,7 +1,5 @@
 package com.example.demo.user;
 
-import javax.validation.Valid;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
@@ -11,8 +9,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.servlet.ModelAndView;
 
 import com.example.demo.user.exceptions.EmailAlreadyRegisteredException;
 import com.example.demo.user.exceptions.InvalidConfirmationCodeException;
@@ -28,13 +24,17 @@ public class UsersController {
 	private String TEST_CODE = "1234";
 	
 	private UserService userService;
-	
+	private UserVerifyier userVerifyier;
 	
 	@Autowired
 	public void setUserService(UserService userService) {
 		this.userService = userService;
 	}
 	
+	@Autowired
+	public void setUserVerifier(UserVerifyier verifier) {
+		this.userVerifyier = verifier;
+	}
 	
 	public String getTEST_CODE() {
 		return TEST_CODE;
