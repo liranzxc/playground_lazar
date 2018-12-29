@@ -28,8 +28,8 @@ public class Application {
 	public CommandLineRunner run(UserRepository userRepository) throws Exception {
 		return args -> {
 
-			userRepository.save(new UserEntity("lirannh@gmail.com", "playground_lazar", "username", "avatar", "role"));
-			userRepository.save(new UserEntity("Shay@gmail.com", "playgrund", "username", "avatar", "role"));
+			//userRepository.save(new UserEntity("lirannh@gmail.com", "playground_lazar", "username", "avatar", "Player"));
+			//userRepository.save(new UserEntity("Shay@gmail.com", "playgrund", "username", "avatar", "Player"));
 
 			//userRepository.save(new UserEntity("demo@gmail.com", "demo", "username", "avatar", "role"));
 		};

@@ -50,10 +50,15 @@ public class ElementsController {
 	public ElementTO createElement(@RequestBody ElementTO element,
 			@PathVariable(name = "userPlayground", required = true) String userPlayground,
 			@PathVariable(name = "email", required = true) String email)
-			throws InvalidEmailException, ElementAlreadyExistException {
+			throws InvalidEmailException, ElementAlreadyExistException, InvalidRoleException {
 
-		this.userVerifier.verify(email);
+		//this.userVerifier.verify(email);
 			
+		String role = this.userVerifier.getType(email);
+		if(!role.equals("Manager")) {
+			throw new InvalidRoleException("only manager can update elements");
+		}
+		
 		this.elementService.addNewElement(element.ToEntity());
 
 		return element;

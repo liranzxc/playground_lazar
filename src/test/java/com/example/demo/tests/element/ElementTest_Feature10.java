@@ -122,16 +122,40 @@ public class ElementTest_Feature10 {
 
 	// NAME TESTS
 
-	// scenario 1 - NAME
+	// scenario 1 - NAME\Manager
 	@Test
-	public void findOneElementByHisNameSuccessfulyInDatabaseWithOneElement() throws ElementAlreadyExistException {
+	public void findOneElementWithHisNameByManagerSuccessfulyInDatabaseWithOneElement() throws ElementAlreadyExistException {
 		assertTrue(scenario1("name", this.demo_entity.getName()));
 	}
 
-	// scenario 1 - TYPE
+	// scenario 1 - TYPE\Manager
 	@Test
-	public void findOneElementByHisTypeSuccessfullyInDatabaseWithOneElement() throws ElementAlreadyExistException {
+	public void findOneElementWithHisTypeByManagerSuccessfullyInDatabaseWithOneElement() throws ElementAlreadyExistException {
 		assertTrue(scenario1("type", this.demo_entity.getType()));
+	}
+	
+	// scenario 1 - TYPE\player  // TODO: Not working
+	@Test
+	public void findOneExpiredElementWithHisTypeByPlayer_Failed()
+			throws ElementAlreadyExistException, InterruptedException {
+		// Given:
+		demo_entity.setExpireDate(new Date());
+		Thread.sleep(50);
+		this.elementService.addNewElement(this.demo_entity);
+
+		
+		// When:
+		boolean isSuccess = false;
+		try {
+			this.restTemplate.getForObject(
+					this.url + "/{userPlayground}/{email}/search/{attributeName}/{value}", ElementTO[].class,
+					demo_user_player.getPlayground(), demo_user_player.getEmail(), "type", this.demo_entity.getType());
+		}catch (Exception e) {
+			isSuccess = true;
+		}
+		
+		// Than:
+		assertTrue(isSuccess);
 	}
 
 	private boolean scenario1(String attributeName, String value) throws ElementAlreadyExistException {
