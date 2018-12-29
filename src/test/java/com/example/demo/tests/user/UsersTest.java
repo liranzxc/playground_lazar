@@ -110,7 +110,7 @@ public class UsersTest {
 
 		// When
 		UserTO testUser = new UserTO("name", "demo@gmail.com", "avatar.url", "Servant", false);
-
+		testUser.setRole("Servant");
 		UserTO user = this.rest.postForObject(this.url + "/", testUser, UserTO.class);
 		// Then: ^Exception^
 
