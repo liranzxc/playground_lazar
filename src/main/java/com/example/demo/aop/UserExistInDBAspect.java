@@ -53,6 +53,7 @@ public class UserExistInDBAspect {
 	                System.err.println("annotation email is: " + email.toString());
 	                if (email instanceof String) {
 	                	if(isAnEmail((String)email)) {
+	                		// TODO: change getUser!!!
 	                		this.userService.getUser((String)email, "playground_lazar");
 	                		return;
 	                	}

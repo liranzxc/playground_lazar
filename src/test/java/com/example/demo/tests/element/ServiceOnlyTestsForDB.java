@@ -105,7 +105,7 @@ public class ServiceOnlyTestsForDB {
 		
 		Location demo_entity_location = new Location(0, 1);
 		ElementEntity demo_entity = new ElementEntity("playground_lazar", "0", demo_entity_location.getX(),
-				demo_entity_location.getY(), "demo", new Date(), date1, "dem5o type", null, "Aviv", "demo@gmail.com");
+				demo_entity_location.getY(), "demo", new Date(), date1, "demo type", null, "Aviv", "demo@gmail.com");
 		
 		ElementEntity demo_entity2 = new ElementEntity("playground_lazar", "2", demo_entity_location.getX(),
 				demo_entity_location.getY(), "demo", new Date(), date2, "demo type", null, "Shay", "demo@gmail.com");

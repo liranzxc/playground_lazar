@@ -38,6 +38,7 @@ public class UserServiceJPA implements UserService {
 	@MyLog
 	public void registerNewUser(UserEntity user) throws EmailAlreadyRegisteredException, InvalidEmailException, InvalidRoleException {
 		System.err.println("User Role in Service is: " + user.getRole());
+		System.err.println("User Email in Service is: " + user.getEmail());
 		if (!isValidEmail(user.getEmail()))
 			throw new InvalidEmailException("The email " +user.getEmail()+" is invalid.");
 		if (!isValidRole(user.getRole())){
@@ -75,7 +76,7 @@ public class UserServiceJPA implements UserService {
 	@MyLog
 	public UserEntity getUser(String email, String playground) throws UserNotFoundException {
 		if (dataBase.existsByEmail(email)) {
-			UserEntity user = dataBase.findByEmail(email).get();
+			//UserEntity user = dataBase.findByEmail(email).get();
 			if (playground.equals(playgroundName))
 				return dataBase.findByEmail(email).get();
 			else

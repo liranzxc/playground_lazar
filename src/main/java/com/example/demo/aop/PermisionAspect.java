@@ -63,14 +63,14 @@ public class PermisionAspect {
 		for (int i = 0; i < args.length; i++) {
 			Object arg = args[i];
             if (arg instanceof String && isAnEmail((String)arg)) {
-            	try {
-	                 this.userService.getUser((String)arg, "playground_lazar"); 
-	                 // TODO: get user type. if the type is contained in "permission" - there is no exception
-	                 // else: throw exception
-            	}
-	            catch(Exception e) {
-	                  //do nothing
-	            }  
+//            	try {
+//	                 this.userService.getUser((String)arg, "playground_lazar"); 
+//	                 // TODO: get user type. if the type is contained in "permission" - there is no exception
+//	                 // else: throw exception
+//            	}
+//	            catch(Exception e) {
+//	                  //do nothing
+//	            }  
             }
 		}
 	}

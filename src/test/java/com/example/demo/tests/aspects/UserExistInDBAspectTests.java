@@ -59,7 +59,7 @@ public class UserExistInDBAspectTests {
 		this.urlUsers = "http://localhost:" + port + "/playground/users";
 		
 		Location demo_entity_location = new Location(0, 1);
-		eeTest = new ElementEntity("playground_lazar", "0", demo_entity_location.getX(),
+		eeTest = new ElementEntity("playground_lazar", "1", demo_entity_location.getX(),
 				demo_entity_location.getY(), "demo", new Date(), null, "demo type", null, "Aviv", "demo@gmail.com");
 		
 		ueTest = new UserEntity("VaildUserDemo@gmail.com","playground_lazar", "Guliver", null, "Player");
@@ -78,6 +78,9 @@ public class UserExistInDBAspectTests {
 	}
 	
 	
+	// Feature 7
+	
+	// scenario 3: 
 	@Test
 	public void getElementWithLegalUser() {
 		
@@ -90,8 +93,14 @@ public class UserExistInDBAspectTests {
 		}
 		
 		ElementTO originalElementTO = new ElementTO(eeTest);
-		String userPlayground = "playground_lazar";
-		String email = "demo@gmail.com";
+//		String userPlayground = "playground_lazar";
+//		String email = "demo@gmail.com";  
+		// TODO: check it out -> because it's working with "demo@gmail.com", which means maybe the aspect does not do the work 
+		String userPlayground = ueTest.getPlayground();
+		String email = ueTest.getEmail();
+		
+//		System.err.println("Email of user = " + email);
+		
 		String playground = originalElementTO.getPlayground();
 		String id = originalElementTO.getId();
 		
@@ -105,7 +114,6 @@ public class UserExistInDBAspectTests {
 		}
 		
 		assertTrue(success);
-		
 	}
 	
 	
@@ -120,8 +128,13 @@ public class UserExistInDBAspectTests {
 		}
 		
 		ElementTO originalElementTO = new ElementTO(eeTest);
-		String userPlayground = "playground_lazar";
-		String badEmail = "123@123.com";
+//		String userPlayground = "playground_lazar";
+//		String badEmail = "123@123.com";
+		
+		String userPlayground = ueTest.getPlayground();
+		String badEmail = "demo@gmail.com";
+		// TODO: change the aspect. the test failed even though the user "demo@gmail.com" does not exist
+		
 		String playground = originalElementTO.getPlayground();
 		String id = originalElementTO.getId();
 		
