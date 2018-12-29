@@ -58,22 +58,23 @@ public class ActivityTest {
 
 	// Feature 11
 	@Test
-	public void Test_Send_Activity_To_Do_Something_and_return_Some_Object() {
-		
+	public void EchoActivity() {
+		Map <String,Object> map = new HashMap<String,Object>();
+		map.put("Attribute", "Test");
 		MultiValueMap<String, String> params= new LinkedMultiValueMap<>();
 		params.add("userPlayground", "playground_lazar");
 		params.add("email", "demo@gmail.com");
 		
-		ActivityTO activtyTo = new ActivityTO();
-		
-		activtyTo.setType("transport"); // add type
-		
-		activtyTo.setId("1");
-		Object result =rest.postForObject( url+"/{userPlayground}/{email}", activtyTo, ActivityTO.class,params);
+		ActivityTO activityTo = new ActivityTO();
+		activityTo.setType("");
+		activityTo.setId("1");
+		activityTo.setAttributes(map);
+		Object result =rest.postForObject( url+"/{userPlayground}/{email}", activityTo, ActivityTO.class,params);
 
 		ActivityTO actual = ActivityTO.class.cast(result);
 
 		assertThat(actual.getId(),equalTo("1"));
+		assertThat(actual.getAttributes().get("Attribute"), equalTo("Test"));
 
 	}
 	
