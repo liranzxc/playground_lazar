@@ -77,8 +77,20 @@ public class UserServiceJPA implements UserService {
 	public UserEntity getUser(String email, String playground) throws UserNotFoundException {
 		if (dataBase.existsByEmail(email)) {
 			//UserEntity user = dataBase.findByEmail(email).get();
-			if (playground.equals(playgroundName))
-				return dataBase.findByEmail(email).get();
+			if (playground.equals(playgroundName)) {
+				
+				// TODO: explain to shay
+				
+				// return dataBase.findByEmail(email).get();
+				
+				UserEntity ue = dataBase.findByEmail(email).get();
+				
+				if(ue == null) {
+					throw new UserNotFoundException("The email " + email +" was not found.");
+				}
+				System.err.println("*******" + ue.getEmail());
+				return ue;
+			}
 			else
 				throw new UserNotFoundException("The user with id " + email +" and playground " + playgroundName + " not found.");
 		} else

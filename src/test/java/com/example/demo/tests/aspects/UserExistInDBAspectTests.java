@@ -93,11 +93,11 @@ public class UserExistInDBAspectTests {
 		}
 		
 		ElementTO originalElementTO = new ElementTO(eeTest);
-//		String userPlayground = "playground_lazar";
-//		String email = "demo@gmail.com";  
+		String userPlayground = "playground_lazar";
+		String email = "demo@gmail.com";  
 		// TODO: check it out -> because it's working with "demo@gmail.com", which means maybe the aspect does not do the work 
-		String userPlayground = ueTest.getPlayground();
-		String email = ueTest.getEmail();
+//		String userPlayground = ueTest.getPlayground();
+//		String email = ueTest.getEmail();
 		
 //		System.err.println("Email of user = " + email);
 		
