@@ -97,8 +97,6 @@ public class ActivityTest {
 		assertThat(actual.getAttributes().get("Attribute"), equalTo("Test"));
 
 	}
-
-	
 	
 	@Test
 	public void AddBoardPostActivity() throws ElementAlreadyExistException {

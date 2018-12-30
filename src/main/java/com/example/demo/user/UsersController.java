@@ -49,15 +49,15 @@ public class UsersController {
 		System.err.println("User Role in Control is: " + userForm.getRole());
 		try {
 			this.userService.registerNewUser(userForm.ToEntity());
-			model.addAttribute("user", this.userService.getUser(userForm.getEmail(), "playground_lazar"));
 		
-			return "redirect:/valid";
+			return "redirect:/valid?email="+userForm.getEmail();
 		
 		}
 		catch (Exception e) {
 			// TODO: handle exception
 			
-			
+			System.err.println("error with register user");
+			e.printStackTrace();
 			return "redirect:/register";
 
 		}
@@ -69,7 +69,7 @@ public class UsersController {
 	//2. Validate code
 	@RequestMapping(value="/confirm/{playground}/{email}/{code}", method=RequestMethod.GET
 			,produces=MediaType.APPLICATION_JSON_VALUE)
-	public UserTO validateCode(
+	public String validateCode(
 			@PathVariable("playground") String playground, 
 			@PathVariable("email") String email, 
 			@PathVariable("code") String code) throws InvalidConfirmationCodeException, UserNotFoundException {
@@ -79,11 +79,16 @@ public class UsersController {
 					user.setCode(null);
 					try {
 						userService.updateUserInfo(user);
+						
+						return "redirect:/client";
+						
+						
+						
 					} catch (InvalidEmailException e) { //This case should not happen, because we only update the user's code.
 						e.printStackTrace();
 					}
-					return new UserTO(user);
-				}
+					return "redirect:/valid?email="+user.getEmail();
+								}
 				else
 					throw new InvalidConfirmationCodeException();
 
