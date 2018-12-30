@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RestController;
 
 import com.example.demo.user.exceptions.EmailAlreadyRegisteredException;
 import com.example.demo.user.exceptions.InvalidConfirmationCodeException;
@@ -17,7 +18,7 @@ import com.example.demo.user.exceptions.InvalidRoleException;
 import com.example.demo.user.exceptions.UserNotActivatedException;
 import com.example.demo.user.exceptions.UserNotFoundException;
 
-@Controller
+@RestController
 @RequestMapping("playground/users")
 public class UsersController {
 	// FOR TEST ONLY!
@@ -41,58 +42,59 @@ public class UsersController {
 	}
 
 	// 1. Register a new user.
-	@RequestMapping(value = "/", method = RequestMethod.POST)
-	public String registerFromForm(@ModelAttribute UserTO userForm, Model model)
+	@RequestMapping(value = "/", method = RequestMethod.POST,consumes=MediaType.APPLICATION_JSON_UTF8_VALUE)
+	public UserTO registerFromForm(@RequestBody UserTO userForm, Model model)
 			throws EmailAlreadyRegisteredException, InvalidEmailException, InvalidRoleException, UserNotFoundException {
 		System.err.println("User Role in Control is: " + userForm.getRole());
 
 		this.userService.registerNewUser(userForm.ToEntity());
+		return userForm;
 
 		// return "redirect:/register";
 
-		return "redirect:/valid?email=" + userForm.getEmail();
-
-	
+		// return "redirect:/valid?email=" + userForm.getEmail();
 
 	}
 
 	// 2. Validate code
-	@RequestMapping(value = "/confirm/{playground}/{email}/{code}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-	public String validateCode(@PathVariable("playground") String playground, @PathVariable("email") String email,
-			@PathVariable("code") String code) throws InvalidConfirmationCodeException, UserNotFoundException {
+	@RequestMapping(value = "/confirm/{playground}/{email}/{code}", method = RequestMethod.GET,produces=MediaType.APPLICATION_JSON_VALUE)
+	public UserTO validateCode(@PathVariable("playground") String playground, @PathVariable("email") String email,
+			@PathVariable("code") String code)
+			throws InvalidConfirmationCodeException, UserNotFoundException, InvalidEmailException {
 		UserEntity user = userService.getUser(email, playground);
 		if (code.equals(user.getCode())) {
 			// UserTO validatedUser = new UserTO(userService.getUser(email));
 			user.setCode(null);
-			try {
-				userService.updateUserInfo(user);
+			userService.updateUserInfo(user);
 
-				return "redirect:/client";
+			return new UserTO(user);
+			// return "redirect:/client";
 
-			} catch (InvalidEmailException e) { // This case should not happen, because we only update the user's code.
-				e.printStackTrace();
-			}
-			return "redirect:/valid?email=" + user.getEmail();
-		} else
-			throw new InvalidConfirmationCodeException();
+		} else {
+			throw new UserNotFoundException();
+		}
+		// return "redirect:/valid?email=" + user.getEmail();
 
 	}
 
 	// 3. Log in
 
 	@RequestMapping(value = "/login/{playground}/{email}", method = RequestMethod.GET)
-	public String logIn(@PathVariable("playground") String playground, @PathVariable("email") String email)
+	public UserEntity logIn(@PathVariable("playground") String playground, @PathVariable("email") String email)
 			throws UserNotFoundException {
 
 		try {
 			UserEntity user = userService.getUser(email, playground);
-
-			return "redirect:/welcomepage";
+			return (user);
+			// return "redirect:/welcomepage";
+			// return user;
 		} catch (Exception e) {
 			// TODO: handle exception
-
-			return "redirect:/client";
+			e.printStackTrace();
+			throw new UserNotFoundException();
 		}
+
+		// return "redirect:/client";
 
 	}
 

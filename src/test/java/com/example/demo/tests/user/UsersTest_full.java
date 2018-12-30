@@ -17,12 +17,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.boot.web.server.LocalServerPort;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.MediaType;
 import org.springframework.test.context.junit4.SpringRunner;
-import org.springframework.util.LinkedMultiValueMap;
-import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 
 import com.example.demo.user.TypesEnumUser.Types;
@@ -38,7 +33,7 @@ import com.example.demo.user.exceptions.UserNotFoundException;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
-public class UsersTest {
+public class UsersTest_full {
 
 	// TODO must fix the exception test for the correct exceptions~! currently
 	// http500 is invoked everytime.
@@ -77,19 +72,9 @@ public class UsersTest {
 	@Test
 	public void TestNewUserForm() {
 		// When I POST /playground/users
-		HttpHeaders headers = new HttpHeaders();
-		headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
-		UserTO testUser = new UserTO("name", "demo@gmail.com", "avatar.url", Types.Player.getType(), false);
-
-		MultiValueMap<String, String> map= new LinkedMultiValueMap<String, String>();
-		map.add("email", testUser.getEmail());
-		map.add("role", testUser.getRole());
-		map.add("username", testUser.getUsername());
-
-
-		HttpEntity<MultiValueMap<String, String>> request = new HttpEntity<MultiValueMap<String, String>>(map, headers);
-
-		this.rest.postForEntity( this.url + "/", request , String.class );
+		UserTO testUser = new UserTO("name", "mail@something.com", "avatar.url", Types.Player.getType(), false);
+		UserTO user = this.rest.postForObject(this.url + "/", testUser, UserTO.class);
+		assertEquals(testUser.getEmail(),user.getEmail());
 	}
 
 	// Scenario 2: Create a new User form when the user (which means his email)
@@ -108,7 +93,6 @@ public class UsersTest {
 		UserTO testUser = new UserTO("name", "demo@gmail.com", "avatar.url", Types.Player.getType(), false);
 
 		try {
-			
 			UserTO user = this.rest.postForObject(this.url + "/", testUser, UserTO.class);
 		} catch (Exception e) {
 			isSucceed = true;
@@ -128,30 +112,44 @@ public class UsersTest {
 		UserTO testUser = new UserTO("name", "65465@gmail.com", "avatar.url", "Servant", false);
 		testUser.setRole("Servant");
 		try {
-			
-			HttpHeaders headers = new HttpHeaders();
-			headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
+			this.rest.postForObject(this.url + "/", testUser, UserTO.class);
 
-			MultiValueMap<String, String> map= new LinkedMultiValueMap<String, String>();
-			map.add("email", testUser.getEmail());
-			map.add("role", testUser.getRole());
-			map.add("username", testUser.getUsername());
-
-
-			HttpEntity<MultiValueMap<String, String>> request = new HttpEntity<MultiValueMap<String, String>>(map, headers);
-
-			this.rest.postForEntity( this.url + "/", request , String.class );
-			
-			
 		}catch(Exception e) {
-			System.err.println("here");
 			throw new InvalidRoleException("invalid role");
 		}
 		// Then: ^Exception^
 
 	}
 
-	
+	///////////////
+	// Feature 2 //
+	///////////////
+
+	// Scenario 1: User confirmation Success
+	@Test
+	public void TestUserConfirmationByCode()
+			throws EmailAlreadyRegisteredException, UserNotFoundException, InvalidEmailException, InvalidRoleException {
+		// Given
+		String testEmail = "demo@gmail.com";
+		UserTO testUser = new UserTO("name", testEmail, "avatar.url", Types.Player.getType(), false);
+		userService.registerNewUser(testUser.ToEntity());
+		String code = null;
+		try {
+			code = userService.getUser(testEmail, "playground_lazar").getCode();
+		} catch (UserNotFoundException e) {
+			e.printStackTrace();
+		}
+		Map<String, String> map = new HashMap<String, String>();
+		map.put("playground", "playground_lazar");
+		map.put("email", "demo@gmail.com");
+		map.put("code", code);
+
+		// When
+		UserTO user = this.rest.getForObject(this.url + "/confirm/{playground}/{email}/{code}", UserTO.class, map);
+		// Then
+		assertEquals(userService.getUser(testEmail, "playground_lazar").getCode(), null);
+	}
+
 	// Scenario 2: User confirm with wrong code
 	@Test(expected = InvalidConfirmationCodeException.class)
 	public void TestInvalidCodeThrowsException() throws InvalidConfirmationCodeException {
@@ -197,7 +195,26 @@ public class UsersTest {
 	// Feature 3 //
 	///////////////
 
-	
+	// Scenario 1: Test user log in successfully
+	@Test
+	public void TestUserLoginSuccessfully() throws Exception {
+		// Given
+		Map<String, String> map = new HashMap<String, String>();
+		map.put("playground", "playground_lazar");
+		map.put("email", "demo@gmail.com");
+		UserTO user = new UserTO("tal", "demo@gmail.com", "anAvatr", Types.Manager.getType(), true);
+		userService.registerNewUser(user.ToEntity());
+
+		// System.err.println(userServices.getAllUsers(5, 1));
+
+		// When
+		UserEntity actual = this.rest.getForObject(this.url + "/login/{playground}/{email}", UserEntity.class, map);
+
+		// Then
+		assertEquals(user.getEmail(), actual.getEmail());
+		assertEquals(UserEntity.class, actual.getClass());
+	}
+
 	// Scenario 2: User tries to login with invalid playground.
 	@Test(expected = Exception.class)
 	public void TestUserTriesToLoginWithInvalidPlayground()
@@ -231,6 +248,26 @@ public class UsersTest {
 	///////////////
 	// Feature 4 //
 	///////////////
+
+	// Scenario 1: Test update user
+	@Test
+	public void TestUpdateUserFromDB()
+			throws EmailAlreadyRegisteredException, UserNotFoundException, InvalidEmailException, InvalidRoleException {
+		// Given
+		Map<String, String> map = new HashMap<String, String>();
+		map.put("playground", "playground_lazar");
+		map.put("email", "demo@gmail.com");
+		UserTO userto = new UserTO("demo", "demo@gmail.com", "DOG", Types.Manager.getType(), true);
+		UserEntity et = userto.ToEntity();
+		userService.registerNewUser(et);
+		et.setCode(null);
+		userService.updateUserInfo(et);
+		userto.setAvatar("CAT");
+		// When
+		rest.put(url + "/{playground}/{email}", userto, map);
+		// Then
+		assertEquals(userto.getAvatar(), "CAT");
+	}
 
 	// Scenario 2: Test that guest cannot update details
 

@@ -12,7 +12,7 @@ import com.example.demo.user.UserService;
 import com.example.demo.user.UserTO;
 import com.example.demo.user.exceptions.UserNotFoundException;
 
-@Controller
+//@Controller
 public class clientController {
 	
 	private UserService userservice;
