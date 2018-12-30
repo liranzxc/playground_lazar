@@ -139,19 +139,24 @@ public class ElementTest_Feature10 {
 	public void findOneExpiredElementWithHisTypeByPlayer_Failed()
 			throws ElementAlreadyExistException, InterruptedException {
 		// Given:
-		demo_entity.setExpireDate(new Date());
+		demo_entity.setExpireDate(new Date(1,1,1));
 		Thread.sleep(50);
 		this.elementService.addNewElement(this.demo_entity);
-
 		
 		// When:
 		boolean isSuccess = false;
 		try {
-			this.restTemplate.getForObject(
+			ElementTO[] etos = this.restTemplate.getForObject(
 					this.url + "/{userPlayground}/{email}/search/{attributeName}/{value}", ElementTO[].class,
 					demo_user_player.getPlayground(), demo_user_player.getEmail(), "type", this.demo_entity.getType());
+		
+			if(etos.length == 0) {
+				isSuccess = true;
+			}
+		
+			
 		}catch (Exception e) {
-			isSuccess = true;
+			
 		}
 		
 		// Than:

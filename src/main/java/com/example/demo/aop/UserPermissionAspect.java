@@ -18,7 +18,7 @@ import com.example.demo.user.exceptions.UserNotFoundException;
 
 @Aspect
 @Component
-public class PermissionAspect {
+public class UserPermissionAspect {
 
 	private UserService userService;
 	
@@ -28,7 +28,7 @@ public class PermissionAspect {
 	}
 	
 	
-	@Around("@annotation(com.example.demo.aop.PermissionLog)")
+	@Around("@annotation(com.example.demo.aop.UserPermission)")
 	public Object getType(ProceedingJoinPoint  pjp) throws InvalidEmailException, UserNotFoundException {
 		Object[] args = pjp.getArgs();	
 		MethodSignature signature = (MethodSignature) pjp.getSignature();
