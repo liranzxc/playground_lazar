@@ -104,14 +104,19 @@ public class UsersTest {
 	}
 
 	// Scenario 3: Invalid Role on user creation throws Exception
-	@Test(expected = Exception.class) // = status <> 2xx
-	public void InvalidRoleThrowsException() {
+	@Test(expected = InvalidRoleException.class) // = status <> 2xx
+	public void InvalidRoleThrowsException() throws InvalidRoleException {
 		// Given...
 
 		// When
-		UserTO testUser = new UserTO("name", "demo@gmail.com", "avatar.url", "Servant", false);
+		UserTO testUser = new UserTO("name", "65465@gmail.com", "avatar.url", "Servant", false);
 		testUser.setRole("Servant");
-		UserTO user = this.rest.postForObject(this.url + "/", testUser, UserTO.class);
+		try {
+			this.rest.postForObject(this.url + "/", testUser, UserTO.class);
+
+		}catch(Exception e) {
+			throw new InvalidRoleException("invalid role");
+		}
 		// Then: ^Exception^
 
 	}
