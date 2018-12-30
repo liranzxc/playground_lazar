@@ -56,8 +56,6 @@ public class ActivityTest {
 		service.cleanUp();
 	}
 
-<<<<<<< HEAD
-=======
 	// Feature 11
 //	@Test
 //	public void Test_Send_Activity_To_Do_Something_and_return_Some_Object() {
@@ -78,7 +76,6 @@ public class ActivityTest {
 //		assertThat(actual.getId(),equalTo("1"));
 //
 //	}
->>>>>>> 5114fe0a8215c8c383b23ddc1ba11e5deca9999f
 
 	@Test
 	public void EchoActivity() {
@@ -100,11 +97,6 @@ public class ActivityTest {
 		assertThat(actual.getAttributes().get("Attribute"), equalTo("Test"));
 
 	}
-<<<<<<< HEAD
-=======
-
->>>>>>> 5114fe0a8215c8c383b23ddc1ba11e5deca9999f
-	
 	
 	@Test
 	public void AddBoardPostActivity() {
