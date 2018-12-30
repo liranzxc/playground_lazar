@@ -7,7 +7,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.example.demo.aop.ToLog;
-import com.example.demo.aop.PermissionLog;
+import com.example.demo.aop.UserPermission;
 import com.example.demo.application.accessories.GeneratorService;
 import com.example.demo.user.TypesEnumUser.Types;
 import com.example.demo.user.exceptions.EmailAlreadyRegisteredException;

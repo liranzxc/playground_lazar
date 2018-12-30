@@ -10,5 +10,5 @@ import com.example.demo.user.TypesEnumUser.Types;
 
 @Retention(RUNTIME)
 @Target(METHOD)
-public @interface PermissionLog {	
+public @interface UserPermission {	
 }
