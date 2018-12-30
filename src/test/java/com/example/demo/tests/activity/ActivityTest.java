@@ -72,6 +72,7 @@ public class ActivityTest {
 	// Feature 11
 
 
+	//s1
 	@Test
 	public void EchoActivity() throws ElementAlreadyExistException {
 		
@@ -98,6 +99,7 @@ public class ActivityTest {
 
 	}
 	
+	//s2
 	@Test
 	public void AddBoardPostActivity() throws ElementAlreadyExistException {
 		//Given
@@ -122,6 +124,7 @@ public class ActivityTest {
 		System.err.println(result.getAttributes());
 	}
 	
+	//s3
 	@Test
 	public void ReadTwoMessages() throws ElementAlreadyExistException {
 		//Given
@@ -183,6 +186,7 @@ public class ActivityTest {
 		
 	}
 	
+	// s4
 	@Test(expected = Exception.class) //status <> 2xx
 	public void ThrowWhenTypeIsNotExist() throws ElementAlreadyExistException {
 		//Given
@@ -206,6 +210,7 @@ public class ActivityTest {
 		//Then ^ThrowsException^
 	}
 	
+	// s5
 	@Test(expected = Exception.class) //status <> 2xx
 	public void ThrowWhenAttributesAreInvalid() throws ElementAlreadyExistException {
 		//Given
@@ -252,6 +257,8 @@ public class ActivityTest {
 		//Then Console prints an empty list.
 	}
 	
+	
+	// s6
 	@Test
 	public void TestCookOmelete() throws ElementAlreadyExistException {
 		//Given
@@ -276,6 +283,7 @@ public class ActivityTest {
 		
 	}
 	
+	//s7
 	@Test
 	public void TestOmeletteEggSizes() throws ElementAlreadyExistException {
 		//Given
