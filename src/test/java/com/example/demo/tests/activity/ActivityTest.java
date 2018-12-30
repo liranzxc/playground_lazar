@@ -56,28 +56,7 @@ public class ActivityTest {
 		service.cleanUp();
 	}
 
-	// Feature 11
-<<<<<<< HEAD
-//	@Test
-//	public void Test_Send_Activity_To_Do_Something_and_return_Some_Object() {
-//		
-//		MultiValueMap<String, String> params= new LinkedMultiValueMap<>();
-//		params.add("userPlayground", "playground_lazar");
-//		params.add("email", "demo@gmail.com");
-//		
-//		ActivityTO activtyTo = new ActivityTO();
-//		
-//		activtyTo.setType("transport"); // add type
-//		
-//		activtyTo.setId("1");
-//		Object result =rest.postForObject( url+"/{userPlayground}/{email}", activtyTo, ActivityTO.class,params);
-//
-//		ActivityTO actual = ActivityTO.class.cast(result);
-//
-//		assertThat(actual.getId(),equalTo("1"));
-//
-//	}
-=======
+
 	@Test
 	public void EchoActivity() {
 		Map <String,Object> map = new HashMap<String,Object>();
@@ -98,7 +77,6 @@ public class ActivityTest {
 		assertThat(actual.getAttributes().get("Attribute"), equalTo("Test"));
 
 	}
->>>>>>> 73a33344a794a3e4e328dda860aacfff3954d35c
 	
 	
 	@Test
