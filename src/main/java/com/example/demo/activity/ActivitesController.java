@@ -9,19 +9,26 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.demo.activity.exceptions.ActivityAlreadyExistException;
+import com.example.demo.element.ElementVeirfyier;
 
 @RestController
 @RequestMapping("playground/activites")
 public class ActivitesController {
 	
 	private ActivityService service;
-	
+	private ElementVeirfyier elementVerifyier;
 	
 	
 	@Autowired
 	public void setActivityRepository(ActivityService activityService) {
 		this.service = activityService;
 	}
+	
+	@Autowired
+	public void setElementVerifyier(ElementVeirfyier verifyier) {
+		this.elementVerifyier = verifyier;
+	}
+	
 	// activites controller
 
 	// 11. go to some activity and do something and return object
@@ -32,7 +39,9 @@ public class ActivitesController {
 	public Object GoToActivity(@RequestBody ActivityTO activity,
 			@PathVariable(name = "userPlayground") String userPlayground, 
 			@PathVariable(name = "email") String email) throws ActivityAlreadyExistException {
-			service.addNewActivity(activity.ToEntity());
+		
+		this.elementVerifyier.verifyElement(activity.getElementPlayground(), activity.getElementId());
+		service.addNewActivity(activity.ToEntity());
 		// just return activity for testing - Checked !
 		return activity;
 

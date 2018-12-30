@@ -12,8 +12,7 @@ import org.springframework.stereotype.Component;
 
 import com.example.demo.element.ElementService;
 import com.example.demo.element.exceptions.ElementNotFoundException;
-import com.example.demo.user.exceptions.InvalidEmailException;
-import com.example.demo.user.exceptions.UserNotFoundException;
+
 
 @Aspect
 @Component
@@ -27,7 +26,7 @@ public class ElementExistInDBAspect {
 	}
 	
 		
-	@Before("@annotation(com.example.demo.aop.UserExistInDB)")
+	@Before("@annotation(com.example.demo.aop.ElementExistInDB)")
 	public void verifyElement(JoinPoint jp) throws ElementNotFoundException {
 		Object[] args = jp.getArgs();	
 		MethodSignature signature = (MethodSignature) jp.getSignature();
