@@ -65,11 +65,12 @@
           <hr class="star-light">
           <div class="container">
           <!--  th:action="@{'/playground/users/confirm/'+${user.playground}+'/'+${user.email}+'/'+${user.code}}" -->
-              <form th:object="${user}" class="needs-validation" novalidate method="GET" >
+              <form th:object="${user}" class="needs-validation" novalidate method="POST" action="/valid">
                 <div class="row">
                   <div class="col-md-6 mb-3">
                     <label for="username">User name</label>
-                    <label  type="text"  class="form-control"  th:text="${user.username}" id="username" value="" required>
+                    <label  type="text"  class="form-control"  th:text="${user.username}" id="usernameL" value="" required></label>
+                  
                     <div class="invalid-feedback">
                       Valid username is required.
                     </div>
@@ -77,19 +78,20 @@
   
                   <div class="col-md-6 mb-3">
                           <label for="email">Email</label>
-                          <label type="text" class="form-control" th:text="${user.email}" id="email" >
+                          <label type="text" class="form-control" th:text="${user.email}" id="emailL" ></label>
+                          <input type="hidden"  class="form-control"  th:value="${user.email}"  th:field="*{email}" id="email"required>
                           
                       </div>
 
                       <div class="col-md-5 mb-3">
                           <label for="role">Role</label>
-                          <label type="text" class="form-control" th:text="${user.role}" id="role" >
+                          <label type="text" class="form-control" th:text="${user.role}" th:field="*{role}" id="role" ></label>
 
                         </div>
 
                         <div class="col-md-6 mb-3">
-                            <label for="code">Code validation</label>
-                            <label type="text" class="form-control" th:text="${user.code}" id="code" >
+                            <label for="code">validation status</label>
+                            <label type="text" class="form-control" th:text="${user.valid}" th:field="*{valid}" id="isValidated" ></label>
                           </div>
   
 

@@ -197,19 +197,19 @@
           <br>
 
           <div class="container col-lg-3">
-          <form id="contactForm" action="lsdlsd" novalidate="novalidate"  onsubmit="yourFunction()" method="GET">
+          <form id="contactForm" th:object="${userTo}" novalidate="novalidate" method="POST" action="/client">
 
               <div class="control-group">
                   <div class="form-group floating-label-form-group controls mb-0 pb-2">
                     <label>Email Address</label>
-                    <input class="form-control" id="email" type="email" placeholder="Email Address" required="required" data-validation-required-message="Please enter your email address.">
+                    <input class="form-control" id="email" type="email" th:field="*{email}" placeholder="Email Address" required="required" data-validation-required-message="Please enter your email address.">
                     <p class="help-block text-danger"></p>
                   </div>
                 </div>
               <div class="control-group">
                 <div class="form-group floating-label-form-group controls mb-0 pb-2">
                   <label>Playground</label>
-                  <input class="form-control" id="Playground" type="text" placeholder="Playground" required="required" data-validation-required-message="Please enter your playground.">
+                  <input class="form-control" id="Playground" type="text" th:field="*{playground}" placeholder="Playground" required="required" data-validation-required-message="Please enter your playground.">
                   <p class="help-block text-danger"></p>
                 </div>
               </div>
@@ -262,26 +262,7 @@
       </a>
     </div>
 
-    <script type="text/javascript">
-    
-    function yourFunction(){
-
-var email = $("#email").val();
-var Playground = $("#Playground").val();
-
-var your_form = document.getElementById('contactForm');
-
-var urlLink = "http://localhost:8080/playground/users/login/"+Playground+"/"+email;
-
-your_form.action = urlLink;
-
-
-
-
-}
-    
-    </script>
-
+  
 
     <!-- Bootstrap core JavaScript -->
     <script src="vendor/jquery/jquery.min.js"></script>

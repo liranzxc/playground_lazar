@@ -77,12 +77,12 @@ public class UsersController {
 	// 3. Log in
 
 	@RequestMapping(value = "/login/{playground}/{email}", method = RequestMethod.GET)
-	public UserEntity logIn(@PathVariable("playground") String playground, @PathVariable("email") String email)
+	public UserTO logIn(@PathVariable("playground") String playground, @PathVariable("email") String email)
 			throws UserNotFoundException {
 
 		try {
 			UserEntity user = userService.getUser(email, playground);
-			return (user);
+			return (new UserTO(user));
 			
 		} catch (Exception e) {
 			// TODO: handle exception

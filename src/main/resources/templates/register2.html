@@ -65,7 +65,7 @@
           <hr class="star-light">
           <div class="container">
           
-              <form th:object="${UserTo}" class="needs-validation" novalidate method="POST" action="playground/users/">
+              <form th:object="${UserTo}" class="needs-validation" novalidate method="POST" action="register">
                 <div class="row">
                   
                   
@@ -89,7 +89,7 @@
                           <label for="role">Role</label>
                           <select th:field="*{role}" class="custom-select d-block w-100" id="role" required>
                             <option value="Player">Player</option>
-                            <option value="Manger" >Manger</option>
+                            <option value="Manager" >Manager</option>
                           </select>
                           <div class="invalid-feedback">
                             Please select a valid country.

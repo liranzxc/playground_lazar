@@ -13,15 +13,18 @@ public class UserTO {
 	//@Value("${playground.name}")
 	private String playground = "playground_lazar";
 	
-	private boolean isValidated;
+	private boolean valid;
 
+
+
+	
 	public UserTO(String username, String email, String avatar, String role, boolean validated) {
 		this.username = username;
 		this.email = email;
 		this.avatar = avatar;
 		this.role = role;
 		//this.playground = "playground_lazar";
-		this.isValidated = validated;
+		this.valid = validated;
 	}
 
 	public String getUsername() {
@@ -76,9 +79,9 @@ public class UserTO {
 		this.role = userEntity.getRole();
 		this.username = userEntity.getUsername();
 		if (userEntity.getCode() == null)
-			this.isValidated = true;
+			this.valid = true;
 		else
-			this.isValidated = false;
+			this.valid = false;
 	}
 
 	// to Entity object 
@@ -86,19 +89,20 @@ public class UserTO {
 	public UserEntity ToEntity()
 	{
 		UserEntity user = new UserEntity(this.email, this.playground, this.username, this.avatar, role);
-		if (this.isValidated == true) {
+		if (this.valid == true) {
 			user.setCode(null);
 		}
 		return user;
 	}
+
+	public boolean getValid() {
+		return valid;
+	}
+
+	public void setValid(boolean valid) {
+		this.valid = valid;
+	}
 	
-	public boolean isValidated() {
-		return isValidated;
-	}
-
-	public void setValidated(boolean validated) {
-		this.isValidated = validated;
-	}
-
+	
 	
 }
