@@ -2,9 +2,9 @@ package com.example.demo.user;
 
 public class TypesEnumUser {
 		
-	public enum types {
+	public enum Types {
 
-		Player("player"), Manager("manger");
+		Player("Player"), Manager("Manager");
 		// declaring private variable for getting values
 		private String action;
 
@@ -14,7 +14,7 @@ public class TypesEnumUser {
 		}
 
 		// enum constructor - cannot be public or protected
-		private types(String action) {
+		private Types(String action) {
 			this.action = action;
 		}
 

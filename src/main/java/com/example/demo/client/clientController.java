@@ -18,15 +18,15 @@ import com.example.demo.user.UserService;
 import com.example.demo.user.UserTO;
 import com.example.demo.user.exceptions.UserNotFoundException;
 
-@Controller
+//@Controller
 public class clientController {
 	
-	private UserService userService;
-	
+
+	private UserService userservice;
 	
 	@Autowired
-	public void setUserService(UserService userService) {
-		this.userService = userService;
+	public void setUserservice(UserService userservice) {
+		this.userservice = userservice;
 	}
 	
 	
@@ -51,11 +51,12 @@ public class clientController {
 	@RequestMapping(path="/valid",method=RequestMethod.GET)
 	public String valid2(@RequestParam(name="email") String emailUser,  Model model) throws UserNotFoundException
 	{
-		UserEntity validuser = userService.getUser(emailUser, "playground_lazar");
+		UserEntity validuser = userservice.getUser(emailUser, "playground_lazar");
 		model.addAttribute("user", validuser);
 		
-		return "valid";
+		return "";
+		
+	
+
 	}
-
-
 }

@@ -64,8 +64,8 @@
           <h1 class="text-uppercase mb-0">Validation</h1>
           <hr class="star-light">
           <div class="container">
-          
-              <form th:object="${user}" class="needs-validation" novalidate method="GET" th:action="@{'/playground/users/confirm/'+${user.playground}+'/'+${user.email}+'/'+${user.code}}">
+          <!--  th:action="@{'/playground/users/confirm/'+${user.playground}+'/'+${user.email}+'/'+${user.code}}" -->
+              <form th:object="${user}" class="needs-validation" novalidate method="GET" >
                 <div class="row">
                   <div class="col-md-6 mb-3">
                     <label for="username">User name</label>

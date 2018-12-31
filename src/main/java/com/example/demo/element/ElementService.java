@@ -15,7 +15,9 @@ public interface ElementService{
 
 	public void addNewElement(ElementEntity et) throws ElementAlreadyExistException;
 	public void updateElement(ElementEntity et) throws ElementNotFoundException;
-	public ElementEntity getElement(String playground, String id) throws ElementNotFoundException;
+	
+	public ElementEntity getElementPlayer(String playground, String id) throws ElementNotFoundException;
+	public ElementEntity getElementManager(String playground, String id) throws ElementNotFoundException;
 	
 	public void deleteElement(String playground, String id);
 	
@@ -29,8 +31,8 @@ public interface ElementService{
 	public List<ElementEntity> getAllElementsNearByManager(double x, double y, double distance, Pageable page) throws InvalidDistanceValueException;
 
 	
-	public List<ElementEntity> getAllElementsByAttributeAndValuePlayer(String attribute, String value,Pageable page) throws InvalidAttributeNameException;
-	public List<ElementEntity> getAllElementsByAttributeAndValueManager(String attribute, String value,Pageable page) throws InvalidAttributeNameException;
+	public List<ElementEntity> getAllElementsByAttributeAndValuePlayer(String attribute, String value,Pageable page) throws InvalidAttributeNameException, InvalidPageSizeRequestException, InvalidPageRequestException;
+	public List<ElementEntity> getAllElementsByAttributeAndValueManager(String attribute, String value,Pageable page) throws InvalidAttributeNameException, InvalidPageSizeRequestException, InvalidPageRequestException;
 
 	
 	public void cleanup();

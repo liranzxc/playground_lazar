@@ -4,6 +4,7 @@ import java.util.Map;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.Lob;
 import javax.persistence.Transient;
 
 import org.springframework.data.mongodb.core.mapping.Document;
@@ -24,7 +25,8 @@ public class ActivityEntity {
 		public ActivityEntity() {
 			super();
 		}
-		public ActivityEntity(String playground, String id, String elementPlayground, String elementId, String type,
+		
+		public ActivityEntity(String playground,String id, String elementPlayground, String elementId, String type,
 				String playerPlayground, String playerEmail, Map<String, Object> attributes) {
 			super();
 			this.key = generateKey(playground, id);
@@ -82,6 +84,7 @@ public class ActivityEntity {
 			}
 		}
 		
+		@Lob
 		public String getJsonAttributes() {
 			try {
 				return new ObjectMapper().writeValueAsString(this.attributes);

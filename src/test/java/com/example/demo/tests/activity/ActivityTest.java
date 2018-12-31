@@ -3,6 +3,7 @@ package com.example.demo.tests.activity;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.junit.Assert.assertThat;
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -21,8 +22,12 @@ import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 
+import com.example.demo.activity.ActivityEnumTypes.Activities;
 import com.example.demo.activity.ActivityService;
 import com.example.demo.activity.ActivityTO;
+import com.example.demo.element.ElementEntity;
+import com.example.demo.element.ElementServiceJpa;
+import com.example.demo.element.exceptions.ElementAlreadyExistException;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
@@ -33,98 +38,295 @@ public class ActivityTest {
 	private String url;
 
 	
+	private ElementEntity demoEntity;
+	
 	RestTemplate rest = new RestTemplate();
 
 	@Autowired
 	private ActivityService service;
+	
+	
+	@Autowired
+	private ElementServiceJpa elementService;
 	
 	@PostConstruct
 	public void init() {
 
 		this.url = "http://localhost:" + port + "/playground/activites";
 		//System.err.println(this.url);
+		
+		this.demoEntity = new ElementEntity("playground_lazar", "1", 0, 0, "postBoard", new Date(), null, "postBoard", null, null, null);
 	}
 	
 	@Before
 	public void setup() {
-		
+		ElementServiceJpa.setIDToZero();
 	}
 	
 	@After
 	public void teardown() {
 		service.cleanUp();
+		this.elementService.cleanup();
 	}
 
 	// Feature 11
+
+
+	//s1
 	@Test
-	public void Test_Send_Activity_To_Do_Something_and_return_Some_Object() {
+	public void EchoActivity() throws ElementAlreadyExistException {
+		
+		this.elementService.addNewElement(demoEntity);
+		
+		Map <String,Object> map = new HashMap<String,Object>();
+		map.put("Attribute", "Test");
+		MultiValueMap<String, String> params= new LinkedMultiValueMap<>();
+		params.add("userPlayground", "playground_lazar");
+		params.add("email", "demo@gmail.com");
+		
+		ActivityTO activityTo = new ActivityTO();
+		activityTo.setType("");
+		activityTo.setId("1");
+		activityTo.setElementId(this.demoEntity.getId());
+		activityTo.setElementPlayground(demoEntity.getPlayground());
+		activityTo.setAttributes(map);
+		Object result =rest.postForObject( url+"/{userPlayground}/{email}", activityTo, ActivityTO.class,params);
+
+		ActivityTO actual = ActivityTO.class.cast(result);
+
+		assertThat(actual.getId(),equalTo("1"));
+		assertThat(actual.getAttributes().get("Attribute"), equalTo("Test"));
+
+	}
+	
+	//s2
+	@Test
+	public void AddBoardPostActivity() throws ElementAlreadyExistException {
+		//Given
+		this.elementService.addNewElement(demoEntity);
+
+		Map <String,Object> map = new HashMap<String,Object>();
+		map.put("poster", "Tal");
+		map.put("message", "This is a test");
+		ActivityTO activity = new ActivityTO("playground_lazar", "playground_lazar", "1", 
+				Activities.BoardPost.getActivityName(), "playground_lazar", "asdfsd", map);
+		
+		activity.setElementId(this.demoEntity.getId());
+		activity.setElementPlayground(demoEntity.getPlayground());
 		
 		MultiValueMap<String, String> params= new LinkedMultiValueMap<>();
 		params.add("userPlayground", "playground_lazar");
 		params.add("email", "demo@gmail.com");
 		
-		ActivityTO activtyTo = new ActivityTO();
-		
-		activtyTo.setType("transport"); // add type
-		
-		activtyTo.setId("1");
-		Object result =rest.postForObject( url+"/{userPlayground}/{email}", activtyTo, ActivityTO.class,params);
-
-		ActivityTO actual = ActivityTO.class.cast(result);
-
-		assertThat(actual.getId(),equalTo("1"));
-
+		//When
+		ActivityTO result =rest.postForObject( url+"/{userPlayground}/{email}", activity, 
+				ActivityTO.class, params );
+		System.err.println(result.getAttributes());
 	}
 	
-	
+	//s3
 	@Test
-	public void AddActivity() {
+	public void ReadTwoMessages() throws ElementAlreadyExistException {
 		//Given
+		this.elementService.addNewElement(demoEntity);
+
+		//first message
 		Map <String,Object> map = new HashMap<String,Object>();
-		map.put("poster", "tal");
-		map.put("message", "this is a test");
-		ActivityTO activity = new ActivityTO("playground_lazar", "0", "playground_lazar", "1", "BoardPost" , "playground_lazar", "asdfsd", map);
+		map.put("poster", "Tal");
+		map.put("message", "This is a test");
+		ActivityTO activity = new ActivityTO("playground_lazar",  "playground_lazar", "1", Activities.BoardPost.getActivityName() , 
+				"playground_lazar", "asdfsd", map);
+		
+		activity.setElementId(this.demoEntity.getId());
+		activity.setElementPlayground(demoEntity.getPlayground());
+		
+		
+		MultiValueMap<String, String> params= new LinkedMultiValueMap<>();
+		params.add("userPlayground", "playground_lazar");
+		params.add("email", "demo@gmail.com");
+		ActivityTO result =rest.postForObject( url+"/{userPlayground}/{email}", activity, ActivityTO.class, params );
+		
+		//second message 
+		Map <String,Object> map1 = new HashMap<String,Object>();
+		map1.put("poster", "Human");
+		map1.put("message", "Generic message");
+		ActivityTO activity1 = new ActivityTO("playground_lazar", "playground_lazar", "1", Activities.BoardPost.getActivityName() , 
+				"playground_lazar", "asdfsd", map1);
+		
+		
+		activity1.setElementId(this.demoEntity.getId());
+		activity1.setElementPlayground(demoEntity.getPlayground());
+		
+		
+		MultiValueMap<String, String> params1= new LinkedMultiValueMap<>();
+		params1.add("userPlayground", "playground_lazar");
+		params1.add("email", "demo@gmail.com");
+		ActivityTO result1 =rest.postForObject( url+"/{userPlayground}/{email}", activity1, ActivityTO.class, params1 );
+		
+		
+		//When
+		//read message
+		Map <String,Object> map2 = new HashMap<String,Object>();
+		map2.put("page", 0);
+		map2.put("size", 5);
+		ActivityTO activity2 = new ActivityTO("playground_lazar",  "playground_lazar", "1", Activities.BoardRead.getActivityName() , "playground_lazar", 
+				"asdfsd", map2);
+		
+		
+		activity2.setElementId(this.demoEntity.getId());
+		activity2.setElementPlayground(demoEntity.getPlayground());
+		
+		
+		MultiValueMap<String, String> params2= new LinkedMultiValueMap<>();
+		params2.add("userPlayground", "playground_lazar");
+		params2.add("email", "demo@gmail.com");
+		ActivityTO result2 =rest.postForObject( url+"/{userPlayground}/{email}", activity2, ActivityTO.class, params2 );
+		//Then: should see the messages on console.
+		System.out.println(result2.getAttributes());
+		
+	}
+	
+	// s4
+	@Test(expected = Exception.class) //status <> 2xx
+	public void ThrowWhenTypeIsNotExist() throws ElementAlreadyExistException {
+		//Given
+		this.elementService.addNewElement(demoEntity);
+
+		Map <String,Object> map = new HashMap<String,Object>();
+		map.put("attribute1", "Tal");
+		map.put("attribute2", "This is a test");
+		ActivityTO activity = new ActivityTO("playground_lazar", "playground_lazar", "1", "FinishTheProjectForUs" , 
+				"playground_lazar", "asdfsd", map);
+		
+		
+		activity.setElementId(this.demoEntity.getId());
+		activity.setElementPlayground(demoEntity.getPlayground());
 		
 		MultiValueMap<String, String> params= new LinkedMultiValueMap<>();
 		params.add("userPlayground", "playground_lazar");
 		params.add("email", "demo@gmail.com");
 		//When
-		Object result =rest.postForObject( url+"/{userPlayground}/{email}", activity, ActivityTO.class, params );
+		ActivityTO result =rest.postForObject( url+"/{userPlayground}/{email}", activity, ActivityTO.class, params );
+		//Then ^ThrowsException^
 	}
 	
-	@Test
-	public void ReadTwoMessages() {
+	// s5
+	@Test(expected = Exception.class) //status <> 2xx
+	public void ThrowWhenAttributesAreInvalid() throws ElementAlreadyExistException {
 		//Given
-		//first message
+		this.elementService.addNewElement(demoEntity);
+
 		Map <String,Object> map = new HashMap<String,Object>();
-		map.put("poster", "tal");
-		map.put("message", "this is a test");
-		ActivityTO activity = new ActivityTO("playground_lazar", "0", "playground_lazar", "1", "BoardPost" , "playground_lazar", "asdfsd", map);
+		map.put("attribute1", "Tal");
+		map.put("attribute2", "This is a test");
+		ActivityTO activity = new ActivityTO("playground_lazar", "playground_lazar", "1", Activities.BoardPost.toString() /*must be a valid type*/ , 
+				"playground_lazar", "asdfsd", map);
+		
+		
+		activity.setElementId(this.demoEntity.getId());
+		activity.setElementPlayground(demoEntity.getPlayground());
+		
+		
 		MultiValueMap<String, String> params= new LinkedMultiValueMap<>();
 		params.add("userPlayground", "playground_lazar");
 		params.add("email", "demo@gmail.com");
-		Object result =rest.postForObject( url+"/{userPlayground}/{email}", activity, ActivityTO.class, params );
-		//second message 
-		Map <String,Object> map1 = new HashMap<String,Object>();
-		map1.put("poster", "human");
-		map1.put("message", "a message");
-		ActivityTO activity1 = new ActivityTO("playground_lazar", "0", "playground_lazar", "1", "BoardPost" , "playground_lazar", "asdfsd", map1);
-		MultiValueMap<String, String> params1= new LinkedMultiValueMap<>();
-		params.add("userPlayground", "playground_lazar");
-		params.add("email", "demo@gmail.com");
-		Object result1 =rest.postForObject( url+"/{userPlayground}/{email}", activity1, ActivityTO.class, params1 );
-		
-		//read message
+		//When
+		ActivityTO result =rest.postForObject( url+"/{userPlayground}/{email}", activity, ActivityTO.class, params );
+		//Then ^ThrowsException^
+	}
+	
+	@Test
+	public void ReadBoardWhenEmpty() throws ElementAlreadyExistException {
+		//Given
+		this.elementService.addNewElement(demoEntity);
+
+		//When
 		Map <String,Object> map2 = new HashMap<String,Object>();
-		map1.put("page", 0);
-		ActivityTO activity2 = new ActivityTO("playground_lazar", "0", "playground_lazar", "1", "BoardRead" , "playground_lazar", "asdfsd", map2);
+		map2.put("page", 0);
+		ActivityTO activity2 = new ActivityTO("playground_lazar",  "playground_lazar", "1", Activities.BoardRead.getActivityName() , 
+				"playground_lazar", "asdfsd", map2);
+		
+		activity2.setElementId(this.demoEntity.getId());
+		activity2.setElementPlayground(demoEntity.getPlayground());
+		
+		
 		MultiValueMap<String, String> params2= new LinkedMultiValueMap<>();
+		params2.add("userPlayground", "playground_lazar");
+		params2.add("email", "demo@gmail.com");
+		Object result =rest.postForObject( url+"/{userPlayground}/{email}", activity2, ActivityTO.class, params2 );
+		//Then Console prints an empty list.
+	}
+	
+	
+	// s6
+	@Test
+	public void TestCookOmelete() throws ElementAlreadyExistException {
+		//Given
+		this.elementService.addNewElement(demoEntity);
+
+		//When
+		Map <String,Object> map = new HashMap<String,Object>();
+		map.put("eggSize", "medium");
+		ActivityTO activity = new ActivityTO("playground_lazar",  "playground_lazar", "1", Activities.CookOmelette.getActivityName() , 
+				"playground_lazar", "asdfsd", map);
+		
+		
+		activity.setElementId(this.demoEntity.getId());
+		activity.setElementPlayground(demoEntity.getPlayground());
+		
+		
+		
+		MultiValueMap<String, String> params= new LinkedMultiValueMap<>();
 		params.add("userPlayground", "playground_lazar");
 		params.add("email", "demo@gmail.com");
-		Object result2 =rest.postForObject( url+"/{userPlayground}/{email}", activity2, ActivityTO.class, params2 );
+		ActivityTO result =rest.postForObject( url+"/{userPlayground}/{email}", activity, ActivityTO.class, params );
+		
+	}
+	
+	//s7
+	@Test
+	public void TestOmeletteEggSizes() throws ElementAlreadyExistException {
+		//Given
+		this.elementService.addNewElement(demoEntity);
+
+		//When
+		Map <String,Object> smallMap = new HashMap<String,Object>();
+		Map <String,Object> mediumMap = new HashMap<String,Object>();
+		Map <String,Object> largeMap = new HashMap<String,Object>();
+		Map <String,Object> xlargeMap = new HashMap<String,Object>();
+		smallMap.put("eggSize", "small");
+		mediumMap.put("eggSize", "medium");
+		largeMap.put("eggSize", "large");
+		xlargeMap.put("eggSize", "extraLarge");
+		ActivityTO activity = new ActivityTO("playground_lazar",  "playground_lazar", "1", Activities.CookOmelette.getActivityName() , 
+				"playground_lazar", "asdfsd", smallMap);
 		
 		
+		activity.setElementId(this.demoEntity.getId());
+		activity.setElementPlayground(demoEntity.getPlayground());
 		
+		
+		MultiValueMap<String, String> params= new LinkedMultiValueMap<>();
+		params.add("userPlayground", "playground_lazar");
+		params.add("email", "demo@gmail.com");
+		
+		ActivityTO result =rest.postForObject( url+"/{userPlayground}/{email}", activity, ActivityTO.class, params );
+		System.err.println(result.getAttributes());
+		
+		ActivityTO activity2 = new ActivityTO("playground_lazar",  "playground_lazar", "1", Activities.CookOmelette.getActivityName() , 
+				"playground_lazar", "asdfsd", mediumMap);
+		ActivityTO result2 =rest.postForObject( url+"/{userPlayground}/{email}", activity2, ActivityTO.class, params );
+		System.err.println(result2.getAttributes());
+		
+		ActivityTO activity3 = new ActivityTO("playground_lazar",  "playground_lazar", "1", Activities.CookOmelette.getActivityName() , 
+				"playground_lazar", "asdfsd", largeMap);
+		ActivityTO result3 =rest.postForObject( url+"/{userPlayground}/{email}", activity3, ActivityTO.class, params );
+		System.err.println(result3.getAttributes());
+		
+		ActivityTO activity4 = new ActivityTO("playground_lazar",  "playground_lazar", "1", Activities.CookOmelette.getActivityName() , 
+				"playground_lazar", "asdfsd", xlargeMap);
+		ActivityTO result4 =rest.postForObject( url+"/{userPlayground}/{email}", activity4, ActivityTO.class, params );
+		System.err.println(result4.getAttributes());
 	}
 	
 }

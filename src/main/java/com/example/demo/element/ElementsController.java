@@ -20,19 +20,27 @@ import com.example.demo.element.exceptions.ElementAlreadyExistException;
 import com.example.demo.element.exceptions.ElementNotFoundException;
 import com.example.demo.element.exceptions.InvalidAttributeNameException;
 import com.example.demo.element.exceptions.InvalidDistanceValueException;
+import com.example.demo.user.UserVerifyier;
 import com.example.demo.user.exceptions.InvalidEmailException;
+import com.example.demo.user.exceptions.InvalidRoleException;
 
 @RestController
 @RequestMapping(path = "/playground/elements")
 public class ElementsController {
 
 	private ElementService elementService;
-	
+	private UserVerifyier userVerifier;
 	
 	@Autowired
 	public void setElementService(ElementService elementService) {
 		this.elementService = elementService;
 	}
+	
+	@Autowired
+	public void setUserVerifier(UserVerifyier verifier) {
+		this.userVerifier = verifier;
+	}
+	
 
 	/*
 	 * Feature 5:
@@ -42,13 +50,15 @@ public class ElementsController {
 	public ElementTO createElement(@RequestBody ElementTO element,
 			@PathVariable(name = "userPlayground", required = true) String userPlayground,
 			@PathVariable(name = "email", required = true) String email)
-			throws InvalidEmailException, ElementAlreadyExistException {
+			throws InvalidEmailException, ElementAlreadyExistException, InvalidRoleException {
 
-		if (!verifiedEmail(email)) {
-			System.err.println("create element throwing Exception");
-			throw new InvalidEmailException("Illeagal email has been given");
-		}
+		//this.userVerifier.verify(email);
 			
+		String role = this.userVerifier.getType(email);
+		if(!role.equals("Manager")) {
+			throw new InvalidRoleException("only manager can update elements");
+		}
+		
 		this.elementService.addNewElement(element.ToEntity());
 
 		return element;
@@ -64,17 +74,23 @@ public class ElementsController {
 			@PathVariable(name = "email", required = true) String email,
 			@PathVariable(name = "playground", required = true) String playground,
 			@PathVariable(name = "id", required = true) String id)
-			throws NullPointerException, ElementNotFoundException {
-
+			throws NullPointerException, ElementNotFoundException, InvalidRoleException {
+		
 		if (element == null) {
 			throw new NullPointerException("cant update element into nothing");
 		}
+		
+		String role = this.userVerifier.getType(email);
+		if(!role.equals("Manager")) {
+			throw new InvalidRoleException("only manager can update elements");
+		}
+		
+		//TODO do we need?
 		element.setCreatorEmail(email);
 		element.setCreatorPlayground(userPlayground);
 
 		ElementEntity entity = element.ToEntity();
 		this.elementService.updateElement(entity);
-
 	}
 
 	/*
@@ -84,11 +100,21 @@ public class ElementsController {
 			"/{userPlayground}/{email}/{playground}/{id}" }, method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
 	public ElementTO getElement(@PathVariable("userPlayground") String userPlayground,
 			@PathVariable("email") String email, @PathVariable("playground") String playground,
-			@PathVariable("id") String id) throws ElementNotFoundException {
-		return new ElementTO(this.elementService.getElement(playground, id));
+			@PathVariable("id") String id) throws ElementNotFoundException, InvalidRoleException {
+		
+		String role = this.userVerifier.getType(email);
+		switch(role) {
+			case("Manager"):{
+				return new ElementTO(this.elementService.getElementManager(playground, id));
+			}
+			case("Player"):{
+				return new ElementTO(this.elementService.getElementPlayer(playground, id));
+			}
+			default:{
+				throw new InvalidRoleException("not player not manager dont what to do");
+			}		
+		}		
 	}
-
-	
 
 	/*
 	 * Feature 8:
@@ -99,10 +125,24 @@ public class ElementsController {
 			@PathVariable(name = "email") String email,
 			@RequestParam(name = "size", required = false, defaultValue = "10") int size,
 			@RequestParam(name = "page", required = false, defaultValue = "0") int page)
-			throws InvalidPageSizeRequestException, InvalidPageRequestException {
+			throws InvalidPageSizeRequestException, InvalidPageRequestException, InvalidRoleException {
 
-		List<ElementEntity> mylist = elementService.getAllElementsManager(PageRequest.of(page, size,Sort.by("id")));
+		String role = this.userVerifier.getType(email);		
+		List<ElementEntity> mylist = null;
+		switch(role){
+			case("Manager"):{
+				mylist = elementService.getAllElementsManager(PageRequest.of(page, size,Sort.by("id")));
+				break;
+			}
+			case("Player"):{
+				mylist = elementService.getAllElementsPlayer(PageRequest.of(page, size,Sort.by("id")));
+				break;
 
+			}
+			default:{
+				throw new InvalidRoleException("didnt find role");
+			}	
+		}
 		return mylist.stream().map(ElementTO::new).collect(Collectors.toList()).toArray(new ElementTO[0]);
 	}
 
@@ -116,14 +156,24 @@ public class ElementsController {
 			@PathVariable("distance") double distance,
 			@RequestParam(name = "size", required = false, defaultValue = "10") int size,
 			@RequestParam(name = "page", required = false, defaultValue = "0") int page)
-			throws InvalidDistanceValueException, InvalidPageSizeRequestException, InvalidPageRequestException {
+			throws InvalidDistanceValueException, InvalidPageSizeRequestException, InvalidPageRequestException, InvalidRoleException {
 
-		if (distance < 0.0)
-			throw new InvalidDistanceValueException("Distance must be equal or higher from 0");
+		String role = this.userVerifier.getType(email);		
+		List<ElementEntity> nearBy = null;
+		switch(role){
+			case("Manager"):{
+				nearBy = elementService.getAllElementsNearByManager(x, y, distance, PageRequest.of(page, size));
+				break;
+			}
+			case("Player"):{
+				nearBy = elementService.getAllElementsNearByPlayer(x, y, distance, PageRequest.of(page, size));
+				break;
 
-		List<ElementEntity> nearBy = this.elementService.getAllElementsNearByManager(x, y, distance,
-				PageRequest.of(page, size,Sort.by("id")));
-
+			}
+			default:{
+				throw new InvalidRoleException("didnt find role");
+			}	
+		}
 		return nearBy.stream().map(ElementTO::new).collect(Collectors.toList()).toArray(new ElementTO[nearBy.size()]);
 
 	}
@@ -140,38 +190,31 @@ public class ElementsController {
 			@RequestParam(name = "size", required = false, defaultValue = "10") int size,
 			@RequestParam(name = "page", required = false, defaultValue = "0") int page)
 			throws InvalidAttributeNameException, InvalidEmailException, InvalidPageSizeRequestException,
-			InvalidPageRequestException {
+			InvalidPageRequestException, InvalidRoleException {
+		
+		
+		String role = this.userVerifier.getType(email);		
+		List<ElementEntity> entitiesBasedAttributeWithValue = null;
+		switch(role){
+			case("Manager"):{
+				entitiesBasedAttributeWithValue = elementService.getAllElementsByAttributeAndValueManager(attributeName, value, PageRequest.of(page, size));
+				break;
+			}
+			case("Player"):{
+				entitiesBasedAttributeWithValue = elementService.getAllElementsByAttributeAndValuePlayer(attributeName, value, PageRequest.of(page, size));
+				break;
 
-		if (!verifiedEmail(email)) {
-			throw new InvalidEmailException();
+			}
+			default:{
+				throw new InvalidRoleException("didnt find role");
+			}	
 		}
-		if (size < 1) {
-			throw new InvalidPageSizeRequestException("Size of a page must be at least 1");
-		} else if (page < 0) {
-			throw new InvalidPageRequestException("Page index must be at least 0");
-		}
-		System.err.println("attribute name = " + attributeName + " value =  " + value);
-		return this.elementService.getAllElementsByAttributeAndValueManager(attributeName, value, PageRequest.of(page, size,Sort.by("id")))
-				.stream().map(ElementTO::new).collect(Collectors.toList()).toArray(new ElementTO[0]);
-
+		return entitiesBasedAttributeWithValue
+			.stream()
+			.map(ElementTO::new)
+			.collect(Collectors.toList())
+			.toArray(new ElementTO[0]);
 	}
-	
-	// this method checks if there is a '@' in the name and there is something
-	// before it and after it
-	private boolean verifiedEmail(String email) {
-		String[] emailParts = email.split("@");
 
-		if (emailParts.length != 2 || emailParts[0].length() < 3) {
-			return false;
-		}
-
-		String[] emailTailParts = emailParts[1].split("\\.");
-
-		if (emailTailParts.length < 2 || emailTailParts[0].isEmpty() || emailTailParts[1].isEmpty()) {
-			return false;
-		}
-
-		return true;
-	}
 
 }

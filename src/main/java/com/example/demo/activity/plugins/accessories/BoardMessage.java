@@ -7,11 +7,11 @@ public class BoardMessage {
 	public BoardMessage() {
 
 	}
-	public String getOp() {
+	public String getPoster() {
 		return poster;
 	}
-	public void setOp(String op) {
-		this.poster = op;
+	public void setPoster(String poster) {
+		this.poster = poster;
 	}
 	public String getMessage() {
 		return message;
