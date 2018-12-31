@@ -49,9 +49,7 @@ public class UsersController {
 				
 		try {
 			this.userService.registerNewUser(userForm.ToEntity());
-			model.addAttribute("user", this.userService.getUser(userForm.getEmail(), "playground_lazar"));
-		
-			return "redirect:/valid";
+			return "redirect:/valid?email="+userForm.getEmail();
 		
 		}
 		catch (Exception e) {
@@ -69,7 +67,7 @@ public class UsersController {
 	//2. Validate code
 	@RequestMapping(value="/confirm/{playground}/{email}/{code}", method=RequestMethod.GET
 			,produces=MediaType.APPLICATION_JSON_VALUE)
-	public UserTO validateCode(
+	public String validateCode(
 			@PathVariable("playground") String playground, 
 			@PathVariable("email") String email, 
 			@PathVariable("code") String code) throws InvalidConfirmationCodeException, UserNotFoundException {
@@ -82,7 +80,10 @@ public class UsersController {
 					} catch (InvalidEmailException e) { //This case should not happen, because we only update the user's code.
 						e.printStackTrace();
 					}
-					return new UserTO(user);
+				//	return new UserTO(user);
+					
+					return "redirect:/client";
+					
 				}
 				else
 					throw new InvalidConfirmationCodeException();
