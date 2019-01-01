@@ -10,33 +10,28 @@ import com.example.demo.element.exceptions.ElementAlreadyExistException;
 import com.example.demo.element.exceptions.ElementNotFoundException;
 import com.example.demo.element.exceptions.InvalidAttributeNameException;
 import com.example.demo.element.exceptions.InvalidDistanceValueException;
+import com.example.demo.user.exceptions.InvalidRoleException;
 
 public interface ElementService{
 
-	public void addNewElement(ElementEntity et) throws ElementAlreadyExistException;
-	public void updateElement(ElementEntity et) throws ElementNotFoundException;
+	public void addNewElement(ElementEntity et, String email) throws ElementAlreadyExistException, InvalidRoleException;
+	public void addElementFromOutside(ElementEntity et, String email) throws ElementAlreadyExistException, InvalidRoleException;
 	
-	public ElementEntity getElementPlayer(String playground, String id) throws ElementNotFoundException;
-	public ElementEntity getElementManager(String playground, String id) throws ElementNotFoundException;
+	public void updateElement(ElementEntity et, String email) throws ElementNotFoundException, InvalidRoleException;
 	
-	public void deleteElement(String playground, String id);
+	
+	public ElementEntity getElement(String playground, String id, String email) throws ElementNotFoundException, InvalidRoleException;
+	
+	public void deleteElement(String playground, String id, String email) throws InvalidRoleException;
 	
 	public List<ElementEntity> getAllElements();
 	
-	public List<ElementEntity> getAllElementsPlayer(Pageable page) throws InvalidPageSizeRequestException, InvalidPageRequestException;
-	public List<ElementEntity> getAllElementsManager(Pageable page) throws InvalidPageSizeRequestException, InvalidPageRequestException;
+	public List<ElementEntity> getAllElements(Pageable page, String email) throws InvalidPageSizeRequestException, InvalidPageRequestException, InvalidRoleException;
 
-	
-	public List<ElementEntity> getAllElementsNearByPlayer(double x, double y, double distance, Pageable page) throws InvalidDistanceValueException;
-	public List<ElementEntity> getAllElementsNearByManager(double x, double y, double distance, Pageable page) throws InvalidDistanceValueException;
+	public List<ElementEntity> getAllElementsNearBy(double x, double y, double distance, String email ,Pageable page) throws InvalidDistanceValueException, InvalidRoleException;
 
-	
-	public List<ElementEntity> getAllElementsByAttributeAndValuePlayer(String attribute, String value,Pageable page) throws InvalidAttributeNameException, InvalidPageSizeRequestException, InvalidPageRequestException;
-	public List<ElementEntity> getAllElementsByAttributeAndValueManager(String attribute, String value,Pageable page) throws InvalidAttributeNameException, InvalidPageSizeRequestException, InvalidPageRequestException;
-
+	public List<ElementEntity> getAllElementsByAttributeAndValue(String attribute, String value, String email, Pageable page) throws InvalidAttributeNameException, InvalidPageSizeRequestException, InvalidPageRequestException, InvalidRoleException;
 	
 	public void cleanup();
-	
-	public void addElementFromOutside(ElementEntity demo_entity) throws ElementAlreadyExistException;
 
 }

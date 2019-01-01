@@ -29,7 +29,8 @@ public class UserPermissionAspect {
 	
 	
 	@Around("@annotation(com.example.demo.aop.UserPermission)")
-	public Object getType(ProceedingJoinPoint  pjp) throws InvalidEmailException, UserNotFoundException {
+	public Object getType(ProceedingJoinPoint  pjp) throws Throwable {
+		
 		Object[] args = pjp.getArgs();	
 		MethodSignature signature = (MethodSignature) pjp.getSignature();
 		String methodName = signature.getMethod().getName();
@@ -46,18 +47,17 @@ public class UserPermissionAspect {
 	    for (int i = 0; i < args.length; i++) {
 	        for (Annotation annotation : annotations[i]) {
 	            if (annotation.annotationType() == EmailValue.class) {
+	            	System.err.println("found EmailValue annotation inside userPermission it is: " + args[i].toString());
 	                Object email = args[i];
 	                if (email instanceof String) {
+	                	System.err.println("");
 	                	if(isAnEmail((String)email)) {
 	                		UserEntity et = this.userService.getUser((String)email, "playground_lazar");
 	                		String role = et.getRole();
 	                		args[i] = role;
-	                		try {
-								return pjp.proceed(args);
-							} catch (Throwable e) {
-								System.err.println("inside PermissionAspect proceed failed:");
-								System.err.println(e.getMessage());
-							}  		
+	                		
+							return pjp.proceed(args);
+					
 	                	}
 	                	else {
 	                		throw new InvalidEmailException("invalid email has been given");
@@ -66,8 +66,8 @@ public class UserPermissionAspect {
 	            }
 	        }
 	    }
-	    
-	    throw new UserNotFoundException("no email has been found");
+	    System.err.println("UserPermission Aspect getType: going to continue with regular args");
+	    return pjp.proceed(args);
 	}
 	
 	

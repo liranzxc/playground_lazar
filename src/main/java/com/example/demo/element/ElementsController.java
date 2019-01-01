@@ -5,7 +5,6 @@ import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Sort;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -52,14 +51,8 @@ public class ElementsController {
 			@PathVariable(name = "email", required = true) String email)
 			throws InvalidEmailException, ElementAlreadyExistException, InvalidRoleException {
 
-		//this.userVerifier.verify(email);
-			
-		String role = this.userVerifier.getType(email);
-		if(!role.equals("Manager")) {
-			throw new InvalidRoleException("only manager can update elements");
-		}
-		
-		this.elementService.addNewElement(element.ToEntity());
+	
+		this.elementService.addNewElement(element.ToEntity(), email);
 
 		return element;
 	}
@@ -80,17 +73,12 @@ public class ElementsController {
 			throw new NullPointerException("cant update element into nothing");
 		}
 		
-		String role = this.userVerifier.getType(email);
-		if(!role.equals("Manager")) {
-			throw new InvalidRoleException("only manager can update elements");
-		}
-		
 		//TODO do we need?
 		element.setCreatorEmail(email);
 		element.setCreatorPlayground(userPlayground);
 
 		ElementEntity entity = element.ToEntity();
-		this.elementService.updateElement(entity);
+		this.elementService.updateElement(entity, email);
 	}
 
 	/*
@@ -101,20 +89,9 @@ public class ElementsController {
 	public ElementTO getElement(@PathVariable("userPlayground") String userPlayground,
 			@PathVariable("email") String email, @PathVariable("playground") String playground,
 			@PathVariable("id") String id) throws ElementNotFoundException, InvalidRoleException {
-		
-		String role = this.userVerifier.getType(email);
-		switch(role) {
-			case("Manager"):{
-				return new ElementTO(this.elementService.getElementManager(playground, id));
-			}
-			case("Player"):{
-				return new ElementTO(this.elementService.getElementPlayer(playground, id));
-			}
-			default:{
-				throw new InvalidRoleException("not player not manager dont what to do");
-			}		
-		}		
-	}
+
+		return new ElementTO(this.elementService.getElement(playground, id, email));
+	}	
 
 	/*
 	 * Feature 8:
@@ -127,22 +104,7 @@ public class ElementsController {
 			@RequestParam(name = "page", required = false, defaultValue = "0") int page)
 			throws InvalidPageSizeRequestException, InvalidPageRequestException, InvalidRoleException {
 
-		String role = this.userVerifier.getType(email);		
-		List<ElementEntity> mylist = null;
-		switch(role){
-			case("Manager"):{
-				mylist = elementService.getAllElementsManager(PageRequest.of(page, size,Sort.by("id")));
-				break;
-			}
-			case("Player"):{
-				mylist = elementService.getAllElementsPlayer(PageRequest.of(page, size,Sort.by("id")));
-				break;
-
-			}
-			default:{
-				throw new InvalidRoleException("didnt find role");
-			}	
-		}
+		List<ElementEntity> mylist = this.elementService.getAllElements(PageRequest.of(page, size), email);	
 		return mylist.stream().map(ElementTO::new).collect(Collectors.toList()).toArray(new ElementTO[0]);
 	}
 
@@ -158,22 +120,7 @@ public class ElementsController {
 			@RequestParam(name = "page", required = false, defaultValue = "0") int page)
 			throws InvalidDistanceValueException, InvalidPageSizeRequestException, InvalidPageRequestException, InvalidRoleException {
 
-		String role = this.userVerifier.getType(email);		
-		List<ElementEntity> nearBy = null;
-		switch(role){
-			case("Manager"):{
-				nearBy = elementService.getAllElementsNearByManager(x, y, distance, PageRequest.of(page, size));
-				break;
-			}
-			case("Player"):{
-				nearBy = elementService.getAllElementsNearByPlayer(x, y, distance, PageRequest.of(page, size));
-				break;
-
-			}
-			default:{
-				throw new InvalidRoleException("didnt find role");
-			}	
-		}
+		List<ElementEntity> nearBy = this.elementService.getAllElementsNearBy(x, y, distance, email, PageRequest.of(page, size));
 		return nearBy.stream().map(ElementTO::new).collect(Collectors.toList()).toArray(new ElementTO[nearBy.size()]);
 
 	}
@@ -192,29 +139,13 @@ public class ElementsController {
 			throws InvalidAttributeNameException, InvalidEmailException, InvalidPageSizeRequestException,
 			InvalidPageRequestException, InvalidRoleException {
 		
+	
+		List<ElementEntity> entities = this.elementService.getAllElementsByAttributeAndValue(attributeName, value, email, PageRequest.of(page, size));
 		
-		String role = this.userVerifier.getType(email);		
-		List<ElementEntity> entitiesBasedAttributeWithValue = null;
-		switch(role){
-			case("Manager"):{
-				entitiesBasedAttributeWithValue = elementService.getAllElementsByAttributeAndValueManager(attributeName, value, PageRequest.of(page, size));
-				break;
-			}
-			case("Player"):{
-				entitiesBasedAttributeWithValue = elementService.getAllElementsByAttributeAndValuePlayer(attributeName, value, PageRequest.of(page, size));
-				break;
-
-			}
-			default:{
-				throw new InvalidRoleException("didnt find role");
-			}	
-		}
-		return entitiesBasedAttributeWithValue
+		return entities
 			.stream()
 			.map(ElementTO::new)
 			.collect(Collectors.toList())
 			.toArray(new ElementTO[0]);
 	}
-
-
 }

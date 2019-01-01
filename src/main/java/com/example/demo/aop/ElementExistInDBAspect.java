@@ -10,6 +10,8 @@ import org.aspectj.lang.reflect.MethodSignature;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import com.example.demo.element.ElementEntity;
+import com.example.demo.element.ElementRepository;
 import com.example.demo.element.ElementService;
 import com.example.demo.element.exceptions.ElementNotFoundException;
 
@@ -18,11 +20,11 @@ import com.example.demo.element.exceptions.ElementNotFoundException;
 @Component
 public class ElementExistInDBAspect {
 	
-	private ElementService elementService;
+	private ElementRepository dataBase;
 	
 	@Autowired
-	public void setUserService(ElementService elementService) {
-		this.elementService = elementService;
+	public void setDataBase(ElementRepository dataBase) {
+		this.dataBase = dataBase;
 	}
 	
 		
@@ -60,7 +62,9 @@ public class ElementExistInDBAspect {
 	    
 	    
 	    if(playground != null && id != null) {
-	    	this.elementService.getElementPlayer(playground, id);
+	    	if(!this.dataBase.existsByKey(ElementEntity.createKeyFromIdAndPlayground(id, playground)) ){
+	    		throw new ElementNotFoundException("no matching element for the given playground and id");
+	    	}
 	    }
 	    else {
 	    	throw new ElementNotFoundException("didnt found playground or id");

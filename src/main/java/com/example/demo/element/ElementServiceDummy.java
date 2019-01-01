@@ -15,6 +15,7 @@ import com.example.demo.element.exceptions.ElementAlreadyExistException;
 import com.example.demo.element.exceptions.ElementNotFoundException;
 import com.example.demo.element.exceptions.InvalidAttributeNameException;
 import com.example.demo.element.exceptions.InvalidDistanceValueException;
+import com.example.demo.user.exceptions.InvalidRoleException;
 
 //@Service
 
@@ -23,40 +24,36 @@ import com.example.demo.element.exceptions.InvalidDistanceValueException;
 public class ElementServiceDummy implements ElementService {
 	
 	private Map<String, ElementEntity> entities;
-	
-	@PostConstruct
-	public void init() {
-		this.entities = new ConcurrentHashMap<>();
-		// maybe add details ?? 
-		
-	}
 
 	@Override
-	public void addNewElement(ElementEntity et) throws ElementAlreadyExistException {
+	public void addNewElement(ElementEntity et, String email)
+			throws ElementAlreadyExistException, InvalidRoleException {
 		// TODO Auto-generated method stub
 		
 	}
 
 	@Override
-	public void updateElement(ElementEntity et) throws ElementNotFoundException {
+	public void addElementFromOutside(ElementEntity et, String email)
+			throws ElementAlreadyExistException, InvalidRoleException {
 		// TODO Auto-generated method stub
 		
 	}
 
 	@Override
-	public ElementEntity getElementPlayer(String playground, String id) throws ElementNotFoundException {
+	public void updateElement(ElementEntity et, String email) throws ElementNotFoundException, InvalidRoleException {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public ElementEntity getElement(String playground, String id, String email)
+			throws ElementNotFoundException, InvalidRoleException {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public ElementEntity getElementManager(String playground, String id) throws ElementNotFoundException {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public void deleteElement(String playground, String id) {
+	public void deleteElement(String playground, String id, String email) throws InvalidRoleException {
 		// TODO Auto-generated method stub
 		
 	}
@@ -68,43 +65,23 @@ public class ElementServiceDummy implements ElementService {
 	}
 
 	@Override
-	public List<ElementEntity> getAllElementsPlayer(Pageable page)
-			throws InvalidPageSizeRequestException, InvalidPageRequestException {
+	public List<ElementEntity> getAllElements(Pageable page, String email)
+			throws InvalidPageSizeRequestException, InvalidPageRequestException, InvalidRoleException {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public List<ElementEntity> getAllElementsManager(Pageable page)
-			throws InvalidPageSizeRequestException, InvalidPageRequestException {
+	public List<ElementEntity> getAllElementsNearBy(double x, double y, double distance, String email, Pageable page)
+			throws InvalidDistanceValueException, InvalidRoleException {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public List<ElementEntity> getAllElementsNearByPlayer(double x, double y, double distance, Pageable page)
-			throws InvalidDistanceValueException {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public List<ElementEntity> getAllElementsNearByManager(double x, double y, double distance, Pageable page)
-			throws InvalidDistanceValueException {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public List<ElementEntity> getAllElementsByAttributeAndValuePlayer(String attribute, String value, Pageable page)
-			throws InvalidAttributeNameException, InvalidPageSizeRequestException, InvalidPageRequestException {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public List<ElementEntity> getAllElementsByAttributeAndValueManager(String attribute, String value, Pageable page)
-			throws InvalidAttributeNameException, InvalidPageSizeRequestException, InvalidPageRequestException {
+	public List<ElementEntity> getAllElementsByAttributeAndValue(String attribute, String value, String email,
+			Pageable page) throws InvalidAttributeNameException, InvalidPageSizeRequestException,
+			InvalidPageRequestException, InvalidRoleException {
 		// TODO Auto-generated method stub
 		return null;
 	}
@@ -114,13 +91,6 @@ public class ElementServiceDummy implements ElementService {
 		// TODO Auto-generated method stub
 		
 	}
-
-	@Override
-	public void addElementFromOutside(ElementEntity demo_entity) throws ElementAlreadyExistException {
-		// TODO Auto-generated method stub
-		
-	}
-
 
 
 }
