@@ -33,7 +33,7 @@ import com.example.demo.user.UserService;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
-public class ElementTest_Feature10 {
+public class Feature10 {
 
 	private int numOfEntities = 20;
 	private ElementEntity[] demo_entities;
