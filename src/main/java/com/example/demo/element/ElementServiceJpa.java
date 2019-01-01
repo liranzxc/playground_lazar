@@ -20,6 +20,7 @@ import com.example.demo.element.exceptions.ElementAlreadyExistException;
 import com.example.demo.element.exceptions.ElementNotFoundException;
 import com.example.demo.element.exceptions.InvalidAttributeNameException;
 import com.example.demo.element.exceptions.InvalidDistanceValueException;
+import com.example.demo.user.TypesEnumUser.Types;
 import com.example.demo.user.exceptions.InvalidRoleException;
 
 @Service
@@ -38,13 +39,13 @@ public class ElementServiceJpa implements ElementService {
 	
 	@Override
 	@Transactional
-	@UserPermission
+	@UserPermission(permissions={Types.Manager})
 	@ToLog
 	public void addNewElement(ElementEntity et, @EmailValue String email) throws ElementAlreadyExistException, InvalidRoleException {
-		String role = email;
-		if(!role.equals("Manager")) {
-			throw new InvalidRoleException("only manager can add new Elements");
-		}
+//		String role = email;
+//		if(!role.equals("Manager")) {
+//			throw new InvalidRoleException("only manager can add new Elements");
+//		}
 		
 		int newID = ++ID;
 		String key = ElementEntity.createKeyFromIdAndPlayground(newID + "", et.getPlayground());
@@ -60,13 +61,13 @@ public class ElementServiceJpa implements ElementService {
 
 	@Override
 	@Transactional
-	@UserPermission
+	@UserPermission(permissions={Types.Manager})
 	@ToLog
 	public void addElementFromOutside(ElementEntity et, @EmailValue String email) throws ElementAlreadyExistException, InvalidRoleException {
-		String role = email;
-		if(!role.equals("Manager")) {
-			throw new InvalidRoleException("only manager can add new Elements");
-		}
+//		String role = email;
+//		if(!role.equals("Manager")) {
+//			throw new InvalidRoleException("only manager can add new Elements");
+//		}
 		
 		String key = et.getKey();
 
@@ -79,13 +80,13 @@ public class ElementServiceJpa implements ElementService {
 
 	@Override
 	@Transactional
-	@UserPermission
+	@UserPermission(permissions={Types.Manager})
 	@ToLog
 	public void updateElement(ElementEntity et, @EmailValue String email) throws ElementNotFoundException, InvalidRoleException {
-		String role = email;
-		if(!role.equals("Manager")) {
-			throw new InvalidRoleException("only manager can add new Elements");
-		}
+//		String role = email;
+//		if(!role.equals("Manager")) {
+//			throw new InvalidRoleException("only manager can add new Elements");
+//		}
 		
 		String key = et.getKey();
 		if (this.dataBase.existsByKey(key)) {
@@ -104,7 +105,7 @@ public class ElementServiceJpa implements ElementService {
 	}
 
 	@Transactional
-	@UserPermission
+	@UserPermission(permissions={Types.Manager, Types.Player})
 	@ToLog
 	@Override
 	public ElementEntity getElement(String playground, String id, @EmailValue String email)
@@ -124,14 +125,14 @@ public class ElementServiceJpa implements ElementService {
 	}
 
 	@Transactional
-	@UserPermission
+	@UserPermission(permissions={Types.Manager})
 	@ToLog
 	@Override
 	public void deleteElement(String playground, String id, @EmailValue String email) throws InvalidRoleException {
-		String role = email; // if gotten to this line email was swapped with type
-		if (!role.equals("Manager")) {
-			throw new InvalidRoleException("Only manager can delete elements");
-		}
+//		String role = email; // if gotten to this line email was swapped with type
+//		if (!role.equals("Manager")) {
+//			throw new InvalidRoleException("Only manager can delete elements");
+//		}
 
 		String key = ElementEntity.createKeyFromIdAndPlayground(id, playground);
 		if (this.dataBase.existsByKey(key)) {
@@ -144,7 +145,7 @@ public class ElementServiceJpa implements ElementService {
 	}
 
 	@Transactional
-	@UserPermission
+	@UserPermission(permissions={Types.Manager, Types.Player})
 	@ToLog
 	@Override
 	public List<ElementEntity> getAllElements(Pageable page,@EmailValue String email)
@@ -165,7 +166,7 @@ public class ElementServiceJpa implements ElementService {
 	}
 
 	@Transactional
-	@UserPermission
+	@UserPermission(permissions={Types.Manager, Types.Player})
 	@ToLog
 	@Override
 	public List<ElementEntity> getAllElementsNearBy(double x, double y, double distance,@EmailValue String email, Pageable page)
@@ -185,7 +186,7 @@ public class ElementServiceJpa implements ElementService {
 	}
 
 	@Transactional
-	@UserPermission
+	@UserPermission(permissions={Types.Manager, Types.Player})
 	@ToLog
 	@Override
 	public List<ElementEntity> getAllElementsByAttributeAndValue(String attribute, String value,@EmailValue String email,
