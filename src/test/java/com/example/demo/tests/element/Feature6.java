@@ -28,6 +28,7 @@ import com.example.demo.element.exceptions.ElementAlreadyExistException;
 import com.example.demo.element.exceptions.ElementNotFoundException;
 import com.example.demo.user.UserEntity;
 import com.example.demo.user.UserService;
+import com.example.demo.user.exceptions.InvalidRoleException;
 
 
 
@@ -140,10 +141,10 @@ public class Feature6 {
 
 	// Scenario 1: 
 	@Test
-	public void updateElementSuccessfullyByManager() throws ElementAlreadyExistException {
+	public void updateElementSuccessfullyByManager() throws ElementAlreadyExistException, InvalidRoleException {
 		// given
 		ElementTO eto = new ElementTO(demo_entity);
-		this.elementService.addNewElement(eto.ToEntity());
+		this.elementService.addNewElement(eto.ToEntity(), this.demo_user_manager.getEmail());
 		
 		String playground = eto.getPlayground();
 		String id = eto.getId();
@@ -158,10 +159,10 @@ public class Feature6 {
 
 	// Scenario 2
 	@Test
-	public void updateElementFailedByPlayer() throws ElementAlreadyExistException {
+	public void updateElementFailedByPlayer() throws ElementAlreadyExistException, InvalidRoleException {
 		// given
 		ElementTO eto = new ElementTO(demo_entity);
-		this.elementService.addNewElement(eto.ToEntity());
+		this.elementService.addNewElement(eto.ToEntity(), this.demo_user_manager.getEmail());
 
 		String playground = eto.getPlayground();
 		String id = eto.getId();

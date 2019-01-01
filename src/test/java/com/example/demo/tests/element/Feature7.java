@@ -144,11 +144,11 @@ public class Feature7 {
 
 	// Scenario 1: 
 	@Test
-	public void getSpecificElementSuccessByPlayer() throws ElementNotFoundException, ElementAlreadyExistException {
+	public void getSpecificElementSuccessByPlayer() throws ElementNotFoundException, ElementAlreadyExistException, InvalidRoleException {
 		
 		// given: an elementEntity with "id":1
 		ElementTO originalElementTO = new ElementTO(demo_entity);
-		this.elementService.addNewElement(originalElementTO.ToEntity());
+		this.elementService.addNewElement(originalElementTO.ToEntity(), this.demo_user_manager.getEmail());
 
 		// when
 		String userPlayground = "playground_lazar";
@@ -170,13 +170,13 @@ public class Feature7 {
 
 	// Scenario 2:
 	@Test
-	public void getSpecificElementWithExpiredDate_FailedByPlayer() throws ElementNotFoundException, ElementAlreadyExistException, InterruptedException {
+	public void getSpecificElementWithExpiredDate_FailedByPlayer() throws ElementNotFoundException, ElementAlreadyExistException, InterruptedException, InvalidRoleException {
 
 		demo_entity.setExpireDate(new Date());
 		Thread.sleep(50);
 		
 		ElementTO originalElementTO = new ElementTO(demo_entity);
-		this.elementService.addNewElement(originalElementTO.ToEntity());
+		this.elementService.addNewElement(originalElementTO.ToEntity(), this.demo_user_manager.getEmail());
 
 		// when
 		String userPlayground = "playground_lazar";
@@ -197,13 +197,13 @@ public class Feature7 {
 	// Scenario 3
 	@Test
 	public void getSpecificElementWithExpiredDate_SuccessByManager()
-			throws ElementNotFoundException, ElementAlreadyExistException, InterruptedException {
+			throws ElementNotFoundException, ElementAlreadyExistException, InterruptedException, InvalidRoleException {
 
 		demo_entity.setExpireDate(new Date());
 		Thread.sleep(50);
 
 		ElementTO originalElementTO = new ElementTO(demo_entity);
-		this.elementService.addNewElement(originalElementTO.ToEntity());
+		this.elementService.addNewElement(originalElementTO.ToEntity(), this.demo_user_manager.getEmail());
 
 		// when
 		String elementPlayground = originalElementTO.getPlayground();

@@ -144,10 +144,10 @@ public class Feature9 {
 
 	// scenario 1
 	@Test
-	public void GetOneElementSuccessfulyInDistanceOne() throws ElementAlreadyExistException {
+	public void GetOneElementSuccessfulyInDistanceOne() throws ElementAlreadyExistException, InvalidRoleException {
 
 		// Given: an array of one ElementEntity in database with size >0
-		this.elementService.addNewElement(this.demo_entity);
+		this.elementService.addNewElement(this.demo_entity, this.demo_user_manager.getEmail());
 
 		// When:
 		double x = this.demo_entity.getX() + 1.0;
@@ -169,10 +169,10 @@ public class Feature9 {
 	// scenario 2
 	@Test
 	public void GetElementsFailedWithInvalidDistance()
-			throws ElementAlreadyExistException, InvalidDistanceValueException {
+			throws ElementAlreadyExistException, InvalidDistanceValueException, InvalidRoleException {
 
 		// Given: an array of ElementEntity array is database in size >0
-		this.elementService.addNewElement(this.demo_entity);
+		this.elementService.addNewElement(this.demo_entity, this.demo_user_manager.getEmail());
 
 		// When:
 		String userPlayground = "playground_lazar";
@@ -194,10 +194,10 @@ public class Feature9 {
 	
 	// Scenario 3
 	@Test
-	public void GetNoElementNearLocationZeroZeroAndDistanceOne() throws ElementAlreadyExistException {
+	public void GetNoElementNearLocationZeroZeroAndDistanceOne() throws ElementAlreadyExistException, InvalidRoleException {
 		
 		// Given: 
-		this.elementService.addNewElement(this.demo_entity);
+		this.elementService.addNewElement(this.demo_entity, this.demo_user_manager.getEmail());
 		
 		// When:
 		double x = 1.0, y = 1.0, distance = 0.0;
@@ -219,7 +219,7 @@ public class Feature9 {
 	// scenario 4 (pagination)
 	@Test
 	public void GetTheFirstTenResultsFromTwentyElementsInDisanceOneOrLower()
-			throws ElementAlreadyExistException, InvalidDistanceValueException {
+			throws ElementAlreadyExistException, InvalidDistanceValueException, InvalidRoleException {
 
 		for (ElementEntity e : this.demo_entities) {
 			if (Integer.parseInt(e.getId()) % 2 == 1) {
@@ -233,7 +233,7 @@ public class Feature9 {
 
 		// Given: 20 elements in distance 1 or lower
 		for (ElementEntity e : this.demo_entities) {
-			this.elementService.addNewElement(e);
+			this.elementService.addNewElement(e, this.demo_user_manager.getEmail());
 		}
 
 		// When: 
@@ -255,7 +255,7 @@ public class Feature9 {
 	
 	// scenario 5 
 	@Test
-	public void getAllElementNearByTenAsPlayer() throws ElementAlreadyExistException {
+	public void getAllElementNearByTenAsPlayer() throws ElementAlreadyExistException, InvalidRoleException {
 
 		for (ElementEntity e : this.demo_entities) {
 			if (Integer.parseInt(e.getId()) % 2 == 1) {
@@ -269,7 +269,7 @@ public class Feature9 {
 
 		// Given: 20 elements in distance 1 or lower
 		for (ElementEntity e : this.demo_entities) {
-			this.elementService.addNewElement(e);
+			this.elementService.addNewElement(e, this.demo_user_manager.getEmail());
 		}
 
 		// When: 

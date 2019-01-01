@@ -27,6 +27,7 @@ import com.example.demo.element.Location;
 import com.example.demo.element.exceptions.ElementAlreadyExistException;
 import com.example.demo.user.UserEntity;
 import com.example.demo.user.UserService;
+import com.example.demo.user.exceptions.InvalidRoleException;
 
 
 @RunWith(SpringRunner.class)
@@ -138,9 +139,9 @@ public class Feature8 {
 
 	// scenario 1:
 	@Test
-	public void GetAllElementsSuccessWithOneElement() throws ElementAlreadyExistException {
+	public void GetAllElementsSuccessWithOneElement() throws ElementAlreadyExistException, InvalidRoleException {
 		// Given:
-		this.elementService.addNewElement(this.demo_entity);
+		this.elementService.addNewElement(this.demo_entity, this.demo_user_manager.getEmail());
 
 		// When:
 
@@ -177,9 +178,9 @@ public class Feature8 {
 	
 	//scenario 3
 	@Test
-	public void getAllElementsAsPlayer_GetArrayOfTenElementsWhichIsNotExpired() throws ElementAlreadyExistException {
+	public void getAllElementsAsPlayer_GetArrayOfTenElementsWhichIsNotExpired() throws ElementAlreadyExistException, InvalidRoleException {
 		for (ElementEntity elementEntity : demo_entities) {
-			this.elementService.addNewElement(elementEntity);
+			this.elementService.addNewElement(elementEntity, this.demo_user_manager.getEmail());
 		}
 
 		ElementTO[] allElements = this.restTemplate.getForObject(this.url + "/{userPlayground}/{email}/all",

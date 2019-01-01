@@ -30,6 +30,7 @@ import com.example.demo.element.Location;
 import com.example.demo.element.exceptions.ElementAlreadyExistException;
 import com.example.demo.user.UserEntity;
 import com.example.demo.user.UserService;
+import com.example.demo.user.exceptions.InvalidRoleException;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
@@ -124,24 +125,24 @@ public class Feature10 {
 
 	// scenario 1 - NAME\Manager
 	@Test
-	public void findOneElementWithHisNameByManagerSuccessfulyInDatabaseWithOneElement() throws ElementAlreadyExistException {
+	public void findOneElementWithHisNameByManagerSuccessfulyInDatabaseWithOneElement() throws ElementAlreadyExistException, InvalidRoleException {
 		assertTrue(scenario1("name", this.demo_entity.getName()));
 	}
 
 	// scenario 1 - TYPE\Manager
 	@Test
-	public void findOneElementWithHisTypeByManagerSuccessfullyInDatabaseWithOneElement() throws ElementAlreadyExistException {
+	public void findOneElementWithHisTypeByManagerSuccessfullyInDatabaseWithOneElement() throws ElementAlreadyExistException, InvalidRoleException {
 		assertTrue(scenario1("type", this.demo_entity.getType()));
 	}
 	
 	// scenario 1 - TYPE\player  // TODO: Not working
 	@Test
 	public void findOneExpiredElementWithHisTypeByPlayer_Failed()
-			throws ElementAlreadyExistException, InterruptedException {
+			throws ElementAlreadyExistException, InterruptedException, InvalidRoleException {
 		// Given:
 		demo_entity.setExpireDate(new Date(1,1,1));
 		Thread.sleep(50);
-		this.elementService.addNewElement(this.demo_entity);
+		this.elementService.addNewElement(this.demo_entity, this.demo_user_manager.getEmail());
 		
 		// When:
 		boolean isSuccess = false;
@@ -163,9 +164,9 @@ public class Feature10 {
 		assertTrue(isSuccess);
 	}
 
-	private boolean scenario1(String attributeName, String value) throws ElementAlreadyExistException {
+	private boolean scenario1(String attributeName, String value) throws ElementAlreadyExistException, InvalidRoleException {
 		// Given:
-		this.elementService.addNewElement(this.demo_entity);
+		this.elementService.addNewElement(this.demo_entity, this.demo_user_manager.getEmail());
 
 		// When:
 
@@ -184,13 +185,13 @@ public class Feature10 {
 
 	// scenario 2 - NAME
 	@Test
-	public void findElementByNameSuccessfulyInDatabaseWithTwentyElement() throws ElementAlreadyExistException {
+	public void findElementByNameSuccessfulyInDatabaseWithTwentyElement() throws ElementAlreadyExistException, InvalidRoleException {
 		// Given: 20 element entities in database (and one is the target)
 		for (ElementEntity e : this.demo_entities) {
 			if (Integer.parseInt(e.getId()) == 6) {
 				e.setName("demo_target"); // the test
 			}
-			this.elementService.addNewElement(e);
+			this.elementService.addNewElement(e, this.demo_user_manager.getEmail());
 		}
 
 		// When:
@@ -214,13 +215,13 @@ public class Feature10 {
 
 	// scenario 2 - TYPE
 	@Test
-	public void findElementByTypeSuccessfulyInDatabaseWithTwentyElements() throws ElementAlreadyExistException {
+	public void findElementByTypeSuccessfulyInDatabaseWithTwentyElements() throws ElementAlreadyExistException, InvalidRoleException {
 		// Given: 20 element entities in database (and one is the target)
 		for (ElementEntity e : this.demo_entities) {
 			if (Integer.parseInt(e.getId()) == 6) {
 				e.setType("demo_target"); // the test
 			}
-			this.elementService.addNewElement(e);
+			this.elementService.addNewElement(e, this.demo_user_manager.getEmail());
 		}
 
 		// When:
@@ -244,14 +245,14 @@ public class Feature10 {
 
 	// scenario 3 - NAME
 	@Test
-	public void findFiveElementsByNameSuccessfulyInDatabaseWithTwentyElement() throws ElementAlreadyExistException {
+	public void findFiveElementsByNameSuccessfulyInDatabaseWithTwentyElement() throws ElementAlreadyExistException, InvalidRoleException {
 		// Given: 20 element entities in database (which 5 of them are the targets)
 
 		for (int i = 0; i < this.demo_entities.length; i++) {
 			if (i < 5) {
 				demo_entities[i].setName("demo_target");
 			}
-			this.elementService.addNewElement(demo_entities[i]);
+			this.elementService.addNewElement(demo_entities[i], this.demo_user_manager.getEmail());
 		}
 
 		// When:
@@ -279,14 +280,14 @@ public class Feature10 {
 
 	// scenario 3 - TYPE
 	@Test
-	public void findFiveElementsByTypeSuccessfulyInDatabaseWithTwentyElements() throws ElementAlreadyExistException {
+	public void findFiveElementsByTypeSuccessfulyInDatabaseWithTwentyElements() throws ElementAlreadyExistException, InvalidRoleException {
 		// Given: 10 element entities in database (which 5 of them are the targets)
 
 		for (int i = 0; i < this.demo_entities.length; i++) {
 			if (i < 5) {
 				demo_entities[i].setType("demo_target");
 			}
-			this.elementService.addNewElement(demo_entities[i]);
+			this.elementService.addNewElement(demo_entities[i], this.demo_user_manager.getEmail());
 		}
 
 		// When:
@@ -315,9 +316,9 @@ public class Feature10 {
 
 	// scenario 4
 	@Test
-	public void findElementFailedByInvalidAttributeNameInDatabaseWithOneElement() throws ElementAlreadyExistException {
+	public void findElementFailedByInvalidAttributeNameInDatabaseWithOneElement() throws ElementAlreadyExistException, InvalidRoleException {
 		// Given:
-		this.elementService.addNewElement(this.demo_entity);
+		this.elementService.addNewElement(this.demo_entity, this.demo_user_manager.getEmail());
 
 		// When:
 		String attributeName = "attack";
@@ -339,22 +340,22 @@ public class Feature10 {
 
 	// scenario 5 - Name
 	@Test
-	public void findNoElementByNameInDatabaseWithTwentyElements() throws ElementAlreadyExistException {
+	public void findNoElementByNameInDatabaseWithTwentyElements() throws ElementAlreadyExistException, InvalidRoleException {
 		assertTrue(scenario5("name", "no demo name"));
 	}
 
 	// scenario 5 - Type
 	@Test
-	public void findNoElementByTypeInDatabaseWithTwentyElements() throws ElementAlreadyExistException {
+	public void findNoElementByTypeInDatabaseWithTwentyElements() throws ElementAlreadyExistException, InvalidRoleException {
 		assertTrue(scenario5("type", "no demo type"));
 	}
 
-	private boolean scenario5(String attributeName, String value) throws ElementAlreadyExistException {
+	private boolean scenario5(String attributeName, String value) throws ElementAlreadyExistException, InvalidRoleException {
 		// Given:
 		ArrayList<ElementEntity> demo_targets = new ArrayList<>();
 
 		for (ElementEntity e : this.demo_entities) {
-			this.elementService.addNewElement(e);
+			this.elementService.addNewElement(e, this.demo_user_manager.getEmail());
 		}
 
 		demo_targets.trimToSize();
@@ -378,21 +379,21 @@ public class Feature10 {
 	// scenario 6 - Name
 	@Test
 	public void CheckDefaultPagination_findTenElementsByNameSuccessfulyInDatabaseWithTwentyElements()
-			throws ElementAlreadyExistException {
+			throws ElementAlreadyExistException, InvalidRoleException {
 		assertTrue(scenario6("name", "demo"));
 	}
 
 	// scenario 6 - Type
 	@Test
 	public void CheckDefaultPagination_findTenElementsByTypeSuccessfulyInDatabaseWithTwentyElements()
-			throws ElementAlreadyExistException {
+			throws ElementAlreadyExistException, InvalidRoleException {
 		assertTrue(scenario6("type", "demo type"));
 	}
 
-	private boolean scenario6(String attributeName, String value) throws ElementAlreadyExistException {
+	private boolean scenario6(String attributeName, String value) throws ElementAlreadyExistException, InvalidRoleException {
 
 		for (ElementEntity e : this.demo_entities) {
-			this.elementService.addNewElement(e);
+			this.elementService.addNewElement(e, this.demo_user_manager.getEmail());
 		}
 
 		// When:
@@ -414,21 +415,21 @@ public class Feature10 {
 	// scenario 7 - Name
 	@Test
 	public void CheckPagination_findSevenElementsInPageOneByNameSuccessfulyInDatabase()
-			throws ElementAlreadyExistException {
+			throws ElementAlreadyExistException, InvalidRoleException {
 		assertTrue(scenario7("name", "demo"));
 	}
 	
 	// scenario 7 - Type
 		@Test
 		public void CheckPagination_findSevenElementsInPageOneByTypeSuccessfulyInDatabase()
-				throws ElementAlreadyExistException {
+				throws ElementAlreadyExistException, InvalidRoleException {
 			assertTrue(scenario7("type", "demo type"));
 		}
 
-	private boolean scenario7(String attributeName, String value) throws ElementAlreadyExistException {
+	private boolean scenario7(String attributeName, String value) throws ElementAlreadyExistException, InvalidRoleException {
 		// Given: 20 elements entities in database (which 5 of them are the targets)
 		for (ElementEntity e : this.demo_entities) {
-			this.elementService.addNewElement(e);
+			this.elementService.addNewElement(e, this.demo_user_manager.getEmail());
 		}
 
 		// When:

@@ -200,10 +200,10 @@ public class Feature5 {
 	
 	// Scenario 4
 	@Test(expected = ElementAlreadyExistException.class)
-	public void createElementWhenElementAlreadyExist() throws ElementAlreadyExistException, InterruptedException {
+	public void createElementWhenElementAlreadyExist() throws ElementAlreadyExistException, InterruptedException, InvalidRoleException {
 		// given
 
-		this.elementService.addElementFromOutside(demo_entity);
+		this.elementService.addElementFromOutside(demo_entity, this.demo_user_manager.getEmail());
 
 		// when
 		ElementTO eto = new ElementTO(demo_entity);
