@@ -20,7 +20,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 @Service
 public class ActivityServiceImpl implements ActivityService {
 
-	private String playground;
+	private String playground = "${playground.name}";
 	
 	private ActivityRepository dataBase;
 	private ApplicationContext spring;
@@ -34,10 +34,6 @@ public class ActivityServiceImpl implements ActivityService {
 		this.jackson = new ObjectMapper();
 	}
 
-	@Value("${playground.name}")
-	public void setPlayground(String playground) {
-		this.playground = playground;
-	}
 	
 	
 	@Override

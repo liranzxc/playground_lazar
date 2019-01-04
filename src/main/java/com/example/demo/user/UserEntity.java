@@ -16,8 +16,7 @@ public class UserEntity {
 
 	private String email;
 	
-	
-	private @Value("${playground.name}") String playground;
+	private String playground;
 
 	private String username;
 	private String avatar;
@@ -33,8 +32,6 @@ public class UserEntity {
 		this.username = username;
 		this.avatar = avatar;
 		this.role = role;
-		System.err.println("pg:" +this.playground);
-
 	}
 	//Constructor which get a NewUserForm and creates a new user from the details.
 

@@ -18,15 +18,11 @@ public class ActivityEntity {
 		private String elementPlayground;
 		private String elementId;
 		private String type;
-		private String playerPlayground;
+		private String playerPlayground = "${playground.name}";
 		private String playerEmail;
 		private String key;
 		private Map<String,Object> attributes;
 		
-		@Value("${playground.name}")
-		public void setPlayerPlayground(String playground) {
-			this.playerPlayground = playground;
-		}
 		
 		public ActivityEntity() {
 			super();
@@ -39,7 +35,6 @@ public class ActivityEntity {
 			this.elementPlayground = elementPlayground;
 			this.elementId = elementId;
 			this.type = type;
-			this.playerPlayground = playerPlayground;
 			this.playerEmail = playerEmail;
 			this.attributes = attributes;
 		}
@@ -65,9 +60,9 @@ public class ActivityEntity {
 		public String getPlayerPlayground() {
 			return playerPlayground;
 		}
-//		public void setPlayerPlayground(String playerPlayground) {
-//			this.playerPlayground = playerPlayground;
-//		}
+		public void setPlayerPlayground(String playerPlayground) {
+			this.playerPlayground = playerPlayground;
+		}
 		public String getPlayerEmail() {
 			return playerEmail;
 		}
