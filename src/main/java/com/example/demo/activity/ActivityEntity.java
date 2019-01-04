@@ -7,6 +7,7 @@ import javax.persistence.Id;
 import javax.persistence.Lob;
 import javax.persistence.Transient;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -21,6 +22,11 @@ public class ActivityEntity {
 		private String playerEmail;
 		private String key;
 		private Map<String,Object> attributes;
+		
+		@Value("${playground.name}")
+		public void setPlayerPlayground(String playground) {
+			this.playerPlayground = playground;
+		}
 		
 		public ActivityEntity() {
 			super();
@@ -59,9 +65,9 @@ public class ActivityEntity {
 		public String getPlayerPlayground() {
 			return playerPlayground;
 		}
-		public void setPlayerPlayground(String playerPlayground) {
-			this.playerPlayground = playerPlayground;
-		}
+//		public void setPlayerPlayground(String playerPlayground) {
+//			this.playerPlayground = playerPlayground;
+//		}
 		public String getPlayerEmail() {
 			return playerEmail;
 		}

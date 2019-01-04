@@ -3,6 +3,7 @@ package com.example.demo.user;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 
@@ -15,8 +16,8 @@ public class UserEntity {
 
 	private String email;
 	
-	//@Value("${playground.name}")
-	private String playground = "playground_lazar";
+	
+	private @Value("${playground.name}") String playground;
 
 	private String username;
 	private String avatar;
@@ -25,16 +26,15 @@ public class UserEntity {
 	private String id;
 	private String code;
 	
-
-	
 	public UserEntity(String email, String playground, String username, String avatar, String role) {
 		super();
 		this.id = String.valueOf(ID++);
 		this.email = email;
-		//this.playground = playground;
 		this.username = username;
 		this.avatar = avatar;
 		this.role = role;
+		System.err.println("pg:" +this.playground);
+
 	}
 	//Constructor which get a NewUserForm and creates a new user from the details.
 
@@ -80,6 +80,10 @@ public class UserEntity {
 	}
 	public void setPoints(Long points) {
 		this.points = points;
+	}
+	
+	public void addPoints(Long points) {
+		this.points += points;
 	}
 	
 	public String getId() {

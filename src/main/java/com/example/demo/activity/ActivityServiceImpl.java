@@ -6,6 +6,7 @@ import java.util.Map;
 import javax.annotation.PostConstruct;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.ApplicationContext;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -19,6 +20,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 @Service
 public class ActivityServiceImpl implements ActivityService {
 
+	private String playground;
+	
 	private ActivityRepository dataBase;
 	private ApplicationContext spring;
 	private ObjectMapper jackson;
@@ -31,11 +34,15 @@ public class ActivityServiceImpl implements ActivityService {
 		this.jackson = new ObjectMapper();
 	}
 
-
+	@Value("${playground.name}")
+	public void setPlayground(String playground) {
+		this.playground = playground;
+	}
+	
 	
 	@Override
 	public void addNewActivity(ActivityEntity entity) throws ActivityAlreadyExistException {
-		entity.setKey(ActivityEntity.generateKey("playground_lazar", ""+Id++));
+		entity.setKey(ActivityEntity.generateKey(playground, ""+Id++));
 		String key = entity.getKey();
 		if(!this.dataBase.existsByKey(key)) {
 			if (!entity.getType().isEmpty()) {

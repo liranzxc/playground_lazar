@@ -91,7 +91,6 @@ public class UsersTest_full {
 		// When:
 		boolean isSucceed = false;
 		UserTO testUser = new UserTO("name", "demo@gmail.com", "avatar.url", Types.Player.getType(), false);
-
 		try {
 			UserTO user = this.rest.postForObject(this.url + "/", testUser, UserTO.class);
 		} catch (Exception e) {
@@ -111,6 +110,7 @@ public class UsersTest_full {
 		// When
 		UserTO testUser = new UserTO("name", "65465@gmail.com", "avatar.url", "Servant", false);
 		testUser.setRole("Servant");
+
 		try {
 			this.rest.postForObject(this.url + "/", testUser, UserTO.class);
 
@@ -132,6 +132,7 @@ public class UsersTest_full {
 		// Given
 		String testEmail = "demo@gmail.com";
 		UserTO testUser = new UserTO("name", testEmail, "avatar.url", Types.Player.getType(), false);
+
 		userService.registerNewUser(testUser.ToEntity());
 		String code = null;
 		try {
