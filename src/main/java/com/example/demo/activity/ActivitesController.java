@@ -9,25 +9,26 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.demo.activity.exceptions.ActivityAlreadyExistException;
+import com.example.demo.activity.plugins.ActivityHandler;
 import com.example.demo.element.ElementVeirfyier;
+import com.example.demo.element.exceptions.ElementNotFoundException;
+import com.example.demo.element.exceptions.InvalidElementForActivityException;
+import com.example.demo.user.exceptions.InvalidEmailException;
+import com.example.demo.user.exceptions.InvalidRoleException;
+import com.example.demo.user.exceptions.UserNotFoundException;
 
 @RestController
 @RequestMapping("playground/activites")
 public class ActivitesController {
 	
 	private ActivityService service;
-	private ElementVeirfyier elementVerifyier;
-	
-	
+
 	@Autowired
 	public void setActivityRepository(ActivityService activityService) {
 		this.service = activityService;
 	}
 	
-	@Autowired
-	public void setElementVerifyier(ElementVeirfyier verifyier) {
-		this.elementVerifyier = verifyier;
-	}
+	
 	
 	// activites controller
 
@@ -38,9 +39,10 @@ public class ActivitesController {
 			consumes = MediaType.APPLICATION_JSON_VALUE)
 	public Object GoToActivity(@RequestBody ActivityTO activity,
 			@PathVariable(name = "userPlayground") String userPlayground, 
-			@PathVariable(name = "email") String email) throws ActivityAlreadyExistException {
+			@PathVariable(name = "email") String email) throws ActivityAlreadyExistException, ElementNotFoundException, InvalidRoleException, UserNotFoundException, InvalidElementForActivityException, InvalidEmailException {
 		
-		this.elementVerifyier.verifyElement(activity.getElementPlayground(), activity.getElementId());
+		
+
 		service.addNewActivity(activity.ToEntity());
 		// just return activity for testing - Checked !
 		return activity;

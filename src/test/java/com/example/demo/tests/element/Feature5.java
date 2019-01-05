@@ -27,11 +27,8 @@ import com.example.demo.element.ElementServiceJpa;
 import com.example.demo.element.ElementTO;
 import com.example.demo.element.Location;
 import com.example.demo.element.exceptions.ElementAlreadyExistException;
-import com.example.demo.element.exceptions.ElementNotFoundException;
-import com.example.demo.element.exceptions.InvalidDistanceValueException;
 import com.example.demo.user.UserEntity;
 import com.example.demo.user.UserService;
-import com.example.demo.user.exceptions.EmailAlreadyRegisteredException;
 import com.example.demo.user.exceptions.InvalidEmailException;
 import com.example.demo.user.exceptions.InvalidRoleException;
 
@@ -117,7 +114,6 @@ public class Feature5 {
 	}
 
 
-
 	@Before
 	public void setup() {
 		ElementServiceJpa.setIDToZero(); // reset the ID to 0 after each test
@@ -125,6 +121,7 @@ public class Feature5 {
 		try {
 			this.userService.registerNewUser(demo_user_manager);
 			this.userService.registerNewUser(demo_user_player);
+			System.err.println("Feature5 setupSuccess");
 		} catch (Exception e) {
 			System.err.println("ElementTest setup exception on registering users, exception is:");
 			System.err.println(e.getMessage());
