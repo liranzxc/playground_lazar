@@ -47,6 +47,7 @@ public class UserServiceJPA implements UserService {
 			throw new InvalidRoleException("The entered role: " + user.getRole() + " is not valid!");
 		}
 		if (!dataBase.existsByEmail(user.getEmail())) {
+			System.err.println();
 			user.setCode(generator.generateValidationCode());
 			// System.err.println("Code for " + user.getEmail() + ": " + user.getCode()); //
 			// Prints the code to the

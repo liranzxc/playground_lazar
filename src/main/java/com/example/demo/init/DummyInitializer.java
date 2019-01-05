@@ -15,8 +15,8 @@ import com.example.demo.user.exceptions.EmailAlreadyRegisteredException;
 import com.example.demo.user.exceptions.InvalidEmailException;
 import com.example.demo.user.exceptions.InvalidRoleException;
 
-@Component
-@Profile("presentation")
+//@Component
+//@Profile("presentation")
 public class DummyInitializer {
 	private UserService service;
 	
