@@ -87,9 +87,9 @@ public class ActivityTest {
 	// Feature 11
 
 
-	//s1
+	//Scenario 1
 	@Test
-	public void EchoActivity() throws ElementAlreadyExistException, InvalidRoleException {
+	public void SuccessEchoActivity() throws ElementAlreadyExistException, InvalidRoleException {
 		
 		this.elementService.addNewElement(demoEntity, this.demo_user_manager.getEmail());
 		
@@ -116,7 +116,7 @@ public class ActivityTest {
 	
 	//s2
 	@Test
-	public void AddBoardPostActivity() throws ElementAlreadyExistException, InvalidRoleException {
+	public void SuccessfulAddPostOnBoard() throws ElementAlreadyExistException, InvalidRoleException {
 		//Given
 		this.elementService.addNewElement(demoEntity, this.demo_user_manager.getEmail());
 
@@ -304,6 +304,7 @@ public class ActivityTest {
 		//Given
 		this.elementService.addNewElement(demoEntity, this.demo_user_manager.getEmail());
 
+		// TODO: do test with invalid egg size, like 'extraSmall'
 		//When
 		Map <String,Object> smallMap = new HashMap<String,Object>();
 		Map <String,Object> mediumMap = new HashMap<String,Object>();

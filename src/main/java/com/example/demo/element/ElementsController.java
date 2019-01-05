@@ -52,6 +52,7 @@ public class ElementsController {
 			throws InvalidEmailException, ElementAlreadyExistException, InvalidRoleException {
 
 	
+		System.err.println("Start add element in Controller");
 		this.elementService.addNewElement(element.ToEntity(), email);
 
 		return element;
