@@ -23,7 +23,7 @@ public class Pot extends ElementEntity{
 		super(playground, id, x, y, name, creationDate, expireDate, type, attributes, creatorPlayground, creatorEmail);
 		
 		this.attributes = new HashMap<String, Object>();
-		this.attributes.put(ActivityTypes.COOKOMMELETTE.getName(), new Long(50));
+		this.attributes.put(ActivityTypes.COOKOMMELETTE.getName(), ActivityTypes.COOKOMMELETTE.getPoints());
 	}
 
 }

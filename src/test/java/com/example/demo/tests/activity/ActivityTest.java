@@ -304,7 +304,6 @@ public class ActivityTest {
 		//Given
 		this.elementService.addNewElement(demoEntity, this.demo_user_manager.getEmail());
 
-		// TODO: do test with invalid egg size, like 'extraSmall'
 		//When
 		Map <String,Object> smallMap = new HashMap<String,Object>();
 		Map <String,Object> mediumMap = new HashMap<String,Object>();
@@ -343,6 +342,30 @@ public class ActivityTest {
 				"playground_lazar", "asdfsd", xlargeMap);
 		ActivityTO result4 =rest.postForObject( url+"/{userPlayground}/{email}", activity4, ActivityTO.class, params );
 		System.err.println(result4.getAttributes());
+	}
+	
+	// s9 (not tested)
+	@Test
+	public void FailedCookOmeleteWithInvalidSize() throws ElementAlreadyExistException, InvalidRoleException {
+		// TODO: Check if working
+		
+		// Given
+		this.elementService.addNewElement(demoEntity, this.demo_user_manager.getEmail());
+
+		// When
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("eggSize", "extraSmall");
+		ActivityTO activity = new ActivityTO("playground_lazar", "playground_lazar", "1",
+				Activities.CookOmelette.getActivityName(), "playground_lazar", "asdfsd", map);
+
+		activity.setElementId(this.demoEntity.getId());
+		activity.setElementPlayground(demoEntity.getPlayground());
+
+		MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
+		params.add("userPlayground", "playground_lazar");
+		params.add("email", "demo@gmail.com");
+		ActivityTO result = rest.postForObject(url + "/{userPlayground}/{email}", activity, ActivityTO.class, params);
+
 	}
 	
 }

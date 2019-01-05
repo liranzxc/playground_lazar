@@ -10,7 +10,6 @@ import com.example.demo.element.ElementEntity;
 public class Fridge extends ElementEntity{
 
 	
-	
 	public Fridge() {
 		super();
 	}
@@ -25,7 +24,7 @@ public class Fridge extends ElementEntity{
 		super(playground, id, x, y, name, creationDate, expireDate, type, attributes, creatorPlayground, creatorEmail);
 		
 		this.attributes = new HashMap<String, Object>();
-		this.attributes.put(ActivityTypes.ENTER_TO_REFRIGERATOR.getName(), new Long(30));
+		this.attributes.put(ActivityTypes.ENTER_TO_REFRIGERATOR.getName(), ActivityTypes.ENTER_TO_REFRIGERATOR.getPoints());
 
 		
 	}

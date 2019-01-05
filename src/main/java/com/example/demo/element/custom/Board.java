@@ -23,7 +23,7 @@ public class Board extends ElementEntity {
 		super(playground, id, x, y, name, creationDate, expireDate, type, attributes, creatorPlayground, creatorEmail);
 		
 		this.attributes = new HashMap<String, Object>();
-		this.attributes.put(ActivityTypes.BOARDPOST.getName(), new Long(10));
-		this.attributes.put(ActivityTypes.BOARDREAD.getName(), new Long(1));
+		this.attributes.put(ActivityTypes.BOARDPOST.getName(), ActivityTypes.BOARDPOST.getPoints());
+		this.attributes.put(ActivityTypes.BOARDREAD.getName(), ActivityTypes.BOARDREAD.getPoints());
 	}
 }
