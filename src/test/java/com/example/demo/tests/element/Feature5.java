@@ -155,6 +155,7 @@ public class Feature5 {
 			success = true;
 		} catch (Exception e) {
 			// do nothing
+			System.err.println("There was exception");
 		}
 
 		// that
