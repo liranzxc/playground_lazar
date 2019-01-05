@@ -17,6 +17,7 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
+import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import com.example.demo.element.ElementEntity;
@@ -67,7 +68,7 @@ public class Feature6 {
 
 	private String url;
 
-	private RestTemplate restTemplate;
+	private TestRestTemplate restTemplate;
 
 	@Autowired
 	private ElementService elementService;
@@ -77,7 +78,7 @@ public class Feature6 {
 
 	@PostConstruct
 	public void init() {
-		this.restTemplate = new RestTemplate();
+		this.restTemplate = new TestRestTemplate();
 		this.url = "http://localhost:" + port + "/playground/elements";
 		
 		this.demo_user_manager = new UserEntity("demoManager@gmail.com", "playground_lazar", "mr.manajer", null, "Manager");
@@ -185,8 +186,8 @@ public class Feature6 {
 	@Test(expected = ElementNotFoundException.class)
 	public void updateElementThatDoesntExist() throws ElementNotFoundException {
 		ElementTO eto = new ElementTO(demo_entity);
-		String userPlayground = "lazar_2019";
-		String email = "demo@gmail.com";
+		String userPlayground = demo_user_manager.getPlayground();
+		String email = demo_user_manager.getEmail();
 		String playground = eto.getPlayground();
 		String id = eto.getId();
 

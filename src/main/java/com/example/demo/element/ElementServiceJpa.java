@@ -16,6 +16,10 @@ import com.example.demo.aop.ToLog;
 import com.example.demo.aop.UserPermission;
 import com.example.demo.application.exceptions.InvalidPageRequestException;
 import com.example.demo.application.exceptions.InvalidPageSizeRequestException;
+import com.example.demo.element.custom.Board;
+import com.example.demo.element.custom.ElementTypes;
+import com.example.demo.element.custom.Fridge;
+import com.example.demo.element.custom.Pot;
 import com.example.demo.element.exceptions.ElementAlreadyExistException;
 import com.example.demo.element.exceptions.ElementNotFoundException;
 import com.example.demo.element.exceptions.InvalidAttributeNameException;
@@ -42,10 +46,12 @@ public class ElementServiceJpa implements ElementService {
 	@UserPermission(permissions={Types.Manager})
 	@ToLog
 	public void addNewElement(ElementEntity et, @EmailValue String email) throws ElementAlreadyExistException, InvalidRoleException {
-//		String role = email;
-//		if(!role.equals("Manager")) {
-//			throw new InvalidRoleException("only manager can add new Elements");
-//		}
+		String elementType =  et.getType();
+		for (ElementTypes type : ElementTypes.values()) {
+			if(elementType.equals(type.getName())) {
+				et = convertElementBaseOnType(et, type);
+			}
+		}
 		
 		int newID = ++ID;
 		String key = ElementEntity.createKeyFromIdAndPlayground(newID + "", et.getPlayground());
@@ -64,10 +70,12 @@ public class ElementServiceJpa implements ElementService {
 	@UserPermission(permissions={Types.Manager})
 	@ToLog
 	public void addElementFromOutside(ElementEntity et, @EmailValue String email) throws ElementAlreadyExistException, InvalidRoleException {
-//		String role = email;
-//		if(!role.equals("Manager")) {
-//			throw new InvalidRoleException("only manager can add new Elements");
-//		}
+		String elementType =  et.getType();
+		for (ElementTypes type : ElementTypes.values()) {
+			if(elementType.equals(type.getName())) {
+				et = convertElementBaseOnType(et, type);
+			}
+		}
 		
 		String key = et.getKey();
 
@@ -329,6 +337,25 @@ public class ElementServiceJpa implements ElementService {
 		}
 
 		return true;
+	}
+	
+	private ElementEntity convertElementBaseOnType(ElementEntity entity,ElementTypes type) {
+		switch(type) {
+		
+		case BOARD:{
+			return new Board(entity);
+		}
+		case POT:{
+			return new Pot(entity);
+		}
+		case FRIDGE:{
+			return new Fridge(entity);
+		}
+		}
+		
+		return entity;
+		
+		
 	}
 
 	public static void setIDToZero() {

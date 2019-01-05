@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.example.demo.application.exceptions.InvalidPageRequestException;
 import com.example.demo.application.exceptions.InvalidPageSizeRequestException;
+import com.example.demo.element.custom.ElementTypes;
 import com.example.demo.element.exceptions.ElementAlreadyExistException;
 import com.example.demo.element.exceptions.ElementNotFoundException;
 import com.example.demo.element.exceptions.InvalidAttributeNameException;
@@ -28,17 +29,12 @@ import com.example.demo.user.exceptions.InvalidRoleException;
 public class ElementsController {
 
 	private ElementService elementService;
-	private UserVerifyier userVerifier;
 	
 	@Autowired
 	public void setElementService(ElementService elementService) {
 		this.elementService = elementService;
 	}
 	
-	@Autowired
-	public void setUserVerifier(UserVerifyier verifier) {
-		this.userVerifier = verifier;
-	}
 	
 
 	/*
@@ -51,7 +47,6 @@ public class ElementsController {
 			@PathVariable(name = "email", required = true) String email)
 			throws InvalidEmailException, ElementAlreadyExistException, InvalidRoleException {
 
-	
 		System.err.println("Start add element in Controller");
 		this.elementService.addNewElement(element.ToEntity(), email);
 
