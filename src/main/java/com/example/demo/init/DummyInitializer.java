@@ -15,7 +15,7 @@ import com.example.demo.user.exceptions.EmailAlreadyRegisteredException;
 import com.example.demo.user.exceptions.InvalidEmailException;
 import com.example.demo.user.exceptions.InvalidRoleException;
 
-@Component
+//@Component
 @Profile("presentation")
 public class DummyInitializer {
 	private UserService service;
@@ -27,13 +27,13 @@ public class DummyInitializer {
 	
 	@PostConstruct
 	public void init() {
-		String playground = "{$playground.name}";
+		String playground = "${playground.name}";
 		String role = TypesEnumUser.Types.Manager.toString();
 		String email = "playground@gmail.com";
 		try {
 			service.registerNewUser(new UserEntity(email, playground, "DemoManager" , "no avatar" , role));
 		} catch (Exception e) {
-			throw new RuntimeException();
+			//do nothing
 		}
 	}
 }
