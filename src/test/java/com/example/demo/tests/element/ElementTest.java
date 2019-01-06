@@ -200,10 +200,10 @@ public class ElementTest {
 	
 	// Scenario 4
 	@Test(expected = ElementAlreadyExistException.class)
-	public void createElementWhenElementAlreadyExist() throws ElementAlreadyExistException, InterruptedException {
+	public void createElementWhenElementAlreadyExist() throws ElementAlreadyExistException, InterruptedException, InvalidRoleException {
 		// given
 
-		this.elementService.addElementFromOutside(demo_entity);
+		this.elementService.addElementFromOutside(demo_entity, demo_user_manager.getEmail());
 
 		// when
 		ElementTO eto = new ElementTO(demo_entity);
@@ -225,10 +225,10 @@ public class ElementTest {
 
 	// Scenario 1: 
 	@Test
-	public void updateElementSuccessfullyByManager() throws ElementAlreadyExistException {
+	public void updateElementSuccessfullyByManager() throws ElementAlreadyExistException, InvalidRoleException {
 		// given
 		ElementTO eto = new ElementTO(demo_entity);
-		this.elementService.addNewElement(eto.ToEntity());
+		this.elementService.addNewElement(eto.ToEntity(), demo_user_manager.getEmail());
 
 		String playground = eto.getPlayground();
 		String id = eto.getId();
@@ -243,10 +243,10 @@ public class ElementTest {
 
 	// Scenario 2
 	@Test
-	public void updateElementFailedByPlayer() throws ElementAlreadyExistException {
+	public void updateElementFailedByPlayer() throws ElementAlreadyExistException, InvalidRoleException {
 		// given
 		ElementTO eto = new ElementTO(demo_entity);
-		this.elementService.addNewElement(eto.ToEntity());
+		this.elementService.addNewElement(eto.ToEntity(), demo_user_manager.getEmail());
 
 		String playground = eto.getPlayground();
 		String id = eto.getId();
@@ -290,11 +290,11 @@ public class ElementTest {
 
 	// Scenario 1: 
 	@Test
-	public void getSpecificElementSuccessByPlayer() throws ElementNotFoundException, ElementAlreadyExistException {
+	public void getSpecificElementSuccessByPlayer() throws ElementNotFoundException, ElementAlreadyExistException, InvalidRoleException {
 		
 		// given: an elementEntity with "id":1
 		ElementTO originalElementTO = new ElementTO(demo_entity);
-		this.elementService.addNewElement(originalElementTO.ToEntity());
+		this.elementService.addNewElement(originalElementTO.ToEntity(), demo_user_manager.getEmail());
 
 		// when
 		String userPlayground = "playground_lazar";
@@ -316,13 +316,13 @@ public class ElementTest {
 
 	// Scenario 2:
 	@Test
-	public void getSpecificElementWithExpiredDate_FailedByPlayer() throws ElementNotFoundException, ElementAlreadyExistException, InterruptedException {
+	public void getSpecificElementWithExpiredDate_FailedByPlayer() throws ElementNotFoundException, ElementAlreadyExistException, InterruptedException, InvalidRoleException {
 
 		demo_entity.setExpireDate(new Date());
 		Thread.sleep(50);
 		
 		ElementTO originalElementTO = new ElementTO(demo_entity);
-		this.elementService.addNewElement(originalElementTO.ToEntity());
+		this.elementService.addNewElement(originalElementTO.ToEntity(), demo_user_manager.getEmail());
 
 		// when
 		String userPlayground = "playground_lazar";
@@ -343,13 +343,13 @@ public class ElementTest {
 	// Scenario 3
 	@Test
 	public void getSpecificElementWithExpiredDate_SuccessByManager()
-			throws ElementNotFoundException, ElementAlreadyExistException, InterruptedException {
+			throws ElementNotFoundException, ElementAlreadyExistException, InterruptedException, InvalidRoleException {
 
 		demo_entity.setExpireDate(new Date());
 		Thread.sleep(50);
 
 		ElementTO originalElementTO = new ElementTO(demo_entity);
-		this.elementService.addNewElement(originalElementTO.ToEntity());
+		this.elementService.addNewElement(originalElementTO.ToEntity(), demo_user_manager.getEmail());
 
 		// when
 		String elementPlayground = originalElementTO.getPlayground();
@@ -390,9 +390,9 @@ public class ElementTest {
 
 	// scenario 1:
 	@Test
-	public void GetAllElementsSuccessWithOneElement() throws ElementAlreadyExistException {
+	public void GetAllElementsSuccessWithOneElement() throws ElementAlreadyExistException, InvalidRoleException {
 		// Given:
-		this.elementService.addNewElement(this.demo_entity);
+		this.elementService.addNewElement(this.demo_entity, demo_user_manager.getEmail());
 
 		// When:
 
@@ -429,9 +429,9 @@ public class ElementTest {
 	
 	//scenario 3
 	@Test
-	public void getAllElementsAsPlayer_GetArrayOfTenElementsWhichIsNotExpired() throws ElementAlreadyExistException {
+	public void getAllElementsAsPlayer_GetArrayOfTenElementsWhichIsNotExpired() throws ElementAlreadyExistException, InvalidRoleException {
 		for (ElementEntity elementEntity : demo_entities) {
-			this.elementService.addNewElement(elementEntity);
+			this.elementService.addNewElement(elementEntity, demo_user_manager.getEmail());
 		}
 
 		ElementTO[] allElements = this.restTemplate.getForObject(this.url + "/{userPlayground}/{email}/all",
@@ -454,10 +454,10 @@ public class ElementTest {
 
 	// scenario 1
 	@Test
-	public void GetOneElementSuccessfulyInDistanceOne() throws ElementAlreadyExistException {
+	public void GetOneElementSuccessfulyInDistanceOne() throws ElementAlreadyExistException, InvalidRoleException {
 
 		// Given: an array of one ElementEntity in database with size >0
-		this.elementService.addNewElement(this.demo_entity);
+		this.elementService.addNewElement(this.demo_entity, demo_user_manager.getEmail());
 
 		// When:
 		double x = this.demo_entity.getX() + 1.0;
@@ -479,10 +479,10 @@ public class ElementTest {
 	// scenario 2
 	@Test
 	public void GetElementsFailedWithInvalidDistance()
-			throws ElementAlreadyExistException, InvalidDistanceValueException {
+			throws ElementAlreadyExistException, InvalidDistanceValueException, InvalidRoleException {
 
 		// Given: an array of ElementEntity array is database in size >0
-		this.elementService.addNewElement(this.demo_entity);
+		this.elementService.addNewElement(this.demo_entity, demo_user_manager.getEmail());
 
 		// When:
 		String userPlayground = "playground_lazar";
@@ -504,10 +504,10 @@ public class ElementTest {
 	
 	// Scenario 3
 	@Test
-	public void GetNoElementNearLocationZeroZeroAndDistanceOne() throws ElementAlreadyExistException {
+	public void GetNoElementNearLocationZeroZeroAndDistanceOne() throws ElementAlreadyExistException, InvalidRoleException {
 		
 		// Given: 
-		this.elementService.addNewElement(this.demo_entity);
+		this.elementService.addNewElement(this.demo_entity, demo_user_manager.getEmail());
 		
 		// When:
 		double x = 1.0, y = 1.0, distance = 0.0;
@@ -529,7 +529,7 @@ public class ElementTest {
 	// scenario 4 (pagination)
 	@Test
 	public void GetTheFirstTenResultsFromTwentyElementsInDisanceOneOrLower()
-			throws ElementAlreadyExistException, InvalidDistanceValueException {
+			throws ElementAlreadyExistException, InvalidDistanceValueException, InvalidRoleException {
 
 		for (ElementEntity e : this.demo_entities) {
 			if (Integer.parseInt(e.getId()) % 2 == 1) {
@@ -543,7 +543,7 @@ public class ElementTest {
 
 		// Given: 20 elements in distance 1 or lower
 		for (ElementEntity e : this.demo_entities) {
-			this.elementService.addNewElement(e);
+			this.elementService.addNewElement(e, demo_user_manager.getEmail());
 		}
 
 		// When: 
@@ -565,7 +565,7 @@ public class ElementTest {
 	
 	// scenario 5 
 	@Test
-	public void getAllElementNearByTenAsPlayer() throws ElementAlreadyExistException {
+	public void getAllElementNearByTenAsPlayer() throws ElementAlreadyExistException, InvalidRoleException {
 
 		for (ElementEntity e : this.demo_entities) {
 			if (Integer.parseInt(e.getId()) % 2 == 1) {
@@ -579,7 +579,7 @@ public class ElementTest {
 
 		// Given: 20 elements in distance 1 or lower
 		for (ElementEntity e : this.demo_entities) {
-			this.elementService.addNewElement(e);
+			this.elementService.addNewElement(e, demo_user_manager.getEmail());
 		}
 
 		// When: 

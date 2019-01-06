@@ -28,6 +28,9 @@ import com.example.demo.activity.ActivityTO;
 import com.example.demo.element.ElementEntity;
 import com.example.demo.element.ElementServiceJpa;
 import com.example.demo.element.exceptions.ElementAlreadyExistException;
+import com.example.demo.user.UserEntity;
+import com.example.demo.user.UserService;
+import com.example.demo.user.exceptions.InvalidRoleException;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
@@ -49,24 +52,45 @@ public class ActivityTest {
 	@Autowired
 	private ElementServiceJpa elementService;
 	
+	@Autowired
+	private UserService userService;
+	
+
+	private UserEntity demo_user_player;
+	private UserEntity demo_user_manager;
+	
+	
 	@PostConstruct
 	public void init() {
 
 		this.url = "http://localhost:" + port + "/playground/activites";
 		//System.err.println(this.url);
 		
+		this.demo_user_manager = new UserEntity("demoManager@gmail.com", "playground_lazar", "mr.manajer", null, "Manager");
+		this.demo_user_player = new UserEntity("demoPlayer@gmail.com", "playground_lazar", "mr.palayer", null, "Player");
+		
+		
 		this.demoEntity = new ElementEntity("playground_lazar", "1", 0, 0, "postBoard", new Date(), null, "postBoard", null, null, null);
 	}
 	
 	@Before
 	public void setup() {
-		ElementServiceJpa.setIDToZero();
+		ElementServiceJpa.setIDToZero(); // reset the ID to 0 after each test
+		
+		try {
+			this.userService.registerNewUser(demo_user_manager);
+			this.userService.registerNewUser(demo_user_player);
+		} catch (Exception e) {
+			System.err.println("ElementTest setup exception on registering users, exception is:");
+			System.err.println(e.getMessage());
+		}		
 	}
 	
 	@After
 	public void teardown() {
 		service.cleanUp();
 		this.elementService.cleanup();
+		this.userService.cleanup();
 	}
 
 	// Feature 11
@@ -74,9 +98,9 @@ public class ActivityTest {
 
 	//s1
 	@Test
-	public void EchoActivity() throws ElementAlreadyExistException {
+	public void EchoActivity() throws ElementAlreadyExistException, InvalidRoleException {
 		
-		this.elementService.addNewElement(demoEntity);
+		this.elementService.addNewElement(demoEntity, this.demo_user_manager.getEmail());
 		
 		Map <String,Object> map = new HashMap<String,Object>();
 		map.put("Attribute", "Test");
@@ -101,9 +125,9 @@ public class ActivityTest {
 	
 	//s2
 	@Test
-	public void AddBoardPostActivity() throws ElementAlreadyExistException {
+	public void AddBoardPostActivity() throws ElementAlreadyExistException, InvalidRoleException {
 		//Given
-		this.elementService.addNewElement(demoEntity);
+		this.elementService.addNewElement(demoEntity, this.demo_user_manager.getEmail());
 
 		Map <String,Object> map = new HashMap<String,Object>();
 		map.put("poster", "Tal");
@@ -126,9 +150,9 @@ public class ActivityTest {
 	
 	//s3
 	@Test
-	public void ReadTwoMessages() throws ElementAlreadyExistException {
+	public void ReadTwoMessages() throws ElementAlreadyExistException, InvalidRoleException {
 		//Given
-		this.elementService.addNewElement(demoEntity);
+		this.elementService.addNewElement(demoEntity, this.demo_user_manager.getEmail());
 
 		//first message
 		Map <String,Object> map = new HashMap<String,Object>();
@@ -188,9 +212,9 @@ public class ActivityTest {
 	
 	// s4
 	@Test(expected = Exception.class) //status <> 2xx
-	public void ThrowWhenTypeIsNotExist() throws ElementAlreadyExistException {
+	public void ThrowWhenTypeIsNotExist() throws ElementAlreadyExistException, InvalidRoleException {
 		//Given
-		this.elementService.addNewElement(demoEntity);
+		this.elementService.addNewElement(demoEntity, this.demo_user_manager.getEmail());
 
 		Map <String,Object> map = new HashMap<String,Object>();
 		map.put("attribute1", "Tal");
@@ -212,9 +236,9 @@ public class ActivityTest {
 	
 	// s5
 	@Test(expected = Exception.class) //status <> 2xx
-	public void ThrowWhenAttributesAreInvalid() throws ElementAlreadyExistException {
+	public void ThrowWhenAttributesAreInvalid() throws ElementAlreadyExistException, InvalidRoleException {
 		//Given
-		this.elementService.addNewElement(demoEntity);
+		this.elementService.addNewElement(demoEntity, this.demo_user_manager.getEmail());
 
 		Map <String,Object> map = new HashMap<String,Object>();
 		map.put("attribute1", "Tal");
@@ -236,9 +260,9 @@ public class ActivityTest {
 	}
 	
 	@Test
-	public void ReadBoardWhenEmpty() throws ElementAlreadyExistException {
+	public void ReadBoardWhenEmpty() throws ElementAlreadyExistException, InvalidRoleException {
 		//Given
-		this.elementService.addNewElement(demoEntity);
+		this.elementService.addNewElement(demoEntity, this.demo_user_manager.getEmail());
 
 		//When
 		Map <String,Object> map2 = new HashMap<String,Object>();
@@ -260,9 +284,9 @@ public class ActivityTest {
 	
 	// s6
 	@Test
-	public void TestCookOmelete() throws ElementAlreadyExistException {
+	public void TestCookOmelete() throws ElementAlreadyExistException, InvalidRoleException {
 		//Given
-		this.elementService.addNewElement(demoEntity);
+		this.elementService.addNewElement(demoEntity, this.demo_user_manager.getEmail());
 
 		//When
 		Map <String,Object> map = new HashMap<String,Object>();
@@ -285,9 +309,9 @@ public class ActivityTest {
 	
 	//s7
 	@Test
-	public void TestOmeletteEggSizes() throws ElementAlreadyExistException {
+	public void TestOmeletteEggSizes() throws ElementAlreadyExistException, InvalidRoleException {
 		//Given
-		this.elementService.addNewElement(demoEntity);
+		this.elementService.addNewElement(demoEntity, this.demo_user_manager.getEmail());
 
 		//When
 		Map <String,Object> smallMap = new HashMap<String,Object>();
