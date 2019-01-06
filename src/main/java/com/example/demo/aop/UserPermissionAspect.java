@@ -71,7 +71,7 @@ public class UserPermissionAspect {
 		 for (Types type : permissionsTypes) {
 			 permissions.add(type.name());
 		}
-		 System.err.println("&&& -- " + permissions.toString());
+		 System.err.println("The only users that can use are: " + permissions.toString());
 		
 		 
 		 

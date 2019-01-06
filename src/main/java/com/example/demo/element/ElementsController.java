@@ -116,6 +116,7 @@ public class ElementsController {
 			@RequestParam(name = "page", required = false, defaultValue = "0") int page)
 			throws InvalidDistanceValueException, InvalidPageSizeRequestException, InvalidPageRequestException, InvalidRoleException {
 
+		System.err.println("We are in the controller");
 		List<ElementEntity> nearBy = this.elementService.getAllElementsNearBy(x, y, distance, email, PageRequest.of(page, size));
 		return nearBy.stream().map(ElementTO::new).collect(Collectors.toList()).toArray(new ElementTO[nearBy.size()]);
 

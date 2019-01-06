@@ -41,7 +41,7 @@ public class Feature9 {
 
 	private int numOfDemoEntities = 20;
 	private ElementEntity[] demo_entities;
-	private ElementEntity demo_entity;
+	private ElementEntity demo_element;
 	
 	private UserEntity demo_user_player;
 	private UserEntity demo_user_manager;
@@ -89,7 +89,7 @@ public class Feature9 {
 		
 		//System.err.println(this.url);
 		Location demo_entity_location = new Location(0,1);
-		this.demo_entity = new ElementEntity(
+		this.demo_element = new ElementEntity(
 				"playground_lazar", "1", demo_entity_location.getX(), demo_entity_location.getY()
 				,"demo", new Date(), null, "demo type", null, "Aviv", "demo@gmail.com");
 		
@@ -138,29 +138,31 @@ public class Feature9 {
 	}
 
 
-	/////////////////////////////////////////////////
-	/////////////////// Feature 9 ///////////////////
-	/////////////////////////////////////////////////
+	
 
 	// scenario 1
 	@Test
 	public void GetOneElementSuccessfulyInDistanceOne() throws ElementAlreadyExistException, InvalidRoleException {
 
 		// Given: an array of one ElementEntity in database with size >0
-		this.elementService.addNewElement(this.demo_entity, this.demo_user_manager.getEmail());
+		this.elementService.addNewElement(this.demo_element, this.demo_user_manager.getEmail());
 
+		
 		// When:
-		double x = this.demo_entity.getX() + 1.0;
-		double y = this.demo_entity.getY();
+		double x = this.demo_element.getX() + 1.0;
+		double y = this.demo_element.getY();
 		double distance = 1.0;
 
+		if(this.restTemplate == null)
+			System.err.println("BAD");
 		ElementTO[] allElements = this.restTemplate.getForObject(
 				this.url + "/{userPlayground}/{email}/near/{x}/{y}/{distance}", ElementTO[].class, 
 				demo_user_manager.getPlayground(), demo_user_manager.getEmail(), x, y, distance);
 
+		System.err.println("here");
 		// Than:
 		boolean success = false;
-		if (allElements.length == 1 && allElements[0].equals(new ElementTO(this.demo_entity)))
+		if (allElements.length == 1 && allElements[0].equals(new ElementTO(this.demo_element)))
 			success = true;
 
 		assertTrue(success);
@@ -172,7 +174,7 @@ public class Feature9 {
 			throws ElementAlreadyExistException, InvalidDistanceValueException, InvalidRoleException {
 
 		// Given: an array of ElementEntity array is database in size >0
-		this.elementService.addNewElement(this.demo_entity, this.demo_user_manager.getEmail());
+		this.elementService.addNewElement(this.demo_element, this.demo_user_manager.getEmail());
 
 		// When:
 		String userPlayground = "playground_lazar";
@@ -197,7 +199,7 @@ public class Feature9 {
 	public void GetNoElementNearLocationZeroZeroAndDistanceOne() throws ElementAlreadyExistException, InvalidRoleException {
 		
 		// Given: 
-		this.elementService.addNewElement(this.demo_entity, this.demo_user_manager.getEmail());
+		this.elementService.addNewElement(this.demo_element, this.demo_user_manager.getEmail());
 		
 		// When:
 		double x = 1.0, y = 1.0, distance = 0.0;
