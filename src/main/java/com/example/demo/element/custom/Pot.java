@@ -4,7 +4,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.example.demo.activity.plugins.ActivityTypes;
+import com.example.demo.activity.ActivityEnumTypes.Activities;
 import com.example.demo.element.ElementEntity;
 
 public class Pot extends ElementEntity{
@@ -23,7 +23,7 @@ public class Pot extends ElementEntity{
 		super(playground, id, x, y, name, creationDate, expireDate, type, attributes, creatorPlayground, creatorEmail);
 		
 		this.attributes = new HashMap<String, Object>();
-		this.attributes.put(ActivityTypes.COOKOMMELETTE.getName(), ActivityTypes.COOKOMMELETTE.getPoints());
+		this.attributes.put(Activities.CookOmelette.getName(), Activities.CookOmelette.getPoints());
 	}
 
 }

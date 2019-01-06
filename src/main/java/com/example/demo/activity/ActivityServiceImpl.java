@@ -15,10 +15,12 @@ import org.springframework.transaction.annotation.Transactional;
 import com.example.demo.activity.exceptions.ActivityAlreadyExistException;
 import com.example.demo.activity.plugins.ActivityHandler;
 import com.example.demo.activity.plugins.PlaygroundPlugin;
+import com.example.demo.aop.UserPermission;
 import com.example.demo.element.ElementEntity;
 import com.example.demo.element.exceptions.ElementNotFoundException;
 import com.example.demo.element.exceptions.InvalidAttributeNameException;
 import com.example.demo.element.exceptions.InvalidElementForActivityException;
+import com.example.demo.user.TypesEnumUser.Types;
 import com.example.demo.user.exceptions.InvalidEmailException;
 import com.example.demo.user.exceptions.InvalidRoleException;
 import com.example.demo.user.exceptions.UserNotFoundException;
@@ -52,6 +54,8 @@ public class ActivityServiceImpl implements ActivityService {
 	
 	@Transactional
 	@Override
+	// TODO: 
+//	@UserPermission(permissions= {Types.Player})
 	public void addNewActivity(ActivityEntity entity) throws ActivityAlreadyExistException, ElementNotFoundException, InvalidRoleException, UserNotFoundException, InvalidElementForActivityException, InvalidEmailException {
 		entity.setKey(ActivityEntity.generateKey(playground, ""+Id++));
 		String key = entity.getKey();
