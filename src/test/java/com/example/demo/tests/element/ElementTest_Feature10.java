@@ -34,7 +34,7 @@ import com.example.demo.user.exceptions.InvalidRoleException;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
-public class Feature10 {
+public class ElementTest_Feature10 {
 
 	private int numOfEntities = 20;
 	private ElementEntity[] demo_entities;
@@ -142,7 +142,7 @@ public class Feature10 {
 		// Given:
 		demo_entity.setExpireDate(new Date(1,1,1));
 		Thread.sleep(50);
-		this.elementService.addNewElement(this.demo_entity, this.demo_user_manager.getEmail());
+		this.elementService.addNewElement(this.demo_entity, demo_user_manager.getEmail());
 		
 		// When:
 		boolean isSuccess = false;
@@ -166,7 +166,7 @@ public class Feature10 {
 
 	private boolean scenario1(String attributeName, String value) throws ElementAlreadyExistException, InvalidRoleException {
 		// Given:
-		this.elementService.addNewElement(this.demo_entity, this.demo_user_manager.getEmail());
+		this.elementService.addNewElement(this.demo_entity, demo_user_manager.getEmail());
 
 		// When:
 
@@ -191,7 +191,7 @@ public class Feature10 {
 			if (Integer.parseInt(e.getId()) == 6) {
 				e.setName("demo_target"); // the test
 			}
-			this.elementService.addNewElement(e, this.demo_user_manager.getEmail());
+			this.elementService.addNewElement(e, demo_user_manager.getEmail());
 		}
 
 		// When:
@@ -221,7 +221,7 @@ public class Feature10 {
 			if (Integer.parseInt(e.getId()) == 6) {
 				e.setType("demo_target"); // the test
 			}
-			this.elementService.addNewElement(e, this.demo_user_manager.getEmail());
+			this.elementService.addNewElement(e, demo_user_manager.getEmail());
 		}
 
 		// When:
@@ -252,7 +252,7 @@ public class Feature10 {
 			if (i < 5) {
 				demo_entities[i].setName("demo_target");
 			}
-			this.elementService.addNewElement(demo_entities[i], this.demo_user_manager.getEmail());
+			this.elementService.addNewElement(demo_entities[i], demo_user_manager.getEmail());
 		}
 
 		// When:
@@ -287,7 +287,7 @@ public class Feature10 {
 			if (i < 5) {
 				demo_entities[i].setType("demo_target");
 			}
-			this.elementService.addNewElement(demo_entities[i], this.demo_user_manager.getEmail());
+			this.elementService.addNewElement(demo_entities[i], demo_user_manager.getEmail());
 		}
 
 		// When:
@@ -318,7 +318,7 @@ public class Feature10 {
 	@Test
 	public void findElementFailedByInvalidAttributeNameInDatabaseWithOneElement() throws ElementAlreadyExistException, InvalidRoleException {
 		// Given:
-		this.elementService.addNewElement(this.demo_entity, this.demo_user_manager.getEmail());
+		this.elementService.addNewElement(this.demo_entity, demo_user_manager.getEmail());
 
 		// When:
 		String attributeName = "attack";
@@ -355,7 +355,7 @@ public class Feature10 {
 		ArrayList<ElementEntity> demo_targets = new ArrayList<>();
 
 		for (ElementEntity e : this.demo_entities) {
-			this.elementService.addNewElement(e, this.demo_user_manager.getEmail());
+			this.elementService.addNewElement(e, demo_user_manager.getEmail());
 		}
 
 		demo_targets.trimToSize();
@@ -393,7 +393,7 @@ public class Feature10 {
 	private boolean scenario6(String attributeName, String value) throws ElementAlreadyExistException, InvalidRoleException {
 
 		for (ElementEntity e : this.demo_entities) {
-			this.elementService.addNewElement(e, this.demo_user_manager.getEmail());
+			this.elementService.addNewElement(e, demo_user_manager.getEmail());
 		}
 
 		// When:
@@ -429,7 +429,7 @@ public class Feature10 {
 	private boolean scenario7(String attributeName, String value) throws ElementAlreadyExistException, InvalidRoleException {
 		// Given: 20 elements entities in database (which 5 of them are the targets)
 		for (ElementEntity e : this.demo_entities) {
-			this.elementService.addNewElement(e, this.demo_user_manager.getEmail());
+			this.elementService.addNewElement(e, demo_user_manager.getEmail());
 		}
 
 		// When:

@@ -33,7 +33,7 @@ public class BoardReadPlugin implements PlaygroundPlugin{
 		try {
 			BoardMessagePageable messagesPageable = this.jackson.readValue(et.getJsonAttributes(), BoardMessagePageable.class);
 			BoardMessagePage messagePage =  new BoardMessagePage(this.repository.findByType(
-					Activities.BoardPost.getName(),
+					Activities.BoardPost.getActivityName(),
 					PageRequest.of(messagesPageable.getPage(), messagesPageable.getSize(), Direction.ASC, "key"))
 					.stream()
 					.map(BoardReadPlugin::getMessageFromBoardMessage)

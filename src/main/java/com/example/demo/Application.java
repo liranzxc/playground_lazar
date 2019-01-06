@@ -10,6 +10,13 @@ import com.example.demo.user.UserRepository;
 
 @SpringBootApplication
 public class Application {
+//    private static String PLAYGROUND_NAME;
+//
+//    @Value("${playground.name}")
+//    public void setSvnUrl(String name) {
+//    	PLAYGROUND_NAME = name;
+//    }
+	
 	
 	public static void main(String[] args) {
 		SpringApplication.run(Application.class, args);

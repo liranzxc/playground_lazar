@@ -40,8 +40,7 @@ public class ActivityTest {
 	private int port;
 	private String url;
 
-	private UserEntity demo_user_manager;
-	private UserEntity demo_user_player;
+	
 	private ElementEntity demoEntity;
 	
 	RestTemplate rest = new RestTemplate();
@@ -49,32 +48,42 @@ public class ActivityTest {
 	@Autowired
 	private ActivityService service;
 	
-	@Autowired
-	private UserService userService;
 	
 	@Autowired
 	private ElementServiceJpa elementService;
+	
+	@Autowired
+	private UserService userService;
+	
+
+	private UserEntity demo_user_player;
+	private UserEntity demo_user_manager;
+	
 	
 	@PostConstruct
 	public void init() {
 
 		this.url = "http://localhost:" + port + "/playground/activites";
 		//System.err.println(this.url);
+		
 		this.demo_user_manager = new UserEntity("demoManager@gmail.com", "playground_lazar", "mr.manajer", null, "Manager");
 		this.demo_user_player = new UserEntity("demoPlayer@gmail.com", "playground_lazar", "mr.palayer", null, "Player");
+		
 		
 		this.demoEntity = new ElementEntity("playground_lazar", "1", 0, 0, "postBoard", new Date(), null, "postBoard", null, null, null);
 	}
 	
 	@Before
 	public void setup() {
-		ElementServiceJpa.setIDToZero();
+		ElementServiceJpa.setIDToZero(); // reset the ID to 0 after each test
+		
 		try {
 			this.userService.registerNewUser(demo_user_manager);
 			this.userService.registerNewUser(demo_user_player);
-		}catch(Exception e ) {
-			System.err.println("failed to register new user");
-		}
+		} catch (Exception e) {
+			System.err.println("ElementTest setup exception on registering users, exception is:");
+			System.err.println(e.getMessage());
+		}		
 	}
 	
 	@After
@@ -87,9 +96,9 @@ public class ActivityTest {
 	// Feature 11
 
 
-	//Scenario 1
+	//s1
 	@Test
-	public void SuccessEchoActivity() throws ElementAlreadyExistException, InvalidRoleException {
+	public void EchoActivity() throws ElementAlreadyExistException, InvalidRoleException {
 		
 		this.elementService.addNewElement(demoEntity, this.demo_user_manager.getEmail());
 		
@@ -116,7 +125,7 @@ public class ActivityTest {
 	
 	//s2
 	@Test
-	public void SuccessfulAddPostOnBoard() throws ElementAlreadyExistException, InvalidRoleException {
+	public void AddBoardPostActivity() throws ElementAlreadyExistException, InvalidRoleException {
 		//Given
 		this.elementService.addNewElement(demoEntity, this.demo_user_manager.getEmail());
 
@@ -124,7 +133,7 @@ public class ActivityTest {
 		map.put("poster", "Tal");
 		map.put("message", "This is a test");
 		ActivityTO activity = new ActivityTO("playground_lazar", "playground_lazar", "1", 
-				Activities.BoardPost.getName(), "playground_lazar", "asdfsd", map);
+				Activities.BoardPost.getActivityName(), "playground_lazar", "asdfsd", map);
 		
 		activity.setElementId(this.demoEntity.getId());
 		activity.setElementPlayground(demoEntity.getPlayground());
@@ -149,7 +158,7 @@ public class ActivityTest {
 		Map <String,Object> map = new HashMap<String,Object>();
 		map.put("poster", "Tal");
 		map.put("message", "This is a test");
-		ActivityTO activity = new ActivityTO("playground_lazar",  "playground_lazar", "1", Activities.BoardPost.getName() , 
+		ActivityTO activity = new ActivityTO("playground_lazar",  "playground_lazar", "1", Activities.BoardPost.getActivityName() , 
 				"playground_lazar", "asdfsd", map);
 		
 		activity.setElementId(this.demoEntity.getId());
@@ -165,7 +174,7 @@ public class ActivityTest {
 		Map <String,Object> map1 = new HashMap<String,Object>();
 		map1.put("poster", "Human");
 		map1.put("message", "Generic message");
-		ActivityTO activity1 = new ActivityTO("playground_lazar", "playground_lazar", "1", Activities.BoardPost.getName() , 
+		ActivityTO activity1 = new ActivityTO("playground_lazar", "playground_lazar", "1", Activities.BoardPost.getActivityName() , 
 				"playground_lazar", "asdfsd", map1);
 		
 		
@@ -184,7 +193,7 @@ public class ActivityTest {
 		Map <String,Object> map2 = new HashMap<String,Object>();
 		map2.put("page", 0);
 		map2.put("size", 5);
-		ActivityTO activity2 = new ActivityTO("playground_lazar",  "playground_lazar", "1", Activities.BoardRead.getName() , "playground_lazar", 
+		ActivityTO activity2 = new ActivityTO("playground_lazar",  "playground_lazar", "1", Activities.BoardRead.getActivityName() , "playground_lazar", 
 				"asdfsd", map2);
 		
 		
@@ -258,7 +267,7 @@ public class ActivityTest {
 		//When
 		Map <String,Object> map2 = new HashMap<String,Object>();
 		map2.put("page", 0);
-		ActivityTO activity2 = new ActivityTO("playground_lazar",  "playground_lazar", "1", Activities.BoardRead.getName() , 
+		ActivityTO activity2 = new ActivityTO("playground_lazar",  "playground_lazar", "1", Activities.BoardRead.getActivityName() , 
 				"playground_lazar", "asdfsd", map2);
 		
 		activity2.setElementId(this.demoEntity.getId());
@@ -282,7 +291,7 @@ public class ActivityTest {
 		//When
 		Map <String,Object> map = new HashMap<String,Object>();
 		map.put("eggSize", "medium");
-		ActivityTO activity = new ActivityTO("playground_lazar",  "playground_lazar", "1", Activities.CookOmelette.getName() , 
+		ActivityTO activity = new ActivityTO("playground_lazar",  "playground_lazar", "1", Activities.CookOmelette.getActivityName() , 
 				"playground_lazar", "asdfsd", map);
 		
 		
@@ -313,7 +322,7 @@ public class ActivityTest {
 		mediumMap.put("eggSize", "medium");
 		largeMap.put("eggSize", "large");
 		xlargeMap.put("eggSize", "extraLarge");
-		ActivityTO activity = new ActivityTO("playground_lazar",  "playground_lazar", "1", Activities.CookOmelette.getName() , 
+		ActivityTO activity = new ActivityTO("playground_lazar",  "playground_lazar", "1", Activities.CookOmelette.getActivityName() , 
 				"playground_lazar", "asdfsd", smallMap);
 		
 		
@@ -328,44 +337,20 @@ public class ActivityTest {
 		ActivityTO result =rest.postForObject( url+"/{userPlayground}/{email}", activity, ActivityTO.class, params );
 		System.err.println(result.getAttributes());
 		
-		ActivityTO activity2 = new ActivityTO("playground_lazar",  "playground_lazar", "1", Activities.CookOmelette.getName() , 
+		ActivityTO activity2 = new ActivityTO("playground_lazar",  "playground_lazar", "1", Activities.CookOmelette.getActivityName() , 
 				"playground_lazar", "asdfsd", mediumMap);
 		ActivityTO result2 =rest.postForObject( url+"/{userPlayground}/{email}", activity2, ActivityTO.class, params );
 		System.err.println(result2.getAttributes());
 		
-		ActivityTO activity3 = new ActivityTO("playground_lazar",  "playground_lazar", "1", Activities.CookOmelette.getName() , 
+		ActivityTO activity3 = new ActivityTO("playground_lazar",  "playground_lazar", "1", Activities.CookOmelette.getActivityName() , 
 				"playground_lazar", "asdfsd", largeMap);
 		ActivityTO result3 =rest.postForObject( url+"/{userPlayground}/{email}", activity3, ActivityTO.class, params );
 		System.err.println(result3.getAttributes());
 		
-		ActivityTO activity4 = new ActivityTO("playground_lazar",  "playground_lazar", "1", Activities.CookOmelette.getName() , 
+		ActivityTO activity4 = new ActivityTO("playground_lazar",  "playground_lazar", "1", Activities.CookOmelette.getActivityName() , 
 				"playground_lazar", "asdfsd", xlargeMap);
 		ActivityTO result4 =rest.postForObject( url+"/{userPlayground}/{email}", activity4, ActivityTO.class, params );
 		System.err.println(result4.getAttributes());
-	}
-	
-	// s9 (not tested)
-	@Test
-	public void FailedCookOmeleteWithInvalidSize() throws ElementAlreadyExistException, InvalidRoleException {
-		// TODO: Check if working
-		
-		// Given
-		this.elementService.addNewElement(demoEntity, this.demo_user_manager.getEmail());
-
-		// When
-		Map<String, Object> map = new HashMap<String, Object>();
-		map.put("eggSize", "extraSmall");
-		ActivityTO activity = new ActivityTO("playground_lazar", "playground_lazar", "1",
-				Activities.CookOmelette.getName(), "playground_lazar", "asdfsd", map);
-
-		activity.setElementId(this.demoEntity.getId());
-		activity.setElementPlayground(demoEntity.getPlayground());
-
-		MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
-		params.add("userPlayground", "playground_lazar");
-		params.add("email", "demo@gmail.com");
-		ActivityTO result = rest.postForObject(url + "/{userPlayground}/{email}", activity, ActivityTO.class, params);
-
 	}
 	
 }

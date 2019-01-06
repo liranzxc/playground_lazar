@@ -16,15 +16,10 @@ import com.example.demo.aop.ToLog;
 import com.example.demo.aop.UserPermission;
 import com.example.demo.application.exceptions.InvalidPageRequestException;
 import com.example.demo.application.exceptions.InvalidPageSizeRequestException;
-import com.example.demo.element.custom.Board;
-import com.example.demo.element.custom.ElementTypes;
-import com.example.demo.element.custom.Fridge;
-import com.example.demo.element.custom.Pot;
 import com.example.demo.element.exceptions.ElementAlreadyExistException;
 import com.example.demo.element.exceptions.ElementNotFoundException;
 import com.example.demo.element.exceptions.InvalidAttributeNameException;
 import com.example.demo.element.exceptions.InvalidDistanceValueException;
-import com.example.demo.user.TypesEnumUser.Types;
 import com.example.demo.user.exceptions.InvalidRoleException;
 
 @Service
@@ -43,14 +38,12 @@ public class ElementServiceJpa implements ElementService {
 	
 	@Override
 	@Transactional
-	@UserPermission(permissions={Types.Manager})
+	@UserPermission
 	@ToLog
 	public void addNewElement(ElementEntity et, @EmailValue String email) throws ElementAlreadyExistException, InvalidRoleException {
-		String elementType =  et.getType();
-		for (ElementTypes type : ElementTypes.values()) {
-			if(elementType.equals(type.getName())) {
-				et = convertElementBaseOnType(et, type);
-			}
+		String role = email;
+		if(!role.equals("Manager")) {
+			throw new InvalidRoleException("only manager can add new Elements");
 		}
 		
 		int newID = ++ID;
@@ -67,14 +60,12 @@ public class ElementServiceJpa implements ElementService {
 
 	@Override
 	@Transactional
-	@UserPermission(permissions={Types.Manager})
+	@UserPermission
 	@ToLog
 	public void addElementFromOutside(ElementEntity et, @EmailValue String email) throws ElementAlreadyExistException, InvalidRoleException {
-		String elementType =  et.getType();
-		for (ElementTypes type : ElementTypes.values()) {
-			if(elementType.equals(type.getName())) {
-				et = convertElementBaseOnType(et, type);
-			}
+		String role = email;
+		if(!role.equals("Manager")) {
+			throw new InvalidRoleException("only manager can add new Elements");
 		}
 		
 		String key = et.getKey();
@@ -88,13 +79,13 @@ public class ElementServiceJpa implements ElementService {
 
 	@Override
 	@Transactional
-	@UserPermission(permissions={Types.Manager})
+	@UserPermission
 	@ToLog
 	public void updateElement(ElementEntity et, @EmailValue String email) throws ElementNotFoundException, InvalidRoleException {
-//		String role = email;
-//		if(!role.equals("Manager")) {
-//			throw new InvalidRoleException("only manager can add new Elements");
-//		}
+		String role = email;
+		if(!role.equals("Manager")) {
+			throw new InvalidRoleException("only manager can add new Elements");
+		}
 		
 		String key = et.getKey();
 		if (this.dataBase.existsByKey(key)) {
@@ -113,7 +104,7 @@ public class ElementServiceJpa implements ElementService {
 	}
 
 	@Transactional
-	@UserPermission(permissions={Types.Manager, Types.Player})
+	@UserPermission
 	@ToLog
 	@Override
 	public ElementEntity getElement(String playground, String id, @EmailValue String email)
@@ -133,14 +124,14 @@ public class ElementServiceJpa implements ElementService {
 	}
 
 	@Transactional
-	@UserPermission(permissions={Types.Manager})
+	@UserPermission
 	@ToLog
 	@Override
 	public void deleteElement(String playground, String id, @EmailValue String email) throws InvalidRoleException {
-//		String role = email; // if gotten to this line email was swapped with type
-//		if (!role.equals("Manager")) {
-//			throw new InvalidRoleException("Only manager can delete elements");
-//		}
+		String role = email; // if gotten to this line email was swapped with type
+		if (!role.equals("Manager")) {
+			throw new InvalidRoleException("Only manager can delete elements");
+		}
 
 		String key = ElementEntity.createKeyFromIdAndPlayground(id, playground);
 		if (this.dataBase.existsByKey(key)) {
@@ -153,7 +144,7 @@ public class ElementServiceJpa implements ElementService {
 	}
 
 	@Transactional
-	@UserPermission(permissions={Types.Manager, Types.Player})
+	@UserPermission
 	@ToLog
 	@Override
 	public List<ElementEntity> getAllElements(Pageable page,@EmailValue String email)
@@ -174,7 +165,7 @@ public class ElementServiceJpa implements ElementService {
 	}
 
 	@Transactional
-	@UserPermission(permissions={Types.Manager, Types.Player})
+	@UserPermission
 	@ToLog
 	@Override
 	public List<ElementEntity> getAllElementsNearBy(double x, double y, double distance,@EmailValue String email, Pageable page)
@@ -194,7 +185,7 @@ public class ElementServiceJpa implements ElementService {
 	}
 
 	@Transactional
-	@UserPermission(permissions={Types.Manager, Types.Player})
+	@UserPermission
 	@ToLog
 	@Override
 	public List<ElementEntity> getAllElementsByAttributeAndValue(String attribute, String value,@EmailValue String email,
@@ -337,25 +328,6 @@ public class ElementServiceJpa implements ElementService {
 		}
 
 		return true;
-	}
-	
-	private ElementEntity convertElementBaseOnType(ElementEntity entity,ElementTypes type) {
-		switch(type) {
-		
-		case BOARD:{
-			return new Board(entity);
-		}
-		case POT:{
-			return new Pot(entity);
-		}
-		case FRIDGE:{
-			return new Fridge(entity);
-		}
-		}
-		
-		return entity;
-		
-		
 	}
 
 	public static void setIDToZero() {

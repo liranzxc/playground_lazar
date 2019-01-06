@@ -11,6 +11,4 @@ import com.example.demo.user.TypesEnumUser.Types;
 @Retention(RUNTIME)
 @Target(METHOD)
 public @interface UserPermission {	
-	
-	Types[] permissions() default {};
 }
