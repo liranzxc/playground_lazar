@@ -6,7 +6,9 @@ import java.util.Date;
 
 
 import javax.annotation.PostConstruct;
+import javax.validation.constraints.AssertTrue;
 
+import org.hibernate.service.spi.Manageable;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -26,15 +28,16 @@ import com.example.demo.element.ElementTO;
 import com.example.demo.element.Location;
 import com.example.demo.element.exceptions.ElementAlreadyExistException;
 import com.example.demo.element.exceptions.ElementNotFoundException;
+import com.example.demo.element.exceptions.InvalidDistanceValueException;
 import com.example.demo.user.UserEntity;
 import com.example.demo.user.UserService;
+import com.example.demo.user.exceptions.EmailAlreadyRegisteredException;
+import com.example.demo.user.exceptions.InvalidEmailException;
 import com.example.demo.user.exceptions.InvalidRoleException;
-
-
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
-public class Feature6 {
+public class GetElement_Tests {
 
 	private int numOfDemoEntities = 20;
 	private ElementEntity[] demo_entities;
@@ -135,71 +138,101 @@ public class Feature6 {
 	}
 
 
-	///////////////
-	// Feature 6 //
-	///////////////
 
 	// Scenario 1: 
 	@Test
-	public void updateElementSuccessfullyByManager() throws ElementAlreadyExistException, InvalidRoleException {
-		// given
-		ElementTO eto = new ElementTO(demo_entity);
-		this.elementService.addNewElement(eto.ToEntity(), this.demo_user_manager.getEmail());
+	public void getSpecificElementSuccessByPlayer() throws ElementNotFoundException, ElementAlreadyExistException, InvalidRoleException {
 		
-		String playground = eto.getPlayground();
-		String id = eto.getId();
-
-		System.err.println("id = " + id + " playground = " + playground);
+		// given: an elementEntity with "id":1
+		ElementTO originalElementTO = new ElementTO(demo_entity);
+		this.elementService.addNewElement(originalElementTO.ToEntity(), this.demo_user_manager.getEmail());
 
 		// when
-		this.restTemplate.put(this.url + "/{userPlayground}/{email}/{playground}/{id}", eto,
-				demo_user_manager.getPlayground(), demo_user_manager.getEmail(), playground, id);
+		String userPlayground = "playground_lazar";
+		String id = originalElementTO.getId();
+		ElementTO elementTOFromDB;
+		elementTOFromDB = this.restTemplate.getForObject(this.url + "/{userPlayground}/{email}/{playground}/{id}",
+				ElementTO.class, userPlayground, demo_user_player.getEmail(), demo_user_player.getPlayground(), id);
 
+		// Than
+		boolean success = true;
+		if (!elementTOFromDB.getId().equals(originalElementTO.getId())) {
+			success = false;
+		} else if (!elementTOFromDB.getPlayground().equals(originalElementTO.getPlayground())) {
+			success = false;
+		}
+
+		assertTrue(success);
 	}
 
-	// Scenario 2
+	// Scenario 2:
 	@Test
-	public void updateElementFailedByPlayer() throws ElementAlreadyExistException, InvalidRoleException {
-		// given
-		ElementTO eto = new ElementTO(demo_entity);
-		this.elementService.addNewElement(eto.ToEntity(), this.demo_user_manager.getEmail());
+	public void getSpecificElementWithExpiredDate_FailedByPlayer() throws ElementNotFoundException, ElementAlreadyExistException, InterruptedException, InvalidRoleException {
 
-		String playground = eto.getPlayground();
-		String id = eto.getId();
+		demo_entity.setExpireDate(new Date());
+		Thread.sleep(50);
+		
+		ElementTO originalElementTO = new ElementTO(demo_entity);
+		this.elementService.addNewElement(originalElementTO.ToEntity(), this.demo_user_manager.getEmail());
 
-		System.err.println("id = " + id + " playground = " + playground);
-
-		boolean isSuccess = false;
 		// when
+		String userPlayground = "playground_lazar";
+		String id = originalElementTO.getId();
+		
+		boolean success = false;
 		try {
-			this.restTemplate.put(this.url + "/{userPlayground}/{email}/{playground}/{id}", eto,
-					demo_user_player.getPlayground(), demo_user_player.getEmail(), playground, id);
-		} catch (Exception e) {
-			isSuccess = true;
+			this.restTemplate.getForObject(this.url + "/{userPlayground}/{email}/{playground}/{id}",
+					ElementTO.class, userPlayground, demo_user_player.getEmail(), demo_user_player.getPlayground(), id);
+		}catch (Exception e) {
+			success = true;
 		}
 		
-		assertTrue(isSuccess);
+		// Than
+		assertTrue(success);
 	}
 
-	// Scenario 3:
-	@Test(expected = ElementNotFoundException.class)
-	public void updateElementThatDoesntExist() throws ElementNotFoundException {
-		ElementTO eto = new ElementTO(demo_entity);
-		String userPlayground = "lazar_2019";
-		String email = "demo@gmail.com";
-		String playground = eto.getPlayground();
-		String id = eto.getId();
+	// Scenario 3
+	@Test
+	public void getSpecificElementWithExpiredDate_SuccessByManager()
+			throws ElementNotFoundException, ElementAlreadyExistException, InterruptedException, InvalidRoleException {
+
+		demo_entity.setExpireDate(new Date());
+		Thread.sleep(50);
+
+		ElementTO originalElementTO = new ElementTO(demo_entity);
+		this.elementService.addNewElement(originalElementTO.ToEntity(), this.demo_user_manager.getEmail());
 
 		// when
+		String elementPlayground = originalElementTO.getPlayground();
+		String id = originalElementTO.getId();
+
+		boolean success = false;
 		try {
-			this.restTemplate.put(this.url + "/{userPlayground}/{email}/{playground}/{id}", eto, userPlayground, email,
-					playground, id);
+			this.restTemplate.getForObject(this.url + "/{userPlayground}/{email}/{playground}/{id}", ElementTO.class,
+					demo_user_manager.getPlayground(), demo_user_manager.getEmail(), elementPlayground, id);
+			success = true;
 		} catch (Exception e) {
-			throw new ElementNotFoundException("you cant update an element that doesnt exist");
+			// do nothing
 		}
 
+		// Than
+		assertTrue(success);
 	}
 
-	
+	// Scenario 4:
+	@Test(expected = ElementNotFoundException.class)
+	public void getSpecificElementFailWhenDataBaseIsEmpty() throws ElementNotFoundException {
+		// given element not in database (tearDown and setup take care of that)
+
+		String elementPlayground = "playground_lazar";
+		String id = "1";
+
+		try {
+			this.restTemplate.getForObject(this.url + "/{userPlayground}/{email}/{playground}/{id}", ElementTO.class,
+					demo_user_manager.getPlayground(), demo_user_manager.getEmail(), elementPlayground, id);
+		} catch (Exception e) {
+			throw new ElementNotFoundException("element doesnt exist");
+		}
+	}
 	
 }

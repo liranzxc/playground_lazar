@@ -32,7 +32,7 @@ import com.example.demo.user.exceptions.InvalidRoleException;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
-public class Feature8 {
+public class GetAllElements_Tests {
 
 	private int numOfDemoEntities = 20;
 	private ElementEntity[] demo_entities;

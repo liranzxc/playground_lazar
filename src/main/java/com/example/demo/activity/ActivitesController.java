@@ -12,7 +12,9 @@ import com.example.demo.activity.exceptions.ActivityAlreadyExistException;
 import com.example.demo.activity.exceptions.InvalidActivityAtributeException;
 import com.example.demo.activity.exceptions.InvalidActivityTypeException;
 import com.example.demo.element.ElementVeirfyier;
+import com.example.demo.user.exceptions.InvalidEmailException;
 import com.example.demo.user.exceptions.InvalidRoleException;
+import com.example.demo.user.exceptions.UserNotFoundException;
 
 @RestController
 @RequestMapping("playground/activites")
@@ -42,7 +44,9 @@ public class ActivitesController {
 	public Object GoToActivity(@RequestBody ActivityTO activity,
 			@PathVariable(name = "userPlayground") String userPlayground, 
 			@PathVariable(name = "email") String email) 
-					throws ActivityAlreadyExistException, InvalidRoleException, InvalidActivityTypeException, InvalidActivityAtributeException {
+					throws ActivityAlreadyExistException, InvalidRoleException, 
+					InvalidActivityTypeException, InvalidActivityAtributeException, UserNotFoundException
+					, InvalidEmailException {
 		
 		this.elementVerifyier.verifyElement(activity.getElementPlayground(), activity.getElementId());
 		System.err.println("In activity controller - after element validation");

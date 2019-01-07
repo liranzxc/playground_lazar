@@ -37,7 +37,7 @@ import com.example.demo.user.exceptions.InvalidRoleException;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
-public class Feature9 {
+public class AddElement_Tests {
 
 	private int numOfDemoEntities = 20;
 	private ElementEntity[] demo_entities;
@@ -137,155 +137,87 @@ public class Feature9 {
 		this.userService.cleanup();
 	}
 
+	///////////////
+	// Feature 5 //
+	///////////////
 
-	/////////////////////////////////////////////////
-	/////////////////// Feature 9 ///////////////////
-	/////////////////////////////////////////////////
-
-	// scenario 1
+	// Scenario 1
 	@Test
-	public void GetOneElementSuccessfulyInDistanceOne() throws ElementAlreadyExistException, InvalidRoleException {
+	public void createElementSuccsefullyByManager() {
+		ElementTO eto = new ElementTO(this.demo_entity);
 
-		// Given: an array of one ElementEntity in database with size >0
-		this.elementService.addNewElement(this.demo_entity, this.demo_user_manager.getEmail());
-
-		// When:
-		double x = this.demo_entity.getX() + 1.0;
-		double y = this.demo_entity.getY();
-		double distance = 1.0;
-
-		ElementTO[] allElements = this.restTemplate.getForObject(
-				this.url + "/{userPlayground}/{email}/near/{x}/{y}/{distance}", ElementTO[].class, 
-				demo_user_manager.getPlayground(), demo_user_manager.getEmail(), x, y, distance);
-
-		// Than:
 		boolean success = false;
-		if (allElements.length == 1 && allElements[0].equals(new ElementTO(this.demo_entity)))
-			success = true;
 
-		assertTrue(success);
-	}
-
-	// scenario 2
-	@Test
-	public void GetElementsFailedWithInvalidDistance()
-			throws ElementAlreadyExistException, InvalidDistanceValueException, InvalidRoleException {
-
-		// Given: an array of ElementEntity array is database in size >0
-		this.elementService.addNewElement(this.demo_entity, this.demo_user_manager.getEmail());
-
-		// When:
-		String userPlayground = "playground_lazar";
-		String email = "aviv@gmail.com";
-		double x = 1.0, y = 1.0, distance = -1.0;
-
-		// Than:
-		boolean success = false;
+		// when
 		try {
-			this.restTemplate.getForObject(
-					this.url + "/{userPlayground}/{email}/near/{x}/{y}/{distance}", ElementTO[].class, userPlayground,
-					email, x, y, distance);
-		} catch (Exception e) { // TODO: replace to InvalidDistanceValueException
+			this.restTemplate.postForObject(this.url + "/{userPlayground}/{email}", eto, ElementTO.class, demo_user_manager.getPlayground(),
+					demo_user_manager.getEmail());
 			success = true;
+		} catch (Exception e) {
+			// do nothing
+			System.err.println("There was exception");
 		}
 
+		// that
 		assertTrue(success);
 	}
 	
+	// Scenario 2
+	@Test
+	public void createElementFailedByPlayer() {
+		ElementTO eto = new ElementTO(this.demo_entity);
+
+		boolean success = false;
+
+		// when
+		try {
+			this.restTemplate.postForObject(this.url + "/{userPlayground}/{email}", eto, ElementTO.class,
+					demo_user_player.getPlayground(), demo_user_player.getEmail());
+		} catch (Exception e) {
+			success = true;
+		}
+
+		// that
+		assertTrue(success);
+	}
+
 	// Scenario 3
-	@Test
-	public void GetNoElementNearLocationZeroZeroAndDistanceOne() throws ElementAlreadyExistException, InvalidRoleException {
-		
-		// Given: 
-		this.elementService.addNewElement(this.demo_entity, this.demo_user_manager.getEmail());
-		
-		// When:
-		double x = 1.0, y = 1.0, distance = 0.0;
-		
-		// Than:
-		boolean success = false;
-		
-		ElementTO[] allElements = this.restTemplate.getForObject(
-				this.url + "/{userPlayground}/{email}/near/{x}/{y}/{distance}", ElementTO[].class, 
-				demo_user_manager.getPlayground(), demo_user_manager.getEmail(), x, y, distance);
-		
-		if(allElements.length == 0)
-			success = true;
-		
-		assertTrue(success);
+	@Test(expected = InvalidEmailException.class)
+	public void createElementWithImagineEmailAndFail() throws InvalidEmailException {
+		String usrPlayground = "playground_lazar";
+		String email = "badEmail@gmail.com";
+		ElementTO eto = new ElementTO(this.demo_entity);
+
+		// when
+		try {
+			this.restTemplate.postForObject(this.url + "/{userPlayground}/{email}", eto, ElementTO.class, usrPlayground,
+					email);
+		} catch (Exception e) {
+			throw new InvalidEmailException("cant create an element with invalid email: " + email);
+		}
 	}
 	
+
 	
-	// scenario 4 (pagination)
-	@Test
-	public void GetTheFirstTenResultsFromTwentyElementsInDisanceOneOrLower()
-			throws ElementAlreadyExistException, InvalidDistanceValueException, InvalidRoleException {
+	// Scenario 4
+	@Test(expected = ElementAlreadyExistException.class)
+	public void createElementWhenElementAlreadyExist() throws ElementAlreadyExistException, InterruptedException, InvalidRoleException {
+		// given
 
-		for (ElementEntity e : this.demo_entities) {
-			if (Integer.parseInt(e.getId()) % 2 == 1) {
-				e.setX(Math.random());
-				e.setY(0.);
-			} else {
-				e.setX(0.);
-				e.setY(Math.random());
-			}
+		this.elementService.addElementFromOutside(demo_entity, this.demo_user_manager.getEmail());
+
+		// when
+		ElementTO eto = new ElementTO(demo_entity);
+
+		try {
+			this.restTemplate.postForObject(this.url + "/{userPlayground}/{email}", eto, ElementTO.class, 
+					demo_user_manager.getPlayground(), demo_user_manager.getEmail());
+			System.out.println("pass");
+		} catch (Exception e) {
+			throw new ElementAlreadyExistException();
 		}
-
-		// Given: 20 elements in distance 1 or lower
-		for (ElementEntity e : this.demo_entities) {
-			this.elementService.addNewElement(e, this.demo_user_manager.getEmail());
-		}
-
-		// When: 
-		double x = 0.0, y = 0.0, distance = 1.0;
-
-		// Than:
-		ElementTO[] allElements;
-		boolean success = false;
-
-		//default size = 10, page = 0;
-		allElements = this.restTemplate.getForObject(this.url + "/{userPlayground}/{email}/near/{x}/{y}/{distance}",
-				ElementTO[].class, demo_user_manager.getPlayground(), demo_user_manager.getEmail(), x, y, distance);
-
-		if (allElements.length == 10)
-			success = true;
-
-		assertTrue(success);
 	}
+
 	
-	// scenario 5 
-	@Test
-	public void getAllElementNearByTenAsPlayer() throws ElementAlreadyExistException, InvalidRoleException {
-
-		for (ElementEntity e : this.demo_entities) {
-			if (Integer.parseInt(e.getId()) % 2 == 1) {
-				e.setX(Math.random());
-				e.setY(0.);
-			} else {
-				e.setX(0.);
-				e.setY(Math.random());
-			}
-		}
-
-		// Given: 20 elements in distance 1 or lower
-		for (ElementEntity e : this.demo_entities) {
-			this.elementService.addNewElement(e, this.demo_user_manager.getEmail());
-		}
-
-		// When: 
-		double x = 0.0, y = 0.0, distance = 10.0;
-
-		// Than:
-		ElementTO[] allElements;
-		boolean success = false;
-
-		//default size = 10, page = 0;
-		allElements = this.restTemplate.getForObject(this.url + "/{userPlayground}/{email}/near/{x}/{y}/{distance}",
-				ElementTO[].class, demo_user_player.getPlayground(), demo_user_player.getEmail(), x, y, distance);
-
-		if (allElements[allElements.length-1].getId().equals("11"))
-			success = true;
-
-		assertTrue(success);
-	}
+	
 }

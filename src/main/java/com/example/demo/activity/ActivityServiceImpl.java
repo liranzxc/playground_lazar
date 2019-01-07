@@ -21,7 +21,12 @@ import com.example.demo.aop.UserPermission;
 import com.example.demo.element.ElementEntity;
 import com.example.demo.element.ElementRepository;
 import com.example.demo.element.exceptions.InvalidAttributeNameException;
+import com.example.demo.user.TypesEnumUser.Types;
+import com.example.demo.user.UserEntity;
+import com.example.demo.user.UserService;
+import com.example.demo.user.exceptions.InvalidEmailException;
 import com.example.demo.user.exceptions.InvalidRoleException;
+import com.example.demo.user.exceptions.UserNotFoundException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 @Service
@@ -30,6 +35,7 @@ public class ActivityServiceImpl implements ActivityService {
 	private ActivityRepository dataBase;
 	private ApplicationContext spring;
 	private ObjectMapper jackson;
+	private UserService userService;
 	private static int Id = 0;
 	
 //	@Autowired
@@ -54,23 +60,29 @@ public class ActivityServiceImpl implements ActivityService {
 		this.jackson = jackson;
 	}
 	
+	@Autowired
+	public void setUserService(UserService userService) {
+		this.userService = userService;
+	}
+	
 
 	
 	@Override
 	@Transactional
-	@UserPermission
+	@UserPermission(permissions= {Types.Player})
 	@ToLog
 	public void addNewActivity(ActivityEntity activityEntity, @EmailValue String email) 
-			throws ActivityAlreadyExistException, InvalidRoleException, InvalidActivityTypeException, InvalidActivityAtributeException {
+			throws ActivityAlreadyExistException, InvalidRoleException, InvalidActivityTypeException, 
+			InvalidActivityAtributeException, UserNotFoundException, InvalidEmailException {
 		// Check if email is OK by role
 		// Aspect @UserPermission inject the role to 'email' var
-		String role = email;
-		if(!role.equals("Player")) {
-			System.out.println("addNewActivity - the user is not player!");
-			throw new InvalidRoleException("only player can do activities!");
-		}
+//		String role = email;
+//		if(!role.equals("Player")) {
+//			System.out.println("addNewActivity - the user is not player!");
+//			throw new InvalidRoleException("only player can do activities!");
+//		}
 		
-		System.err.println("add new ativity - after user email validation");
+		//System.err.println("add new ativity - after user email validation");
 		
 		activityEntity.setKey(ActivityEntity.generateKey("playground_lazar", ""+Id++));
 		String key = activityEntity.getKey();
@@ -84,15 +96,14 @@ public class ActivityServiceImpl implements ActivityService {
 
 					theClass = Class.forName(className);
 					
-					
-					
 				} catch (Exception e) {
 					throw new InvalidActivityTypeException(activityEntity.getType() + " is an invalid activity type"); //cause the user to get http 500 error
 				}
 				
+				Object activity;
 				try {
 					PlaygroundPlugin plugin = (PlaygroundPlugin) this.spring.getBean(theClass);
-					Object activity = plugin.invokeOperation(activityEntity);
+					activity = plugin.invokeOperation(activityEntity);
 					
 					Map<String, Object> rvMap = this.jackson.readValue(
 							this.jackson.writeValueAsString(activity),
@@ -101,8 +112,21 @@ public class ActivityServiceImpl implements ActivityService {
 				} catch (Exception e) {
 					throw new InvalidActivityAtributeException("Invalid attributes");
 				}
+				
+				
 			}
 			this.dataBase.save(activityEntity);
+			
+			// TODO: add activity points to user account
+			System.err.println("Start to add activity points to user account");
+			UserEntity userAccount = userService.getUser(activityEntity.getPlayerEmail(), activityEntity.getPlayerPlayground());
+			userAccount.setPoints(userAccount.getPoints() + 10);
+			userService.updateUserInfo(userAccount);
+			
+			System.err.println("Inside activity controller: num of points of user is: " 
+			+ userService.getUser
+			(activityEntity.getPlayerEmail(), activityEntity.getPlayerPlayground())
+			.getPoints());
 		}
 		else {
 			throw new ActivityAlreadyExistException("Activity already exists");

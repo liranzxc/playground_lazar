@@ -34,7 +34,7 @@ import com.example.demo.user.exceptions.InvalidRoleException;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
-public class Feature10 {
+public class FindElementByAttributes_Tests {
 
 	private int numOfEntities = 20;
 	private ElementEntity[] demo_entities;
@@ -117,11 +117,7 @@ public class Feature10 {
 		this.userService.cleanup();
 	}
 
-////////////////
-// Feature 10 //
-////////////////
 
-	// NAME TESTS
 
 	// scenario 1 - NAME\Manager
 	@Test

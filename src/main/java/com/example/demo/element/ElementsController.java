@@ -22,6 +22,7 @@ import com.example.demo.element.exceptions.InvalidDistanceValueException;
 import com.example.demo.user.UserVerifyier;
 import com.example.demo.user.exceptions.InvalidEmailException;
 import com.example.demo.user.exceptions.InvalidRoleException;
+import com.example.demo.user.exceptions.UserNotFoundException;
 
 @RestController
 @RequestMapping(path = "/playground/elements")
@@ -88,7 +89,7 @@ public class ElementsController {
 			"/{userPlayground}/{email}/{playground}/{id}" }, method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
 	public ElementTO getElement(@PathVariable("userPlayground") String userPlayground,
 			@PathVariable("email") String email, @PathVariable("playground") String playground,
-			@PathVariable("id") String id) throws ElementNotFoundException, InvalidRoleException {
+			@PathVariable("id") String id) throws ElementNotFoundException, InvalidRoleException, UserNotFoundException {
 
 		return new ElementTO(this.elementService.getElement(playground, id, email));
 	}	
@@ -102,7 +103,7 @@ public class ElementsController {
 			@PathVariable(name = "email") String email,
 			@RequestParam(name = "size", required = false, defaultValue = "10") int size,
 			@RequestParam(name = "page", required = false, defaultValue = "0") int page)
-			throws InvalidPageSizeRequestException, InvalidPageRequestException, InvalidRoleException {
+			throws InvalidPageSizeRequestException, InvalidPageRequestException, InvalidRoleException, UserNotFoundException {
 
 		List<ElementEntity> mylist = this.elementService.getAllElements(PageRequest.of(page, size), email);	
 		return mylist.stream().map(ElementTO::new).collect(Collectors.toList()).toArray(new ElementTO[0]);
@@ -118,7 +119,8 @@ public class ElementsController {
 			@PathVariable("distance") double distance,
 			@RequestParam(name = "size", required = false, defaultValue = "10") int size,
 			@RequestParam(name = "page", required = false, defaultValue = "0") int page)
-			throws InvalidDistanceValueException, InvalidPageSizeRequestException, InvalidPageRequestException, InvalidRoleException {
+			throws InvalidDistanceValueException, InvalidPageSizeRequestException, 
+			InvalidPageRequestException, InvalidRoleException, UserNotFoundException {
 
 		List<ElementEntity> nearBy = this.elementService.getAllElementsNearBy(x, y, distance, email, PageRequest.of(page, size));
 		return nearBy.stream().map(ElementTO::new).collect(Collectors.toList()).toArray(new ElementTO[nearBy.size()]);
@@ -137,7 +139,7 @@ public class ElementsController {
 			@RequestParam(name = "size", required = false, defaultValue = "10") int size,
 			@RequestParam(name = "page", required = false, defaultValue = "0") int page)
 			throws InvalidAttributeNameException, InvalidEmailException, InvalidPageSizeRequestException,
-			InvalidPageRequestException, InvalidRoleException {
+			InvalidPageRequestException, InvalidRoleException, UserNotFoundException {
 		
 	
 		List<ElementEntity> entities = this.elementService.getAllElementsByAttributeAndValue(attributeName, value, email, PageRequest.of(page, size));

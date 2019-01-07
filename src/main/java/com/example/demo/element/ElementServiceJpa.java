@@ -20,7 +20,11 @@ import com.example.demo.element.exceptions.ElementAlreadyExistException;
 import com.example.demo.element.exceptions.ElementNotFoundException;
 import com.example.demo.element.exceptions.InvalidAttributeNameException;
 import com.example.demo.element.exceptions.InvalidDistanceValueException;
+import com.example.demo.user.TypesEnumUser.Types;
+import com.example.demo.user.UserRepository;
+import com.example.demo.user.UserService;
 import com.example.demo.user.exceptions.InvalidRoleException;
+import com.example.demo.user.exceptions.UserNotFoundException;
 
 @Service
 public class ElementServiceJpa implements ElementService {
@@ -28,30 +32,37 @@ public class ElementServiceJpa implements ElementService {
 	private static int ID = 0;
 	//private ArrayList<String> roleTypes;
 	
-	private ElementRepository dataBase;
+	private ElementRepository elementDatabase;
+	private UserService userService;
 
 	@Autowired
-	public void setDataBase(ElementRepository dataBase) {
-		this.dataBase = dataBase;
+	public void setElementDataBase(ElementRepository dataBase) {
+		this.elementDatabase = dataBase;
 	}
+	
+	@Autowired
+	public void setUserDataBase(UserService userService) {
+		this.userService = userService;
+	}
+	
 	
 	
 	@Override
 	@Transactional
-	@UserPermission
+	@UserPermission(permissions= {Types.Manager})
 	@ToLog
 	public void addNewElement(ElementEntity et, @EmailValue String email) throws ElementAlreadyExistException, InvalidRoleException {
-		String role = email;
-		if(!role.equals("Manager")) {
-			throw new InvalidRoleException("only manager can add new Elements");
-		}
+//		String role = email;
+//		if(!role.equals("Manager")) {
+//			throw new InvalidRoleException("only manager can add new Elements");
+//		}
 		
 		int newID = ++ID;
 		String key = ElementEntity.createKeyFromIdAndPlayground(newID + "", et.getPlayground());
 		et.setKey(key);
 
-		if (!this.dataBase.existsByKey(key)) {
-			this.dataBase.save(et);
+		if (!this.elementDatabase.existsByKey(key)) {
+			this.elementDatabase.save(et);
 		} else {
 			ID--; // reverse assigned ID
 			throw new ElementAlreadyExistException();
@@ -60,18 +71,18 @@ public class ElementServiceJpa implements ElementService {
 
 	@Override
 	@Transactional
-	@UserPermission
+	@UserPermission(permissions= {Types.Manager})
 	@ToLog
 	public void addElementFromOutside(ElementEntity et, @EmailValue String email) throws ElementAlreadyExistException, InvalidRoleException {
-		String role = email;
-		if(!role.equals("Manager")) {
-			throw new InvalidRoleException("only manager can add new Elements");
-		}
+//		String role = email;
+//		if(!role.equals("Manager")) {
+//			throw new InvalidRoleException("only manager can add new Elements");
+//		}
 		
 		String key = et.getKey();
 
-		if (!this.dataBase.existsByKey(key)) {
-			this.dataBase.save(et);
+		if (!this.elementDatabase.existsByKey(key)) {
+			this.elementDatabase.save(et);
 		} else {
 			throw new ElementAlreadyExistException();
 		}
@@ -79,20 +90,20 @@ public class ElementServiceJpa implements ElementService {
 
 	@Override
 	@Transactional
-	@UserPermission
+	@UserPermission(permissions= {Types.Manager})
 	@ToLog
 	public void updateElement(ElementEntity et, @EmailValue String email) throws ElementNotFoundException, InvalidRoleException {
-		String role = email;
-		if(!role.equals("Manager")) {
-			throw new InvalidRoleException("only manager can add new Elements");
-		}
+//		String role = email;
+//		if(!role.equals("Manager")) {
+//			throw new InvalidRoleException("only manager can add new Elements");
+//		}
 		
 		String key = et.getKey();
-		if (this.dataBase.existsByKey(key)) {
-			this.dataBase.deleteByKey(key); // delete not updated element
-			this.dataBase.save(et); // save updated element
+		if (this.elementDatabase.existsByKey(key)) {
+			this.elementDatabase.deleteByKey(key); // delete not updated element
+			this.elementDatabase.save(et); // save updated element
 		} else {
-			throw new ElementNotFoundException();
+			throw new ElementNotFoundException("The searched Element does not exist in database");
 		}
 	}
 
@@ -100,18 +111,20 @@ public class ElementServiceJpa implements ElementService {
 	@Transactional(readOnly = true)
 	@ToLog
 	public List<ElementEntity> getAllElements() {
-		return this.dataBase.findAll(Sort.by("id"));
+		return this.elementDatabase.findAll(Sort.by("id"));
 	}
 
 	@Transactional
-	@UserPermission
+	@UserPermission(permissions= {Types.Manager, Types.Player})
 	@ToLog
 	@Override
 	public ElementEntity getElement(String playground, String id, @EmailValue String email)
-			throws ElementNotFoundException, InvalidRoleException {
-		String role = email; // if gotten to this line email was swapped with type
+			throws ElementNotFoundException, InvalidRoleException, UserNotFoundException {
+		//String role = email; // if gotten to this line email was swapped with type
+		String userRole = userService.getUser(email, "playground_lazar").getRole();
+		System.err.println("in getElement - role is: " + userRole);
 		
-		switch (role) {
+		switch (userRole) {
 		case ("Player"): {
 			return getElementPlayer(playground, id);
 		}
@@ -134,24 +147,26 @@ public class ElementServiceJpa implements ElementService {
 		}
 
 		String key = ElementEntity.createKeyFromIdAndPlayground(id, playground);
-		if (this.dataBase.existsByKey(key)) {
-			ElementEntity et = this.dataBase.findByKey(key).get();
+		if (this.elementDatabase.existsByKey(key)) {
+			ElementEntity et = this.elementDatabase.findByKey(key).get();
 			et.setExpireDate(new Date()); // empty constructor give now date
 
-			this.dataBase.deleteByKey(key);
-			this.dataBase.save(et);
+			this.elementDatabase.deleteByKey(key);
+			this.elementDatabase.save(et);
 		}
 	}
 
 	@Transactional
-	@UserPermission
+	@UserPermission(permissions= {Types.Manager, Types.Player})
 	@ToLog
 	@Override
 	public List<ElementEntity> getAllElements(Pageable page,@EmailValue String email)
-			throws InvalidPageSizeRequestException, InvalidPageRequestException, InvalidRoleException {
-		String role = email; // if gotten to this line email was swapped with type
-		System.err.println("getAllElements Role is: " + role);
-		switch (role) {
+			throws InvalidPageSizeRequestException, InvalidPageRequestException, InvalidRoleException, UserNotFoundException {
+		//String role = email; // if gotten to this line email was swapped with type
+		String userRole = userService.getUser(email, "playground_lazar").getRole();
+		System.err.println("in getElement - role is: " + userRole);
+		
+		switch (userRole) {
 		case ("Player"): {
 			System.err.println("going to getAllElementPlayer");
 			return getAllElementsPlayer(page);
@@ -165,15 +180,16 @@ public class ElementServiceJpa implements ElementService {
 	}
 
 	@Transactional
-	@UserPermission
+	@UserPermission(permissions= {Types.Manager, Types.Player})
 	@ToLog
 	@Override
 	public List<ElementEntity> getAllElementsNearBy(double x, double y, double distance,@EmailValue String email, Pageable page)
-			throws InvalidDistanceValueException, InvalidRoleException {
+			throws InvalidDistanceValueException, InvalidRoleException, UserNotFoundException {
+		//String role = email; // if gotten to this line email was swapped with type
+		String userRole = userService.getUser(email, "playground_lazar").getRole();
+		System.err.println("in getElement - role is: " + userRole);
 
-		String role = email; // if gotten to this line email was swapped with type
-
-		switch (role) {
+		switch (userRole) {
 		case ("Player"): {
 			return getAllElementsNearByPlayer(x, y, distance, page);
 		}
@@ -185,15 +201,17 @@ public class ElementServiceJpa implements ElementService {
 	}
 
 	@Transactional
-	@UserPermission
+	@UserPermission(permissions= {Types.Manager, Types.Player})
 	@ToLog
 	@Override
 	public List<ElementEntity> getAllElementsByAttributeAndValue(String attribute, String value,@EmailValue String email,
 			Pageable page) throws InvalidAttributeNameException, InvalidPageSizeRequestException,
-			InvalidPageRequestException, InvalidRoleException {
-		String role = email; // if gotten to this line email was swapped with type
-
-		switch (role) {
+			InvalidPageRequestException, InvalidRoleException, UserNotFoundException {
+		//String role = email; // if gotten to this line email was swapped with type
+		String userRole = userService.getUser(email, "playground_lazar").getRole();
+		System.err.println("in getElement - role is: " + userRole);
+		
+		switch (userRole) {
 		case ("Player"): {
 			return getAllElementsByAttributeAndValuePlayer(attribute, value, page);
 		}
@@ -208,13 +226,13 @@ public class ElementServiceJpa implements ElementService {
 	@Transactional
 	@ToLog
 	public void cleanup() {
-		this.dataBase.deleteAll();
+		this.elementDatabase.deleteAll();
 	}
 
 	private ElementEntity getElementPlayer(String playground, String id) throws ElementNotFoundException {
 		String key = ElementEntity.createKeyFromIdAndPlayground(id, playground);
-		if (this.dataBase.existsByKey(key)) {
-			return this.dataBase.findAllByKeyAndExpireDateGreaterThanOrExpireDateIsNull(key, new Date()).get();
+		if (this.elementDatabase.existsByKey(key)) {
+			return this.elementDatabase.findAllByKeyAndExpireDateGreaterThanOrExpireDateIsNull(key, new Date()).get();
 		} else {
 			throw new ElementNotFoundException();
 		}
@@ -222,8 +240,8 @@ public class ElementServiceJpa implements ElementService {
 
 	private ElementEntity getElementManager(String playground, String id) throws ElementNotFoundException {
 		String key = ElementEntity.createKeyFromIdAndPlayground(id, playground);
-		if (this.dataBase.existsByKey(key)) {
-			return this.dataBase.findByKey(key).get();
+		if (this.elementDatabase.existsByKey(key)) {
+			return this.elementDatabase.findByKey(key).get();
 		} else {
 			throw new ElementNotFoundException();
 		}
@@ -233,14 +251,14 @@ public class ElementServiceJpa implements ElementService {
 			throws InvalidPageSizeRequestException, InvalidPageRequestException {
 
 		verifyPageable(page);
-		return this.dataBase.findAll(page).getContent();
+		return this.elementDatabase.findAll(page).getContent();
 	}
 
 	private List<ElementEntity> getAllElementsPlayer(Pageable page)
 			throws InvalidPageSizeRequestException, InvalidPageRequestException {
 
 		verifyPageable(page);
-		return this.dataBase.findAllByExpireDateGreaterThanOrExpireDateIsNull(new Date(), page);
+		return this.elementDatabase.findAllByExpireDateGreaterThanOrExpireDateIsNull(new Date(), page);
 	}
 
 	private List<ElementEntity> getAllElementsNearByManager(double x, double y, double distance, Pageable page)
@@ -250,7 +268,7 @@ public class ElementServiceJpa implements ElementService {
 			throw new InvalidDistanceValueException(
 					"when searching elements who is near by, distance must be bigger or equal to 0");
 		} else {
-			List<ElementEntity> list = this.dataBase.findAll().stream().filter(ee -> isNear(ee, x, y, distance))
+			List<ElementEntity> list = this.elementDatabase.findAll().stream().filter(ee -> isNear(ee, x, y, distance))
 					.skip(page.getPageSize() * page.getPageNumber()).limit(page.getPageSize())
 					.collect(Collectors.toList());
 			return list;
@@ -265,7 +283,7 @@ public class ElementServiceJpa implements ElementService {
 			throw new InvalidDistanceValueException(
 					"when searching elements who is near by, distance must be bigger or equal to 0");
 		} else {
-			List<ElementEntity> list = this.dataBase.findAllByExpireDateGreaterThanOrExpireDateIsNull(new Date())
+			List<ElementEntity> list = this.elementDatabase.findAllByExpireDateGreaterThanOrExpireDateIsNull(new Date())
 					.stream().filter(ee -> isNear(ee, x, y, distance)).skip(page.getPageSize() * page.getPageNumber())
 					.limit(page.getPageSize()).collect(Collectors.toList());
 			return list;
@@ -279,10 +297,10 @@ public class ElementServiceJpa implements ElementService {
 		switch (attribute) {
 
 		case "name": {
-			return this.dataBase.findAllByName(value, page);
+			return this.elementDatabase.findAllByName(value, page);
 		}
 		case "type": {
-			return this.dataBase.findAllByType(value, page);
+			return this.elementDatabase.findAllByType(value, page);
 		}
 
 		default:
@@ -298,10 +316,10 @@ public class ElementServiceJpa implements ElementService {
 		switch (attribute) {
 
 		case "name": {
-			return this.dataBase.findAllByNameAndExpireDateGreaterThanOrExpireDateIsNull(value, new Date(), page);
+			return this.elementDatabase.findAllByNameAndExpireDateGreaterThanOrExpireDateIsNull(value, new Date(), page);
 		}
 		case "type": {
-			return this.dataBase.findAllByTypeAndExpireDateGreaterThanOrExpireDateIsNull(value, new Date(), page);
+			return this.elementDatabase.findAllByTypeAndExpireDateGreaterThanOrExpireDateIsNull(value, new Date(), page);
 		}
 
 		default:
