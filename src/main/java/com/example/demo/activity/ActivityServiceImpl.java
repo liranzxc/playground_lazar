@@ -74,15 +74,6 @@ public class ActivityServiceImpl implements ActivityService {
 	public void addNewActivity(ActivityEntity activityEntity, @EmailValue String email) 
 			throws ActivityAlreadyExistException, InvalidRoleException, InvalidActivityTypeException, 
 			InvalidActivityAtributeException, UserNotFoundException, InvalidEmailException {
-		// Check if email is OK by role
-		// Aspect @UserPermission inject the role to 'email' var
-//		String role = email;
-//		if(!role.equals("Player")) {
-//			System.out.println("addNewActivity - the user is not player!");
-//			throw new InvalidRoleException("only player can do activities!");
-//		}
-		
-		//System.err.println("add new ativity - after user email validation");
 		
 		activityEntity.setKey(ActivityEntity.generateKey("playground_lazar", ""+Id++));
 		String key = activityEntity.getKey();
@@ -117,7 +108,7 @@ public class ActivityServiceImpl implements ActivityService {
 			}
 			this.dataBase.save(activityEntity);
 			
-			// TODO: add activity points to user account
+			// TODO: add activity points to user account - make it better
 			System.err.println("Start to add activity points to user account");
 			UserEntity userAccount = userService.getUser(activityEntity.getPlayerEmail(), activityEntity.getPlayerPlayground());
 			userAccount.setPoints(userAccount.getPoints() + 10);
