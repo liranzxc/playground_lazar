@@ -26,20 +26,20 @@ public class ElementEntity {
 	}
 
 
-	private String key;
+	protected String key;
 	
-	private double x;
-	private double y;
-	private String name;
-	private Date creationDate;
-	private Date expireDate;
-	private String type;
-	private Map<String, Object> attributes;
-	private String creatorPlayground;
-	private String creatorEmail;
+	protected double x;
+	protected double y;
+	protected String name;
+	protected Date creationDate;
+	protected Date expireDate;
+	protected String type;
+	protected Map<String, Object> attributes;
+	protected String creatorPlayground;
+	protected String creatorEmail;
 	
 	//@GeneratedValue(strategy=GenerationType.AUTO)
-	private int id;
+	protected int id;
 		
 	
 	public ElementEntity(String playground, String id, double x, double y, String name, Date creationDate, Date expireDate, String type,

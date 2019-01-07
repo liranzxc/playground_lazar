@@ -14,13 +14,16 @@ import org.springframework.transaction.annotation.Transactional;
 import com.example.demo.activity.exceptions.ActivityAlreadyExistException;
 import com.example.demo.activity.exceptions.InvalidActivityAtributeException;
 import com.example.demo.activity.exceptions.InvalidActivityTypeException;
+import com.example.demo.activity.plugins.ActivityHandler;
 import com.example.demo.activity.plugins.PlaygroundPlugin;
 import com.example.demo.aop.EmailValue;
 import com.example.demo.aop.ToLog;
 import com.example.demo.aop.UserPermission;
 import com.example.demo.element.ElementEntity;
 import com.example.demo.element.ElementRepository;
+import com.example.demo.element.exceptions.ElementNotFoundException;
 import com.example.demo.element.exceptions.InvalidAttributeNameException;
+import com.example.demo.element.exceptions.InvalidElementForActivityException;
 import com.example.demo.user.TypesEnumUser.Types;
 import com.example.demo.user.UserEntity;
 import com.example.demo.user.UserService;
@@ -37,6 +40,13 @@ public class ActivityServiceImpl implements ActivityService {
 	private ObjectMapper jackson;
 	private UserService userService;
 	private static int Id = 0;
+	
+	private ActivityHandler handler;
+	
+	@Autowired
+	public void setActivityHandler(ActivityHandler handler) {
+		this.handler = handler;
+	}
 	
 //	@Autowired
 //	public ActivityServiceImpl(ActivityRepository dataBase, ApplicationContext spring) {
@@ -73,13 +83,13 @@ public class ActivityServiceImpl implements ActivityService {
 	@ToLog
 	public void addNewActivity(ActivityEntity activityEntity, @EmailValue String email) 
 			throws ActivityAlreadyExistException, InvalidRoleException, InvalidActivityTypeException, 
-			InvalidActivityAtributeException, UserNotFoundException, InvalidEmailException {
+			InvalidActivityAtributeException, UserNotFoundException, InvalidEmailException, ElementNotFoundException, InvalidElementForActivityException {
 		
 		activityEntity.setKey(ActivityEntity.generateKey("playground_lazar", ""+Id++));
 		String key = activityEntity.getKey();
 		if(!this.dataBase.existsByKey(key)) {
 			if (!activityEntity.getType().isEmpty()) {
-				
+				this.handler.handle(activityEntity);
 				Class<?> theClass;
 				try {
 					String type = activityEntity.getType();

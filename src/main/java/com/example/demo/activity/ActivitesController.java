@@ -12,6 +12,8 @@ import com.example.demo.activity.exceptions.ActivityAlreadyExistException;
 import com.example.demo.activity.exceptions.InvalidActivityAtributeException;
 import com.example.demo.activity.exceptions.InvalidActivityTypeException;
 import com.example.demo.element.ElementVeirfyier;
+import com.example.demo.element.exceptions.ElementNotFoundException;
+import com.example.demo.element.exceptions.InvalidElementForActivityException;
 import com.example.demo.user.exceptions.InvalidEmailException;
 import com.example.demo.user.exceptions.InvalidRoleException;
 import com.example.demo.user.exceptions.UserNotFoundException;
@@ -46,9 +48,9 @@ public class ActivitesController {
 			@PathVariable(name = "email") String email) 
 					throws ActivityAlreadyExistException, InvalidRoleException, 
 					InvalidActivityTypeException, InvalidActivityAtributeException, UserNotFoundException
-					, InvalidEmailException {
+					, InvalidEmailException, ElementNotFoundException, InvalidElementForActivityException {
 		
-		this.elementVerifyier.verifyElement(activity.getElementPlayground(), activity.getElementId());
+		//this.elementVerifyier.verifyElement(activity.getElementPlayground(), activity.getElementId());
 		System.err.println("In activity controller - the email is: " + email);
 		service.addNewActivity(activity.ToEntity(), email);
 		// just return activity for testing - Checked !
