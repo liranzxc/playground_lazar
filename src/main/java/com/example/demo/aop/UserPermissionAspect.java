@@ -53,11 +53,11 @@ public class UserPermissionAspect {
 	                	System.err.println("");
 	                	if(isAnEmail((String)email)) {
 	                		UserEntity et = this.userService.getUser((String)email, "playground_lazar");
+	                		System.err.println("user: " + (String)email + " was found on database");
 	                		String role = et.getRole();
 	                		args[i] = role;
 	                		
 							return pjp.proceed(args);
-					
 	                	}
 	                	else {
 	                		throw new InvalidEmailException("invalid email has been given");
@@ -70,9 +70,14 @@ public class UserPermissionAspect {
 	    return pjp.proceed(args);
 	}
 	
+	// TODO: understand what happend here
+//	private boolean isAnEmail(String email) {
+//		return Pattern.matches("[_a-zA-Z1-9]+(\\.[A-Za-z0-9]*)*@[A-Za-z0-9]+\\.[A-Za-z0-9]+(\\.[A-Za-z0-9]*)*", email);
+//	}
 	
 	private boolean isAnEmail(String email) {
-		return Pattern.matches("[_a-zA-Z1-9]+(\\.[A-Za-z0-9]*)*@[A-Za-z0-9]+\\.[A-Za-z0-9]+(\\.[A-Za-z0-9]*)*", email);
+		String[] withoutShtrudel = email.split("@");
+		return (withoutShtrudel.length == 2);
 	}
 	
 }

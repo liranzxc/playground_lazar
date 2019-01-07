@@ -9,7 +9,10 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.demo.activity.exceptions.ActivityAlreadyExistException;
+import com.example.demo.activity.exceptions.InvalidActivityAtributeException;
+import com.example.demo.activity.exceptions.InvalidActivityTypeException;
 import com.example.demo.element.ElementVeirfyier;
+import com.example.demo.user.exceptions.InvalidRoleException;
 
 @RestController
 @RequestMapping("playground/activites")
@@ -38,10 +41,12 @@ public class ActivitesController {
 			consumes = MediaType.APPLICATION_JSON_VALUE)
 	public Object GoToActivity(@RequestBody ActivityTO activity,
 			@PathVariable(name = "userPlayground") String userPlayground, 
-			@PathVariable(name = "email") String email) throws ActivityAlreadyExistException {
+			@PathVariable(name = "email") String email) 
+					throws ActivityAlreadyExistException, InvalidRoleException, InvalidActivityTypeException, InvalidActivityAtributeException {
 		
 		this.elementVerifyier.verifyElement(activity.getElementPlayground(), activity.getElementId());
-		service.addNewActivity(activity.ToEntity());
+		System.err.println("In activity controller - after element validation");
+		service.addNewActivity(activity.ToEntity(), email);
 		// just return activity for testing - Checked !
 		return activity;
 

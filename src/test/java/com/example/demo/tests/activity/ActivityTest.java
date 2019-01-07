@@ -25,6 +25,7 @@ import org.springframework.web.client.RestTemplate;
 import com.example.demo.activity.ActivityEnumTypes.Activities;
 import com.example.demo.activity.ActivityService;
 import com.example.demo.activity.ActivityTO;
+import com.example.demo.activity.exceptions.InvalidActivityTypeException;
 import com.example.demo.element.ElementEntity;
 import com.example.demo.element.ElementServiceJpa;
 import com.example.demo.element.exceptions.ElementAlreadyExistException;
@@ -98,15 +99,15 @@ public class ActivityTest {
 
 	//s1
 	@Test
-	public void EchoActivity() throws ElementAlreadyExistException, InvalidRoleException {
+	public void SuccessEchoActivityByPlayer() throws ElementAlreadyExistException, InvalidRoleException {
 		
 		this.elementService.addNewElement(demoEntity, this.demo_user_manager.getEmail());
 		
 		Map <String,Object> map = new HashMap<String,Object>();
 		map.put("Attribute", "Test");
 		MultiValueMap<String, String> params= new LinkedMultiValueMap<>();
-		params.add("userPlayground", "playground_lazar");
-		params.add("email", "demo@gmail.com");
+		params.add("userPlayground", demo_user_player.getPlayground());
+		params.add("email", demo_user_player.getEmail());
 		
 		ActivityTO activityTo = new ActivityTO();
 		activityTo.setType("");
@@ -114,14 +115,45 @@ public class ActivityTest {
 		activityTo.setElementId(this.demoEntity.getId());
 		activityTo.setElementPlayground(demoEntity.getPlayground());
 		activityTo.setAttributes(map);
-		Object result =rest.postForObject( url+"/{userPlayground}/{email}", activityTo, ActivityTO.class,params);
+		Object result =rest.postForObject( url+"/{userPlayground}/{email}", activityTo, ActivityTO.class
+				,demo_user_player.getPlayground(), demo_user_player.getEmail());
 
 		ActivityTO actual = ActivityTO.class.cast(result);
 
 		assertThat(actual.getId(),equalTo("1"));
 		assertThat(actual.getAttributes().get("Attribute"), equalTo("Test"));
-
 	}
+	
+	
+	@Test(expected=InvalidRoleException.class)
+	public void FailedEchoActivityByManager() throws ElementAlreadyExistException, InvalidRoleException {
+		
+		this.elementService.addNewElement(demoEntity, this.demo_user_manager.getEmail());
+		
+		Map <String,Object> map = new HashMap<String,Object>();
+		map.put("Attribute", "Test");
+		MultiValueMap<String, String> params= new LinkedMultiValueMap<>();
+		params.add("userPlayground", demo_user_manager.getPlayground());
+		params.add("email", demo_user_manager.getEmail());
+		
+		ActivityTO activityTo = new ActivityTO();
+		activityTo.setType("");
+		activityTo.setId("1");
+		activityTo.setElementId(this.demoEntity.getId());
+		activityTo.setElementPlayground(demoEntity.getPlayground());
+		activityTo.setAttributes(map);
+		
+		try {
+			rest.postForObject( url+"/{userPlayground}/{email}", activityTo, ActivityTO.class, 
+					demo_user_manager.getPlayground(), demo_user_manager.getEmail());
+		}
+		catch (Exception e) {
+			throw new InvalidRoleException("Invalid role of user");
+		}
+		
+	}
+	
+
 	
 	//s2
 	@Test
@@ -138,13 +170,9 @@ public class ActivityTest {
 		activity.setElementId(this.demoEntity.getId());
 		activity.setElementPlayground(demoEntity.getPlayground());
 		
-		MultiValueMap<String, String> params= new LinkedMultiValueMap<>();
-		params.add("userPlayground", "playground_lazar");
-		params.add("email", "demo@gmail.com");
-		
 		//When
 		ActivityTO result =rest.postForObject( url+"/{userPlayground}/{email}", activity, 
-				ActivityTO.class, params );
+				ActivityTO.class, demo_user_player.getPlayground(), demo_user_player.getEmail());
 		System.err.println(result.getAttributes());
 	}
 	
@@ -164,11 +192,9 @@ public class ActivityTest {
 		activity.setElementId(this.demoEntity.getId());
 		activity.setElementPlayground(demoEntity.getPlayground());
 		
-		
-		MultiValueMap<String, String> params= new LinkedMultiValueMap<>();
-		params.add("userPlayground", "playground_lazar");
-		params.add("email", "demo@gmail.com");
-		ActivityTO result =rest.postForObject( url+"/{userPlayground}/{email}", activity, ActivityTO.class, params );
+
+		ActivityTO result =rest.postForObject( url+"/{userPlayground}/{email}", activity, ActivityTO.class
+				, demo_user_player.getPlayground(), demo_user_player.getEmail());
 		
 		//second message 
 		Map <String,Object> map1 = new HashMap<String,Object>();
@@ -182,10 +208,8 @@ public class ActivityTest {
 		activity1.setElementPlayground(demoEntity.getPlayground());
 		
 		
-		MultiValueMap<String, String> params1= new LinkedMultiValueMap<>();
-		params1.add("userPlayground", "playground_lazar");
-		params1.add("email", "demo@gmail.com");
-		ActivityTO result1 =rest.postForObject( url+"/{userPlayground}/{email}", activity1, ActivityTO.class, params1 );
+		ActivityTO result1 =rest.postForObject( url+"/{userPlayground}/{email}", activity1, ActivityTO.class
+				, demo_user_player.getPlayground(), demo_user_player.getEmail() );
 		
 		
 		//When
@@ -201,18 +225,16 @@ public class ActivityTest {
 		activity2.setElementPlayground(demoEntity.getPlayground());
 		
 		
-		MultiValueMap<String, String> params2= new LinkedMultiValueMap<>();
-		params2.add("userPlayground", "playground_lazar");
-		params2.add("email", "demo@gmail.com");
-		ActivityTO result2 =rest.postForObject( url+"/{userPlayground}/{email}", activity2, ActivityTO.class, params2 );
+		ActivityTO result2 =rest.postForObject( url+"/{userPlayground}/{email}", activity2, ActivityTO.class
+				, demo_user_player.getPlayground(), demo_user_player.getEmail() );
 		//Then: should see the messages on console.
 		System.out.println(result2.getAttributes());
-		
 	}
 	
 	// s4
-	@Test(expected = Exception.class) //status <> 2xx
-	public void ThrowWhenTypeIsNotExist() throws ElementAlreadyExistException, InvalidRoleException {
+	@Test(expected = InvalidActivityTypeException.class) //status <> 2xx
+	public void ThrowWhenTypeIsNotExist() 
+			throws ElementAlreadyExistException, InvalidRoleException, InvalidActivityTypeException {
 		//Given
 		this.elementService.addNewElement(demoEntity, this.demo_user_manager.getEmail());
 
@@ -226,11 +248,13 @@ public class ActivityTest {
 		activity.setElementId(this.demoEntity.getId());
 		activity.setElementPlayground(demoEntity.getPlayground());
 		
-		MultiValueMap<String, String> params= new LinkedMultiValueMap<>();
-		params.add("userPlayground", "playground_lazar");
-		params.add("email", "demo@gmail.com");
 		//When
-		ActivityTO result =rest.postForObject( url+"/{userPlayground}/{email}", activity, ActivityTO.class, params );
+		try {
+			rest.postForObject( url+"/{userPlayground}/{email}", activity, ActivityTO.class
+					, demo_user_player.getPlayground(), demo_user_player.getEmail());
+		}catch (Exception e) {
+			throw new InvalidActivityTypeException();
+		}
 		//Then ^ThrowsException^
 	}
 	
@@ -255,7 +279,8 @@ public class ActivityTest {
 		params.add("userPlayground", "playground_lazar");
 		params.add("email", "demo@gmail.com");
 		//When
-		ActivityTO result =rest.postForObject( url+"/{userPlayground}/{email}", activity, ActivityTO.class, params );
+		rest.postForObject( url+"/{userPlayground}/{email}", activity, ActivityTO.class
+				, demo_user_player.getPlayground(), demo_user_player.getEmail());
 		//Then ^ThrowsException^
 	}
 	
@@ -274,11 +299,10 @@ public class ActivityTest {
 		activity2.setElementPlayground(demoEntity.getPlayground());
 		
 		
-		MultiValueMap<String, String> params2= new LinkedMultiValueMap<>();
-		params2.add("userPlayground", "playground_lazar");
-		params2.add("email", "demo@gmail.com");
-		Object result =rest.postForObject( url+"/{userPlayground}/{email}", activity2, ActivityTO.class, params2 );
+		rest.postForObject( url+"/{userPlayground}/{email}", activity2, ActivityTO.class
+				, demo_user_player.getPlayground(), demo_user_player.getEmail());
 		//Then Console prints an empty list.
+		// TODO: check if it's really empty
 	}
 	
 	
@@ -299,11 +323,8 @@ public class ActivityTest {
 		activity.setElementPlayground(demoEntity.getPlayground());
 		
 		
-		
-		MultiValueMap<String, String> params= new LinkedMultiValueMap<>();
-		params.add("userPlayground", "playground_lazar");
-		params.add("email", "demo@gmail.com");
-		ActivityTO result =rest.postForObject( url+"/{userPlayground}/{email}", activity, ActivityTO.class, params );
+		ActivityTO result =rest.postForObject( url+"/{userPlayground}/{email}", activity, ActivityTO.class
+				, demo_user_player.getPlayground(), demo_user_player.getEmail());
 		
 	}
 	
@@ -330,26 +351,26 @@ public class ActivityTest {
 		activity.setElementPlayground(demoEntity.getPlayground());
 		
 		
-		MultiValueMap<String, String> params= new LinkedMultiValueMap<>();
-		params.add("userPlayground", "playground_lazar");
-		params.add("email", "demo@gmail.com");
-		
-		ActivityTO result =rest.postForObject( url+"/{userPlayground}/{email}", activity, ActivityTO.class, params );
+		ActivityTO result =rest.postForObject( url+"/{userPlayground}/{email}", activity, ActivityTO.class
+				, demo_user_player.getPlayground(), demo_user_player.getEmail());
 		System.err.println(result.getAttributes());
 		
 		ActivityTO activity2 = new ActivityTO("playground_lazar",  "playground_lazar", "1", Activities.CookOmelette.getActivityName() , 
 				"playground_lazar", "asdfsd", mediumMap);
-		ActivityTO result2 =rest.postForObject( url+"/{userPlayground}/{email}", activity2, ActivityTO.class, params );
+		ActivityTO result2 =rest.postForObject( url+"/{userPlayground}/{email}", activity2, ActivityTO.class
+				, demo_user_player.getPlayground(), demo_user_player.getEmail() );
 		System.err.println(result2.getAttributes());
 		
 		ActivityTO activity3 = new ActivityTO("playground_lazar",  "playground_lazar", "1", Activities.CookOmelette.getActivityName() , 
 				"playground_lazar", "asdfsd", largeMap);
-		ActivityTO result3 =rest.postForObject( url+"/{userPlayground}/{email}", activity3, ActivityTO.class, params );
+		ActivityTO result3 =rest.postForObject( url+"/{userPlayground}/{email}", activity3, ActivityTO.class
+				, demo_user_player.getPlayground(), demo_user_player.getEmail() );
 		System.err.println(result3.getAttributes());
 		
 		ActivityTO activity4 = new ActivityTO("playground_lazar",  "playground_lazar", "1", Activities.CookOmelette.getActivityName() , 
 				"playground_lazar", "asdfsd", xlargeMap);
-		ActivityTO result4 =rest.postForObject( url+"/{userPlayground}/{email}", activity4, ActivityTO.class, params );
+		ActivityTO result4 =rest.postForObject( url+"/{userPlayground}/{email}", activity4, ActivityTO.class
+				, demo_user_player.getPlayground(), demo_user_player.getEmail());
 		System.err.println(result4.getAttributes());
 	}
 	
