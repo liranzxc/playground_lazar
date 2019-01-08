@@ -13,6 +13,7 @@ public class Omelette {
 	
 	private String quality;
 	private double size;
+	private Long points;
 	
 	public Omelette() {
 		
@@ -24,8 +25,10 @@ public class Omelette {
 		double qualityBias = getQualityBias(recipe.getEggSize());
 		this.size = (random.nextDouble()*10*qualityBias)+10;
 		this.quality = bake(qualityBias, random);
+		this.points = Score(this.size, this.quality);
 	}
-	
+
+
 	private String bake(double qualityBias, Random random) {
 			double qual = random.nextDouble()*150*qualityBias;
 			if (qual < 30) {
@@ -57,8 +60,24 @@ public class Omelette {
 		
 	}
 	
+	public Long Score(double size, String quality) {
+		double qualityBias=1;
+		if (quality.equals(Quality.Poor.toString()))
+			qualityBias = 0.8;
+		else if (quality.equals(Quality.Average.toString()))
+			qualityBias = 1;
+		else if (quality.equals(Quality.Good.toString()))
+			qualityBias = 1.2;
+		else if (quality.equals(Quality.Excellent.toString()))
+			qualityBias = 1.5;
+		
+		return (long)(qualityBias * size);
+	}
+	
 	//for jackson
 
+	
+	
 	public String getQuality() {
 		return quality;
 	}
@@ -73,6 +92,15 @@ public class Omelette {
 
 	public void setSize(double size) {
 		this.size = size;
+	}
+	
+	
+	public Long getPoints() {
+		return points;
+	}
+
+	public void setPoints(Long points) {
+		this.points = points;
 	}
 	
 }

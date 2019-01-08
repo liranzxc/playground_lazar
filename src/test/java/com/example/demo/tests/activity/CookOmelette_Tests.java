@@ -165,6 +165,7 @@ public class CookOmelette_Tests {
 		try {
 			rest.postForObject( url+"/{userPlayground}/{email}", activityTo, ActivityTO.class
 					,demo_user_player.getPlayground(), demo_user_player.getEmail());
+			
 		}
 		catch (Exception e) {
 			throw new InvalidElementForActivityException();
@@ -189,7 +190,6 @@ public class CookOmelette_Tests {
 				
 		ActivityTO result =rest.postForObject( url+"/{userPlayground}/{email}", activity, ActivityTO.class
 				, demo_user_player.getPlayground(), demo_user_player.getEmail());
-				
 	}
 	
 	@Test
