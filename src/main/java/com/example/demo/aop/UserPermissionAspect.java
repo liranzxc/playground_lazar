@@ -39,7 +39,6 @@ public class UserPermissionAspect {
 		Class<?>[] parameterTypes = signature.getMethod().getParameterTypes();
 
 		List<String> allPermissions = getUsersTypesWithPermission(signature);
-		System.err.println("&&& -- " + allPermissions.toString());
 
 		Annotation[][] annotations;
 		try {
@@ -72,7 +71,6 @@ public class UserPermissionAspect {
 				}
 			}
 		}
-		System.err.println("UserPermission Aspect getType: going to continue with regular args");
 		return pjp.proceed(args);
 	}
 
