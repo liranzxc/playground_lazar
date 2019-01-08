@@ -2,6 +2,7 @@ package com.example.demo.tests.activity;
 
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.junit.Assert.assertThat;
+import static org.junit.Assert.assertTrue;
 
 import java.util.Date;
 import java.util.HashMap;
@@ -28,10 +29,12 @@ import com.example.demo.activity.ActivityTO;
 import com.example.demo.activity.exceptions.InvalidActivityTypeException;
 import com.example.demo.element.ElementEntity;
 import com.example.demo.element.ElementServiceJpa;
+import com.example.demo.element.custom.ElementTypes;
 import com.example.demo.element.exceptions.ElementAlreadyExistException;
 import com.example.demo.user.UserEntity;
 import com.example.demo.user.UserService;
 import com.example.demo.user.exceptions.InvalidRoleException;
+import com.example.demo.user.exceptions.UserNotFoundException;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
@@ -43,6 +46,9 @@ public class ActivityTest {
 
 	
 	private ElementEntity demoEntity;
+	private ElementEntity board;
+	private ElementEntity pot;
+	
 	
 	RestTemplate rest = new RestTemplate();
 
@@ -72,6 +78,9 @@ public class ActivityTest {
 		
 		
 		this.demoEntity = new ElementEntity("playground_lazar", "1", 0, 0, "postBoard", new Date(), null, "postBoard", null, null, null);
+		this.board = new ElementEntity("playground_lazar", "1", 0, 0, "uncle bob board", new Date(), null, ElementTypes.Board.toString(), null, null, null);
+		this.pot = new ElementEntity("playground_lazar", "1", 0, 0, "uncle bob pot", new Date(), null, ElementTypes.Pot.toString(), null, null, null);
+
 	}
 	
 	@Before
@@ -162,10 +171,10 @@ public class ActivityTest {
 	
 	//s2
 	@Test
-	public void AddBoardPostActivity() throws ElementAlreadyExistException, InvalidRoleException {
+	public void AddBoardPostActivity() throws ElementAlreadyExistException, InvalidRoleException, UserNotFoundException {
 		//Given
-		this.elementService.addNewElement(demoEntity, this.demo_user_manager.getEmail());
-
+		this.elementService.addNewElement(this.board, this.demo_user_manager.getEmail());
+		Long oldPoints = this.userService.getUser(this.demo_user_player.getEmail(), this.demo_user_player.getPlayground()).getPoints();
 		Map <String,Object> map = new HashMap<String,Object>();
 		map.put("poster", "Tal");
 		map.put("message", "This is a test");
@@ -180,14 +189,21 @@ public class ActivityTest {
 		//When
 		ActivityTO result =rest.postForObject( url+"/{userPlayground}/{email}", activityTo, 
 				ActivityTO.class, demo_user_player.getPlayground(), demo_user_player.getEmail());
+		
+		Long newPoints = this.userService.getUser(this.demo_user_player.getEmail(), this.demo_user_player.getPlayground()).getPoints();
+
 		System.err.println(result.getAttributes());
+		
+		System.err.println("Old points: " + oldPoints);
+		System.err.println("New points: " + newPoints);
+		assertTrue(newPoints != oldPoints);
 	}
 	
 	//s3
 	@Test
 	public void ReadTwoMessages() throws ElementAlreadyExistException, InvalidRoleException {
 		//Given
-		this.elementService.addNewElement(demoEntity, this.demo_user_manager.getEmail());
+		this.elementService.addNewElement(this.board, this.demo_user_manager.getEmail());
 
 		//first message
 		Map <String,Object> map = new HashMap<String,Object>();
@@ -294,7 +310,7 @@ public class ActivityTest {
 	@Test
 	public void ReadBoardWhenEmpty() throws ElementAlreadyExistException, InvalidRoleException {
 		//Given
-		this.elementService.addNewElement(demoEntity, this.demo_user_manager.getEmail());
+		this.elementService.addNewElement(this.board, this.demo_user_manager.getEmail());
 
 		//When
 		Map <String,Object> map2 = new HashMap<String,Object>();
@@ -317,7 +333,7 @@ public class ActivityTest {
 	@Test
 	public void TestCookOmelete() throws ElementAlreadyExistException, InvalidRoleException {
 		//Given
-		this.elementService.addNewElement(demoEntity, this.demo_user_manager.getEmail());
+		this.elementService.addNewElement(this.pot, this.demo_user_manager.getEmail());
 
 		//When
 		Map <String,Object> map = new HashMap<String,Object>();
@@ -339,7 +355,7 @@ public class ActivityTest {
 	@Test
 	public void TestOmeletteEggSizes() throws ElementAlreadyExistException, InvalidRoleException {
 		//Given
-		this.elementService.addNewElement(demoEntity, this.demo_user_manager.getEmail());
+		this.elementService.addNewElement(this.pot, this.demo_user_manager.getEmail());
 
 		//When
 		Map <String,Object> smallMap = new HashMap<String,Object>();

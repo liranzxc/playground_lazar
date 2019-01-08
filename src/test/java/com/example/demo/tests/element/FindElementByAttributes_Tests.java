@@ -36,7 +36,7 @@ import com.example.demo.user.exceptions.InvalidRoleException;
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
 public class FindElementByAttributes_Tests {
 
-	private int numOfEntities = 20;
+	private int numOfEntities = 5;
 	private ElementEntity[] demo_entities;
 	private ElementEntity demo_entity;
 
@@ -136,28 +136,16 @@ public class FindElementByAttributes_Tests {
 	public void findOneExpiredElementWithHisTypeByPlayer_Failed()
 			throws ElementAlreadyExistException, InterruptedException, InvalidRoleException {
 		// Given:
-		demo_entity.setExpireDate(new Date(1,1,1));
-		Thread.sleep(50);
+		demo_entity.setExpireDate(new Date(0));
 		this.elementService.addNewElement(this.demo_entity, this.demo_user_manager.getEmail());
 		
-		// When:
-		boolean isSuccess = false;
-		try {
+
 			ElementTO[] etos = this.restTemplate.getForObject(
 					this.url + "/{userPlayground}/{email}/search/{attributeName}/{value}", ElementTO[].class,
 					demo_user_player.getPlayground(), demo_user_player.getEmail(), "type", this.demo_entity.getType());
 		
-			if(etos.length == 0) {
-				isSuccess = true;
-			}
-		
-			
-		}catch (Exception e) {
-			
-		}
-		
 		// Than:
-		assertTrue(isSuccess);
+		assertTrue(etos.length == 0);
 	}
 
 	private boolean scenario1(String attributeName, String value) throws ElementAlreadyExistException, InvalidRoleException {
@@ -184,7 +172,7 @@ public class FindElementByAttributes_Tests {
 	public void findElementByNameSuccessfulyInDatabaseWithTwentyElement() throws ElementAlreadyExistException, InvalidRoleException {
 		// Given: 20 element entities in database (and one is the target)
 		for (ElementEntity e : this.demo_entities) {
-			if (Integer.parseInt(e.getId()) == 6) {
+			if (Integer.parseInt(e.getId()) == 2) {
 				e.setName("demo_target"); // the test
 			}
 			this.elementService.addNewElement(e, this.demo_user_manager.getEmail());
@@ -214,7 +202,7 @@ public class FindElementByAttributes_Tests {
 	public void findElementByTypeSuccessfulyInDatabaseWithTwentyElements() throws ElementAlreadyExistException, InvalidRoleException {
 		// Given: 20 element entities in database (and one is the target)
 		for (ElementEntity e : this.demo_entities) {
-			if (Integer.parseInt(e.getId()) == 6) {
+			if (Integer.parseInt(e.getId()) == 2) {
 				e.setType("demo_target"); // the test
 			}
 			this.elementService.addNewElement(e, this.demo_user_manager.getEmail());
@@ -239,13 +227,14 @@ public class FindElementByAttributes_Tests {
 		assertTrue(success);
 	}
 
+	// TODO: change find 2 from 5, not 5 from 20
 	// scenario 3 - NAME
 	@Test
 	public void findFiveElementsByNameSuccessfulyInDatabaseWithTwentyElement() throws ElementAlreadyExistException, InvalidRoleException {
 		// Given: 20 element entities in database (which 5 of them are the targets)
 
 		for (int i = 0; i < this.demo_entities.length; i++) {
-			if (i < 5) {
+			if (i < 2) {
 				demo_entities[i].setName("demo_target");
 			}
 			this.elementService.addNewElement(demo_entities[i], this.demo_user_manager.getEmail());
@@ -262,7 +251,7 @@ public class FindElementByAttributes_Tests {
 
 		boolean success = true;
 
-		if (allElements.length != 5) {
+		if (allElements.length != 2) {
 			success = false;
 		}
 
@@ -274,13 +263,14 @@ public class FindElementByAttributes_Tests {
 		assertTrue(success);
 	}
 
+	// TODO: change find 2 from 5, not 5 from 20
 	// scenario 3 - TYPE
 	@Test
 	public void findFiveElementsByTypeSuccessfulyInDatabaseWithTwentyElements() throws ElementAlreadyExistException, InvalidRoleException {
 		// Given: 10 element entities in database (which 5 of them are the targets)
 
 		for (int i = 0; i < this.demo_entities.length; i++) {
-			if (i < 5) {
+			if (i < 2) {
 				demo_entities[i].setType("demo_target");
 			}
 			this.elementService.addNewElement(demo_entities[i], this.demo_user_manager.getEmail());
@@ -297,7 +287,7 @@ public class FindElementByAttributes_Tests {
 
 		boolean success = true;
 
-		if (allElements.length != 5) {
+		if (allElements.length != 2) {
 			success = false;
 		}
 
@@ -334,6 +324,7 @@ public class FindElementByAttributes_Tests {
 		assertTrue(success);
 	}
 
+	// TODO: change to 5, not 20
 	// scenario 5 - Name
 	@Test
 	public void findNoElementByNameInDatabaseWithTwentyElements() throws ElementAlreadyExistException, InvalidRoleException {
@@ -388,7 +379,16 @@ public class FindElementByAttributes_Tests {
 
 	private boolean scenario6(String attributeName, String value) throws ElementAlreadyExistException, InvalidRoleException {
 
-		for (ElementEntity e : this.demo_entities) {
+		ElementEntity[] test_entities = new ElementEntity[11];
+		
+		for (int i = 0; i < test_entities.length; i++) {
+			test_entities[i] = new ElementEntity("playground_lazar", (i + 1) + "", 0,
+					0, "demo", new Date(), null, "demo type", null, "Aviv",
+					"demo@gmail.com");
+			
+		}
+		
+		for (ElementEntity e : test_entities) {
 			this.elementService.addNewElement(e, this.demo_user_manager.getEmail());
 		}
 
@@ -429,7 +429,7 @@ public class FindElementByAttributes_Tests {
 		}
 
 		// When:
-		int size = 7;
+		int size = 2;
 		int page = 1;
 
 		Map<String, Object> map = new HashMap<>();

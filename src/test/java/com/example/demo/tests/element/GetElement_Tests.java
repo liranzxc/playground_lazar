@@ -39,8 +39,6 @@ import com.example.demo.user.exceptions.InvalidRoleException;
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
 public class GetElement_Tests {
 
-	private int numOfDemoEntities = 20;
-	private ElementEntity[] demo_entities;
 	private ElementEntity demo_entity;
 	
 	private UserEntity demo_user_player;
@@ -94,26 +92,6 @@ public class GetElement_Tests {
 				,"demo", new Date(), null, "demo type", null, "Aviv", "demo@gmail.com");
 		
 
-		/*
-		 * Create numOfDemoEntities element entities more in array for more tests. we used sleep method
-		 * for getting different time-stamps.
-		 */
-		Location demo_entities_locaiton = new Location();
-		demo_entities = new ElementEntity[numOfDemoEntities];
-		for (int i = 0; i < this.numOfDemoEntities; i++) {
-			try {
-				Thread.sleep(20);
-			} catch (InterruptedException e) {
-				e.printStackTrace();
-			}
-			this.demo_entities[i] = new ElementEntity(
-					"playground_lazar", (i+2)+"", demo_entities_locaiton.getX(), demo_entities_locaiton.getY()
-					,"demo", new Date(), null, "demo type", null, "Aviv", "demo@gmail.com");
-			
-			if(i == this.numOfDemoEntities/4) {
-				this.demo_entities[i].setExpireDate(new Date(1,10,10));
-			}
-		}
 	}
 
 

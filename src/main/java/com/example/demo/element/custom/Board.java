@@ -13,10 +13,10 @@ public class Board extends ElementEntity {
 		super();
 	}
 
-//	public Board(ElementEntity entity) {
-//		super(entity);
-//		initBoardAttributes();
-//	}
+	public Board(ElementEntity entity) {
+		super(entity);
+		initBoardAttributes();
+	}
 
 	public Board(String playground, String id, double x, double y, String name, Date creationDate, Date expireDate,
 			String type, Map<String, Object> attributes, String creatorPlayground, String creatorEmail) {

@@ -94,42 +94,7 @@ public class PostMessage_Tests {
 	}
 	
 	
-	@Test
-	public void AddBoardPostActivity() throws ElementAlreadyExistException, InvalidRoleException, UserNotFoundException {
-		String poster = "Tal";
-		String message = "This is a test";
-		long playerPointsBeforePost = demo_user_player.getPoints();
-		
-		//Given
-		this.elementService.addNewElement(demoEntity, this.demo_user_manager.getEmail());
 
-		Map <String,Object> map = new HashMap<String,Object>();
-		map.put("poster", poster);
-		map.put("message", message);
-		ActivityTO activity = new ActivityTO("playground_lazar", demoEntity.getPlayground()
-				, demoEntity.getId(), Activities.BoardPost.getActivityName()
-				, demo_user_player.getPlayground(), demo_user_player.getEmail(), map);
-		
-		//activity.setElementId(this.demoEntity.getId());
-		//activity.setElementPlayground(demoEntity.getPlayground());
-		
-		//When
-		ActivityTO result =rest.postForObject( url+"/{userPlayground}/{email}", activity, 
-				ActivityTO.class, demo_user_player.getPlayground(), demo_user_player.getEmail());
-		
-		
-		//assertThat((String)result.getAttributes().get("message"), "This is a test");
-		assertTrue(((String)result.getAttributes().get("message")) 
-				.equals(message));
-		assertTrue(((String)result.getAttributes().get("poster")) 
-				.equals(poster));
-		
-		long playerPointsAfterPost = userService.getUser(demo_user_player.getEmail(), demo_user_player.getPlayground()).getPoints();
-		System.err.println(playerPointsAfterPost);
-		assertTrue(playerPointsAfterPost == playerPointsBeforePost + 10);
-	}
-	
-	
 	
 	
 }

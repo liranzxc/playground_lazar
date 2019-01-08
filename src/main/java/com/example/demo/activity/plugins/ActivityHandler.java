@@ -45,6 +45,9 @@ public class ActivityHandler {
 		ElementEntity element = this.elementService.getElement(elementPlayground, elementID, playerEmail);
 		
 		Map<String,Object> elementMapping = element.getAttributes();
+		if(elementMapping == null || elementMapping.isEmpty()) {
+			throw new InvalidElementForActivityException("cant use activity on this element, no activies available for this element");		
+		}
 		
 		String activityType = activity.getType();
 		
@@ -54,7 +57,8 @@ public class ActivityHandler {
 					Long pointsFromActivity  = (Long)elementMapping.get(attribute);
 					UserEntity user = this.userService.getUser(playerEmail, playerPlayground);
 					user.setPoints(user.getPoints() + pointsFromActivity);
-					this.userService.updateUserInfo(user);		
+					this.userService.updateUserInfo(user);	
+					return;
 				}
 			}
 		}

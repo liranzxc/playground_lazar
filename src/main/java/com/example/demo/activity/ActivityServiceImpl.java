@@ -40,109 +40,93 @@ public class ActivityServiceImpl implements ActivityService {
 	private ObjectMapper jackson;
 	private UserService userService;
 	private static int Id = 0;
-	
+
 	private ActivityHandler handler;
-	
+
 	@Autowired
 	public void setActivityHandler(ActivityHandler handler) {
 		this.handler = handler;
 	}
-	
+
 //	@Autowired
 //	public ActivityServiceImpl(ActivityRepository dataBase, ApplicationContext spring) {
 //		this.dataBase = dataBase;
 //		this.spring = spring;
 //		this.jackson = new ObjectMapper();
 //	}
-	
+
 	@Autowired
 	public void setDataBase(ActivityRepository dataBase) {
 		this.dataBase = dataBase;
 	}
-	
+
 	@Autowired
 	public void setApplicationContext(ApplicationContext spring) {
 		this.spring = spring;
 	}
-	
+
 	@Autowired
 	public void setObjectMapper(ObjectMapper jackson) {
 		this.jackson = jackson;
 	}
-	
+
 	@Autowired
 	public void setUserService(UserService userService) {
 		this.userService = userService;
 	}
-	
 
-	
 	@Override
 	@Transactional
-	@UserPermission(permissions= {Types.Player})
+	@UserPermission(permissions = { Types.Player })
 	@ToLog
-	public void addNewActivity(ActivityEntity activityEntity, @EmailValue String email) 
-			throws ActivityAlreadyExistException, InvalidRoleException, InvalidActivityTypeException, 
-			InvalidActivityAtributeException, UserNotFoundException, InvalidEmailException, ElementNotFoundException, InvalidElementForActivityException {
-		
-		activityEntity.setKey(ActivityEntity.generateKey("playground_lazar", ""+Id++));
+	public void addNewActivity(ActivityEntity activityEntity, @EmailValue String email)
+			throws ActivityAlreadyExistException, InvalidRoleException, InvalidActivityTypeException,
+			InvalidActivityAtributeException, UserNotFoundException, InvalidEmailException, ElementNotFoundException,
+			InvalidElementForActivityException {
+
+		activityEntity.setKey(ActivityEntity.generateKey("playground_lazar", "" + Id++));
 		String key = activityEntity.getKey();
-		if(!this.dataBase.existsByKey(key)) {
+		if (!this.dataBase.existsByKey(key)) {
 			if (!activityEntity.getType().isEmpty()) {
-				this.handler.handle(activityEntity);
+
 				Class<?> theClass;
 				try {
 					String type = activityEntity.getType();
 					String className = "com.example.demo.activity.plugins." + type + "Plugin";
 
 					theClass = Class.forName(className);
-					
+
 				} catch (Exception e) {
-					throw new InvalidActivityTypeException(activityEntity.getType() + " is an invalid activity type"); //cause the user to get http 500 error
+					throw new InvalidActivityTypeException(activityEntity.getType() + " is an invalid activity type"); // cause error
 				}
-				
+
 				Object activity;
 				try {
 					PlaygroundPlugin plugin = (PlaygroundPlugin) this.spring.getBean(theClass);
 					activity = plugin.invokeOperation(activityEntity);
-					
-					Map<String, Object> rvMap = this.jackson.readValue(
-							this.jackson.writeValueAsString(activity),
+
+					Map<String, Object> rvMap = this.jackson.readValue(this.jackson.writeValueAsString(activity),
 							Map.class);
 					activityEntity.getAttributes().putAll(rvMap);
 				} catch (Exception e) {
 					throw new InvalidActivityAtributeException("Invalid attributes");
 				}
-				
-				
+
+				System.err.println("inside activity service type is not empty going to handle");
+				this.handler.handle(activityEntity);
 			}
 			this.dataBase.save(activityEntity);
-			
-			// TODO: add activity points to user account - make it better
-			System.err.println("Start to add activity points to user account");
-			UserEntity userAccount = userService.getUser(activityEntity.getPlayerEmail(), activityEntity.getPlayerPlayground());
-			userAccount.setPoints(userAccount.getPoints() + 10);
-			userService.updateUserInfo(userAccount);
-			
-			System.err.println("Inside activity controller: num of points of user is: " 
-			+ userService.getUser
-			(activityEntity.getPlayerEmail(), activityEntity.getPlayerPlayground())
-			.getPoints());
-		}
-		else {
+		} else {
 			throw new ActivityAlreadyExistException("Activity already exists");
 		}
-		
-	}
 
+	}
 
 	@Override
 	public List<ActivityEntity> getAllActivitiesByTypes(String type, Pageable pageable) {
 		List<ActivityEntity> list = dataBase.findByType(type, pageable);
 		return list;
 	}
-
-
 
 	@Override
 	public void cleanUp() {

@@ -42,6 +42,13 @@ public class ElementEntity {
 	protected int id;
 		
 	
+	public ElementEntity(ElementEntity clone) {
+		
+		this(clone.getPlayground(), clone.getId(), clone.getX(), clone.getY(), clone.getName(), 
+				clone.getCreationDate(), clone.getExpireDate(), clone.getType(), clone.getAttributes(), 
+				clone.getCreatorPlayground(), clone.getCreatorEmail());
+	}
+	
 	public ElementEntity(String playground, String id, double x, double y, String name, Date creationDate, Date expireDate, String type,
 			Map<String, Object> attributes, String creatorPlayground, String creatorEmail) {
 		super();

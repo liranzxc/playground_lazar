@@ -12,6 +12,11 @@ public class Pot extends ElementEntity{
 	public Pot() {
 		super();
 	}
+	
+	public Pot(ElementEntity entity) {
+		super(entity);
+		initPotAttributes();
+	}
 
 	public Pot(String playground, String id, double x, double y, String name, Date creationDate, Date expireDate,
 			String type, Map<String, Object> attributes, String creatorPlayground, String creatorEmail) {
@@ -23,7 +28,7 @@ public class Pot extends ElementEntity{
 	private void initPotAttributes() {
 		this.attributes = new HashMap<String, Object>();
 		String cook = ActivityEnumTypes.Activities.CookOmelette.getActivityName();
-		this.attributes.put(cook, 50L);
+		this.attributes.put(cook, 100L);
 	}
 
 }

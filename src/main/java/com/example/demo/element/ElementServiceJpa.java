@@ -2,6 +2,7 @@ package com.example.demo.element;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 
@@ -16,12 +17,15 @@ import com.example.demo.aop.ToLog;
 import com.example.demo.aop.UserPermission;
 import com.example.demo.application.exceptions.InvalidPageRequestException;
 import com.example.demo.application.exceptions.InvalidPageSizeRequestException;
+import com.example.demo.element.custom.Board;
+import com.example.demo.element.custom.ElementTypes;
+import com.example.demo.element.custom.Fridge;
+import com.example.demo.element.custom.Pot;
 import com.example.demo.element.exceptions.ElementAlreadyExistException;
 import com.example.demo.element.exceptions.ElementNotFoundException;
 import com.example.demo.element.exceptions.InvalidAttributeNameException;
 import com.example.demo.element.exceptions.InvalidDistanceValueException;
 import com.example.demo.user.TypesEnumUser.Types;
-import com.example.demo.user.UserRepository;
 import com.example.demo.user.UserService;
 import com.example.demo.user.exceptions.InvalidRoleException;
 import com.example.demo.user.exceptions.UserNotFoundException;
@@ -52,11 +56,8 @@ public class ElementServiceJpa implements ElementService {
 	@UserPermission(permissions= {Types.Manager})
 	@ToLog
 	public void addNewElement(ElementEntity et, @EmailValue String email) throws ElementAlreadyExistException, InvalidRoleException {
-//		String role = email;
-//		if(!role.equals("Manager")) {
-//			throw new InvalidRoleException("only manager can add new Elements");
-//		}
 		
+		et = setAttributesBasedType(et);
 		int newID = ++ID;
 		String key = ElementEntity.createKeyFromIdAndPlayground(newID + "", et.getPlayground());
 		et.setKey(key);
@@ -74,11 +75,6 @@ public class ElementServiceJpa implements ElementService {
 	@UserPermission(permissions= {Types.Manager})
 	@ToLog
 	public void addElementFromOutside(ElementEntity et, @EmailValue String email) throws ElementAlreadyExistException, InvalidRoleException {
-//		String role = email;
-//		if(!role.equals("Manager")) {
-//			throw new InvalidRoleException("only manager can add new Elements");
-//		}
-		
 		String key = et.getKey();
 
 		if (!this.elementDatabase.existsByKey(key)) {
@@ -93,13 +89,10 @@ public class ElementServiceJpa implements ElementService {
 	@UserPermission(permissions= {Types.Manager})
 	@ToLog
 	public void updateElement(ElementEntity et, @EmailValue String email) throws ElementNotFoundException, InvalidRoleException {
-//		String role = email;
-//		if(!role.equals("Manager")) {
-//			throw new InvalidRoleException("only manager can add new Elements");
-//		}
 		
 		String key = et.getKey();
 		if (this.elementDatabase.existsByKey(key)) {
+			et = setAttributesBasedType(et);
 			this.elementDatabase.deleteByKey(key); // delete not updated element
 			this.elementDatabase.save(et); // save updated element
 		} else {
@@ -231,10 +224,11 @@ public class ElementServiceJpa implements ElementService {
 
 	private ElementEntity getElementPlayer(String playground, String id) throws ElementNotFoundException {
 		String key = ElementEntity.createKeyFromIdAndPlayground(id, playground);
-		if (this.elementDatabase.existsByKey(key)) {
-			return this.elementDatabase.findAllByKeyAndExpireDateGreaterThanOrExpireDateIsNull(key, new Date()).get();
+		Optional<ElementEntity> et = this.elementDatabase.findByKeyAndExpireDateGreaterThanOrExpireDateIsNull(key, new Date());
+		if (et.isPresent()) {
+			return et.get();
 		} else {
-			throw new ElementNotFoundException();
+			throw new ElementNotFoundException("element wasnt found");
 		}
 	}
 
@@ -350,6 +344,30 @@ public class ElementServiceJpa implements ElementService {
 
 	public static void setIDToZero() {
 		ID = 0;
+	}
+	
+	
+	
+	private ElementEntity setAttributesBasedType(ElementEntity et) {
+		String type = et.getType();
+		for (ElementTypes eType : ElementTypes.values()) {
+			if(eType.toString().equals(type)) {
+				return setElementBaseType(et, eType);
+			}
+		}
+		return et;
+	}
+
+	private ElementEntity setElementBaseType(ElementEntity newEntity, ElementTypes type) {
+		switch (type) {
+		case Board:
+			return new Board(newEntity);
+		case Fridge:
+			return new Fridge(newEntity);
+		case Pot:
+			return new Pot(newEntity);
+		}
+		return newEntity;
 	}
 
 }

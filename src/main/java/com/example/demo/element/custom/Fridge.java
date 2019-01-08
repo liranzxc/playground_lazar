@@ -12,6 +12,10 @@ public class Fridge extends ElementEntity{
 	public Fridge() {
 		super();
 	}
+	
+	public Fridge(ElementEntity et) {
+		super(et);
+	}
 
 	public Fridge(String playground, String id, double x, double y, String name, Date creationDate, Date expireDate,
 			String type, Map<String, Object> attributes, String creatorPlayground, String creatorEmail) {

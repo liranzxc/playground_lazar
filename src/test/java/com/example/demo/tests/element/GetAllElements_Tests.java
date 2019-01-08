@@ -34,7 +34,7 @@ import com.example.demo.user.exceptions.InvalidRoleException;
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
 public class GetAllElements_Tests {
 
-	private int numOfDemoEntities = 20;
+	private int numOfDemoEntities = 5;
 	private ElementEntity[] demo_entities;
 	private ElementEntity demo_entity;
 	
@@ -105,8 +105,8 @@ public class GetAllElements_Tests {
 					"playground_lazar", (i+2)+"", demo_entities_locaiton.getX(), demo_entities_locaiton.getY()
 					,"demo", new Date(), null, "demo type", null, "Aviv", "demo@gmail.com");
 			
-			if(i == this.numOfDemoEntities/4) {
-				this.demo_entities[i].setExpireDate(new Date(1,10,10));
+			if(i < 2) {
+				this.demo_entities[i].setExpireDate(new Date(0));
 			}
 		}
 	}
@@ -175,7 +175,7 @@ public class GetAllElements_Tests {
 		assertTrue(success);
 	}
 
-	
+	// TODO: change 2 from 5, not 10 from 20
 	//scenario 3
 	@Test
 	public void getAllElementsAsPlayer_GetArrayOfTenElementsWhichIsNotExpired() throws ElementAlreadyExistException, InvalidRoleException {
@@ -189,7 +189,7 @@ public class GetAllElements_Tests {
 		// Than:
 		boolean success = false;
 		
-		if(allElements[allElements.length-1].getId().equals("11")) {
+		if(allElements[allElements.length-1].getId().equals("5")) {
 			success = true;
 		}
 
