@@ -40,7 +40,6 @@ public class UsersController {
 	@RequestMapping(value = "/", method = RequestMethod.POST,consumes=MediaType.APPLICATION_JSON_UTF8_VALUE)
 	public UserTO registerFromForm(@RequestBody UserTO userForm, Model model)
 			throws EmailAlreadyRegisteredException, InvalidEmailException, InvalidRoleException, UserNotFoundException {
-		System.err.println("User Role in Control is: " + userForm.getRole());
 
 		this.userService.registerNewUser(userForm.ToEntity());
 		return userForm;
@@ -92,22 +91,7 @@ public class UsersController {
 	public void updateUserByPlaygroundAndEmail(@PathVariable(name = "email") String email,
 			@PathVariable(name = "playground") String playground, @RequestBody UserTO updatedDetails)
 			throws UserNotFoundException, UserNotActivatedException, InvalidEmailException {
-//		List<UserEntity> mydb = CreateUserDB();
-//		
-//		UserEntity user =  mydb.stream()
-//				.filter(e-> e.getEmail().equals(email) && e.getPlayground().equals(playground))
-//				.findFirst().get();
 
-//		if(user!=null && mydb.remove(user))
-//			{
-//				user.setAvatar(userTo.getAvatar());
-//				user.setEmail(userTo.getEmail());
-//				user.setRole(userTo.getRole());
-//				user.setUsername(userTo.getUsername());
-//				
-//				mydb.add(user);
-//
-//				System.out.println("User Update");
 		if (userService.getUser(email, playground).getCode() != null)
 			throw new UserNotActivatedException("The user " + email + " is not yet validated!");
 		else {
