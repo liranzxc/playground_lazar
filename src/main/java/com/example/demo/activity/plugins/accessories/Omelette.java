@@ -2,6 +2,8 @@ package com.example.demo.activity.plugins.accessories;
 
 import java.util.Random;
 
+import com.example.demo.activity.exceptions.InvalidEggSizeException;
+
 public class Omelette {
 	public enum EggSize{
 		Small, Medium, Large, ExtraLarge;
@@ -18,7 +20,6 @@ public class Omelette {
 	public Omelette() {
 		
 	}
-	
 
 	public Omelette(OmeletteRecipe recipe) {
 		Random random = new Random();
@@ -56,7 +57,7 @@ public class Omelette {
 		else if (eggSize.equals(EggSize.ExtraLarge.toString())) {
 			return 1.4;
 		}
-		else throw new RuntimeException();
+		else throw new InvalidEggSizeException("The egg size: " + eggSize +" does not exist.");
 		
 	}
 	

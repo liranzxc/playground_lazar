@@ -4,6 +4,7 @@ import static org.hamcrest.CoreMatchers.equalTo;
 import static org.junit.Assert.assertThat;
 
 import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -25,6 +26,7 @@ import org.springframework.web.client.RestTemplate;
 import com.example.demo.activity.ActivityService;
 import com.example.demo.activity.ActivityTO;
 import com.example.demo.activity.ActivityTypes;
+import com.example.demo.activity.exceptions.InvalidEggSizeException;
 import com.example.demo.activity.plugins.accessories.Omelette.EggSize;
 import com.example.demo.element.ElementEntity;
 import com.example.demo.element.ElementServiceJpa;
@@ -251,5 +253,32 @@ public class CookOmelette_Tests {
 				, demo_user_player.getPlayground(), demo_user_player.getEmail());
 				
 	}
+	
+	
+	@Test(expected=InvalidEggSizeException.class)
+	public void FailedCookOmeletteWithInvalidSize() throws ElementAlreadyExistException, InvalidRoleException {
+		//Given
+		this.elementService.addNewElement(this.pot, this.demo_user_manager.getEmail());
+		//When
+		Map <String,Object> map = new HashMap<String,Object>();
+		map.put("eggSize", "extraSmall");
+		ActivityTO activity = new ActivityTO("playground_lazar",  "playground_lazar", "1", ActivityTypes.CookOmelette.getActivityName()
+				, demo_user_player.getPlayground(), demo_user_player.getEmail(), map);
+				
+				
+		activity.setElementId(this.demoEntity.getId());
+		activity.setElementPlayground(demoEntity.getPlayground());
+				
+		try {
+			ActivityTO result =rest.postForObject( url+"/{userPlayground}/{email}", activity, ActivityTO.class
+					, demo_user_player.getPlayground(), demo_user_player.getEmail());
+		}
+		//Then
+		catch (Exception e) {
+			throw new InvalidEggSizeException();
+		}
+	
+	}
+	
 }
 

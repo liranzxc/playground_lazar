@@ -116,6 +116,7 @@ public class ActivityServiceImpl implements ActivityService {
 
 					return activity;
 				} catch (Exception e) {
+					e.printStackTrace();
 					throw new InvalidActivityAtributeException("Invalid attributes");
 				}
 			}
