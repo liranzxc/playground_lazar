@@ -28,7 +28,7 @@ public class Pot extends ElementEntity{
 	private void initPotAttributes() {
 		this.attributes = new HashMap<String, Object>();
 		String cook = ActivityTypes.CookOmelette.getActivityName();
-		this.attributes.put(cook, 100L);
+		this.attributes.put(cook, 50L);
 	}
 
 }
