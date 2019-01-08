@@ -10,8 +10,8 @@ import org.springframework.data.domain.Sort.Direction;
 import org.springframework.stereotype.Component;
 
 import com.example.demo.activity.ActivityEntity;
-import com.example.demo.activity.ActivityEnumTypes.Activities;
 import com.example.demo.activity.ActivityRepository;
+import com.example.demo.activity.ActivityTypes;
 import com.example.demo.activity.plugins.accessories.BoardMessage;
 import com.example.demo.activity.plugins.accessories.BoardMessagePage;
 import com.example.demo.activity.plugins.accessories.BoardMessagePageable;
@@ -33,7 +33,7 @@ public class BoardReadPlugin implements PlaygroundPlugin{
 		try {
 			BoardMessagePageable messagesPageable = this.jackson.readValue(et.getJsonAttributes(), BoardMessagePageable.class);
 			BoardMessagePage messagePage =  new BoardMessagePage(this.repository.findByType(
-					Activities.BoardPost.getActivityName(),
+					ActivityTypes.BoardPost.getActivityName(),
 					PageRequest.of(messagesPageable.getPage(), messagesPageable.getSize(), Direction.ASC, "key"))
 					.stream()
 					.map(BoardReadPlugin::getMessageFromBoardMessage)

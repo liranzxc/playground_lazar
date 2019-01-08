@@ -11,7 +11,6 @@ import org.springframework.web.bind.annotation.RestController;
 import com.example.demo.activity.exceptions.ActivityAlreadyExistException;
 import com.example.demo.activity.exceptions.InvalidActivityAtributeException;
 import com.example.demo.activity.exceptions.InvalidActivityTypeException;
-import com.example.demo.element.ElementVeirfyier;
 import com.example.demo.element.exceptions.ElementNotFoundException;
 import com.example.demo.element.exceptions.InvalidElementForActivityException;
 import com.example.demo.user.exceptions.InvalidEmailException;
@@ -23,7 +22,6 @@ import com.example.demo.user.exceptions.UserNotFoundException;
 public class ActivitesController {
 	
 	private ActivityService service;
-	private ElementVeirfyier elementVerifyier;
 	
 	
 	@Autowired
@@ -31,10 +29,6 @@ public class ActivitesController {
 		this.service = activityService;
 	}
 	
-	@Autowired
-	public void setElementVerifyier(ElementVeirfyier verifyier) {
-		this.elementVerifyier = verifyier;
-	}
 	
 	// activites controller
 

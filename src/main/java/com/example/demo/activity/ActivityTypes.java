@@ -1,7 +1,7 @@
 package com.example.demo.activity;
 
-public class ActivityEnumTypes {
-	public enum Activities{
+
+public enum ActivityTypes{
 		
 		BoardPost("BoardPost"), BoardRead("BoardRead"), CookOmelette("CookOmelette");
 		// declaring private variable for getting values
@@ -13,9 +13,8 @@ public class ActivityEnumTypes {
 		}
 
 		// enum constructor - cannot be public or protected
-		private Activities(String action) {
+		private ActivityTypes(String action) {
 			this.action = action;
 		}
 
-	};
-}
+	}

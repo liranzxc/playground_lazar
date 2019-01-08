@@ -19,7 +19,6 @@ import com.example.demo.element.exceptions.ElementAlreadyExistException;
 import com.example.demo.element.exceptions.ElementNotFoundException;
 import com.example.demo.element.exceptions.InvalidAttributeNameException;
 import com.example.demo.element.exceptions.InvalidDistanceValueException;
-import com.example.demo.user.UserVerifyier;
 import com.example.demo.user.exceptions.InvalidEmailException;
 import com.example.demo.user.exceptions.InvalidRoleException;
 import com.example.demo.user.exceptions.UserNotFoundException;
@@ -29,16 +28,10 @@ import com.example.demo.user.exceptions.UserNotFoundException;
 public class ElementsController {
 
 	private ElementService elementService;
-	private UserVerifyier userVerifier;
 	
 	@Autowired
 	public void setElementService(ElementService elementService) {
 		this.elementService = elementService;
-	}
-	
-	@Autowired
-	public void setUserVerifier(UserVerifyier verifier) {
-		this.userVerifier = verifier;
 	}
 	
 

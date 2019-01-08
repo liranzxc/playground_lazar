@@ -22,9 +22,9 @@ import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 
-import com.example.demo.activity.ActivityEnumTypes;
 import com.example.demo.activity.ActivityService;
 import com.example.demo.activity.ActivityTO;
+import com.example.demo.activity.ActivityTypes;
 import com.example.demo.element.ElementEntity;
 import com.example.demo.element.ElementServiceJpa;
 import com.example.demo.element.custom.ElementTypes;
@@ -122,7 +122,7 @@ public class CookOmelette_Tests {
 		params.add("email", demo_user_player.getEmail());
 		
 		ActivityTO activityTo = new ActivityTO();
-		activityTo.setType(ActivityEnumTypes.Activities.CookOmelette.getActivityName());
+		activityTo.setType(ActivityTypes.CookOmelette.getActivityName());
 		activityTo.setId("1");
 		activityTo.setElementId(expiredPot.getId());
 		activityTo.setElementPlayground(expiredPot.getPlayground());
@@ -153,7 +153,7 @@ public class CookOmelette_Tests {
 		params.add("email", demo_user_player.getEmail());
 		
 		ActivityTO activityTo = new ActivityTO();
-		activityTo.setType(ActivityEnumTypes.Activities.CookOmelette.getActivityName());
+		activityTo.setType(ActivityTypes.CookOmelette.getActivityName());
 		activityTo.setId("1");
 		activityTo.setElementId(expiredPot.getId());
 		activityTo.setElementPlayground(expiredPot.getPlayground());

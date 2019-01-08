@@ -25,16 +25,10 @@ public class UsersController {
 	private String TEST_CODE = "1234";
 
 	private UserService userService;
-	private UserVerifyier userVerifyier;
-
+	
 	@Autowired
 	public void setUserService(UserService userService) {
 		this.userService = userService;
-	}
-
-	@Autowired
-	public void setUserVerifier(UserVerifyier verifier) {
-		this.userVerifyier = verifier;
 	}
 
 	public String getTEST_CODE() {

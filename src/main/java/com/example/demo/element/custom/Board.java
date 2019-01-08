@@ -4,7 +4,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.example.demo.activity.ActivityEnumTypes;
+import com.example.demo.activity.ActivityTypes;
 import com.example.demo.element.ElementEntity;
 
 public class Board extends ElementEntity {
@@ -26,8 +26,8 @@ public class Board extends ElementEntity {
 
 	private void initBoardAttributes() {
 		this.attributes = new HashMap<String, Object>();
-		String post = ActivityEnumTypes.Activities.BoardPost.getActivityName();
-		String read = ActivityEnumTypes.Activities.BoardRead.getActivityName();
+		String post = ActivityTypes.BoardPost.getActivityName();
+		String read = ActivityTypes.BoardRead.getActivityName();
 		this.attributes.put(post, 10L);
 		this.attributes.put(read, 1L);
 	}

@@ -23,9 +23,10 @@ import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 
-import com.example.demo.activity.ActivityEnumTypes.Activities;
+import com.example.demo.activity.ActivityTypes;
 import com.example.demo.activity.ActivityService;
 import com.example.demo.activity.ActivityTO;
+import com.example.demo.activity.ActivityTypes;
 import com.example.demo.activity.exceptions.InvalidActivityTypeException;
 import com.example.demo.element.ElementEntity;
 import com.example.demo.element.ElementServiceJpa;
@@ -179,7 +180,7 @@ public class ActivityTest {
 		map.put("poster", "Tal");
 		map.put("message", "This is a test");
 		ActivityTO activityTo = new ActivityTO("playground_lazar", "playground_lazar", "1", 
-				Activities.BoardPost.getActivityName(), "playground_lazar", "asdfsd", map);
+				ActivityTypes.BoardPost.getActivityName(), "playground_lazar", "asdfsd", map);
 		
 		activityTo.setElementId(this.demoEntity.getId());
 		activityTo.setElementPlayground(demoEntity.getPlayground());
@@ -209,7 +210,7 @@ public class ActivityTest {
 		Map <String,Object> map = new HashMap<String,Object>();
 		map.put("poster", "Tal");
 		map.put("message", "This is a test");
-		ActivityTO activityTo = new ActivityTO("playground_lazar",  "playground_lazar", "1", Activities.BoardPost.getActivityName() , 
+		ActivityTO activityTo = new ActivityTO("playground_lazar",  "playground_lazar", "1", ActivityTypes.BoardPost.getActivityName() , 
 				demo_user_player.getPlayground(), demo_user_player.getEmail(), map);
 		
 		activityTo.setElementId(this.demoEntity.getId());
@@ -223,7 +224,7 @@ public class ActivityTest {
 		Map <String,Object> map1 = new HashMap<String,Object>();
 		map1.put("poster", "Human");
 		map1.put("message", "Generic message");
-		ActivityTO activityTo1 = new ActivityTO("playground_lazar", "playground_lazar", "1", Activities.BoardPost.getActivityName() , 
+		ActivityTO activityTo1 = new ActivityTO("playground_lazar", "playground_lazar", "1", ActivityTypes.BoardPost.getActivityName() , 
 				demo_user_player.getPlayground(), demo_user_player.getEmail(), map1);
 		
 		
@@ -240,7 +241,7 @@ public class ActivityTest {
 		Map <String,Object> map2 = new HashMap<String,Object>();
 		map2.put("page", 0);
 		map2.put("size", 5);
-		ActivityTO activity2 = new ActivityTO("playground_lazar",  "playground_lazar", "1", Activities.BoardRead.getActivityName() 
+		ActivityTO activity2 = new ActivityTO("playground_lazar",  "playground_lazar", "1", ActivityTypes.BoardRead.getActivityName() 
 				, demo_user_player.getPlayground(), demo_user_player.getEmail(), map2);
 		
 		
@@ -290,7 +291,7 @@ public class ActivityTest {
 		Map <String,Object> map = new HashMap<String,Object>();
 		map.put("attribute1", "Tal");
 		map.put("attribute2", "This is a test");
-		ActivityTO activity = new ActivityTO("playground_lazar", "playground_lazar", "1", Activities.BoardPost.toString() /*must be a valid type*/ 
+		ActivityTO activity = new ActivityTO("playground_lazar", "playground_lazar", "1", ActivityTypes.BoardPost.toString() /*must be a valid type*/ 
 				, demo_user_player.getPlayground(), demo_user_player.getEmail(), map);
 		
 		
@@ -315,7 +316,7 @@ public class ActivityTest {
 		//When
 		Map <String,Object> map2 = new HashMap<String,Object>();
 		map2.put("page", 0);
-		ActivityTO activity2 = new ActivityTO("playground_lazar",  "playground_lazar", "1", Activities.BoardRead.getActivityName()
+		ActivityTO activity2 = new ActivityTO("playground_lazar",  "playground_lazar", "1", ActivityTypes.BoardRead.getActivityName()
 				, demo_user_player.getPlayground(), demo_user_player.getEmail(), map2);
 		
 		activity2.setElementId(this.demoEntity.getId());
@@ -338,7 +339,7 @@ public class ActivityTest {
 		//When
 		Map <String,Object> map = new HashMap<String,Object>();
 		map.put("eggSize", "medium");
-		ActivityTO activity = new ActivityTO("playground_lazar",  "playground_lazar", "1", Activities.CookOmelette.getActivityName()
+		ActivityTO activity = new ActivityTO("playground_lazar",  "playground_lazar", "1", ActivityTypes.CookOmelette.getActivityName()
 				, demo_user_player.getPlayground(), demo_user_player.getEmail(), map);
 		
 		
@@ -366,7 +367,7 @@ public class ActivityTest {
 		mediumMap.put("eggSize", "medium");
 		largeMap.put("eggSize", "large");
 		xlargeMap.put("eggSize", "extraLarge");
-		ActivityTO activity = new ActivityTO("playground_lazar",  "playground_lazar", "1", Activities.CookOmelette.getActivityName()
+		ActivityTO activity = new ActivityTO("playground_lazar",  "playground_lazar", "1", ActivityTypes.CookOmelette.getActivityName()
 				, demo_user_player.getPlayground(), demo_user_player.getEmail(), smallMap);
 		
 		
@@ -378,19 +379,19 @@ public class ActivityTest {
 				, demo_user_player.getPlayground(), demo_user_player.getEmail());
 		System.err.println(result.getAttributes());
 		
-		ActivityTO activity2 = new ActivityTO("playground_lazar",  "playground_lazar", "1", Activities.CookOmelette.getActivityName() 
+		ActivityTO activity2 = new ActivityTO("playground_lazar",  "playground_lazar", "1", ActivityTypes.CookOmelette.getActivityName() 
 				, demo_user_player.getPlayground(), demo_user_player.getEmail(), mediumMap);
 		ActivityTO result2 =rest.postForObject( url+"/{userPlayground}/{email}", activity2, ActivityTO.class
 				, demo_user_player.getPlayground(), demo_user_player.getEmail() );
 		System.err.println(result2.getAttributes());
 		
-		ActivityTO activity3 = new ActivityTO("playground_lazar",  "playground_lazar", "1", Activities.CookOmelette.getActivityName()
+		ActivityTO activity3 = new ActivityTO("playground_lazar",  "playground_lazar", "1", ActivityTypes.CookOmelette.getActivityName()
 				, demo_user_player.getPlayground(), demo_user_player.getEmail(), largeMap);
 		ActivityTO result3 =rest.postForObject( url+"/{userPlayground}/{email}", activity3, ActivityTO.class
 				, demo_user_player.getPlayground(), demo_user_player.getEmail() );
 		System.err.println(result3.getAttributes());
 		
-		ActivityTO activity4 = new ActivityTO("playground_lazar",  "playground_lazar", "1", Activities.CookOmelette.getActivityName() 
+		ActivityTO activity4 = new ActivityTO("playground_lazar",  "playground_lazar", "1", ActivityTypes.CookOmelette.getActivityName() 
 				, demo_user_player.getPlayground(), demo_user_player.getEmail(), xlargeMap);
 		ActivityTO result4 =rest.postForObject( url+"/{userPlayground}/{email}", activity4, ActivityTO.class
 				, demo_user_player.getPlayground(), demo_user_player.getEmail());

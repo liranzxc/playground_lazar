@@ -4,7 +4,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.example.demo.activity.ActivityEnumTypes;
+import com.example.demo.activity.ActivityTypes;
 import com.example.demo.element.ElementEntity;
 
 public class Pot extends ElementEntity{
@@ -27,7 +27,7 @@ public class Pot extends ElementEntity{
 	
 	private void initPotAttributes() {
 		this.attributes = new HashMap<String, Object>();
-		String cook = ActivityEnumTypes.Activities.CookOmelette.getActivityName();
+		String cook = ActivityTypes.CookOmelette.getActivityName();
 		this.attributes.put(cook, 100L);
 	}
 
