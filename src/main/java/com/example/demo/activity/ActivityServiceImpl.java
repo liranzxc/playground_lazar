@@ -103,7 +103,7 @@ public class ActivityServiceImpl implements ActivityService {
 				try {
 					PlaygroundPlugin plugin = (PlaygroundPlugin) this.spring.getBean(theClass);
 					activity = plugin.invokeOperation(activityEntity);
-
+					
 					Map<String, Object> rvMap = this.jackson.readValue(this.jackson.writeValueAsString(activity),
 							Map.class);
 					
