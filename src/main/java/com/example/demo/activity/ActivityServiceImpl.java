@@ -108,8 +108,7 @@ public class ActivityServiceImpl implements ActivityService {
 							Map.class);
 					
 					activityEntity.getAttributes().putAll(rvMap);
-					
-					//this.handler.handle(activityEntity);
+					this.handler.handle(activityEntity);
 
 					this.dataBase.save(activityEntity);
 

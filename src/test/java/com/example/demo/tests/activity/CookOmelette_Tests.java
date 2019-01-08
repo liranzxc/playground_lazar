@@ -85,12 +85,18 @@ public class CookOmelette_Tests {
 		this.pot = new ElementEntity("playground_lazar", "1", 0, 0, "uncle bob pot", new Date(), null, ElementTypes.Pot.toString(), null, null, null);
 		this.expiredPot = new ElementEntity("playground_lazar", "1", 0, 0, "uncle bob old pot", new Date(), new Date(0), ElementTypes.Pot.toString(), null, null, null);
 		this.board = new ElementEntity("playground_lazar", "1", 0, 0, "uncle bob board", new Date(), null, ElementTypes.Board.toString(), null, null, null);
+		
+		//clean data base before anything
+		this.elementService.cleanup();
+		this.userService.cleanup();
+		this.service.cleanUp();
+
 	}
 	
 	@Before
 	public void setup() {
 		ElementServiceJpa.setIDToZero(); // reset the ID to 0 after each test
-		
+
 		try {
 			this.userService.registerNewUser(demo_user_manager);
 			this.userService.registerNewUser(demo_user_player);
@@ -102,7 +108,7 @@ public class CookOmelette_Tests {
 	
 	@After
 	public void teardown() {
-		service.cleanUp();
+		this.service.cleanUp();
 		this.elementService.cleanup();
 		this.userService.cleanup();
 	}

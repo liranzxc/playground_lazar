@@ -81,6 +81,11 @@ public class ActivityTest {
 		this.demoEntity = new ElementEntity("playground_lazar", "1", 0, 0, "postBoard", new Date(), null, "postBoard", null, null, null);
 		this.board = new ElementEntity("playground_lazar", "1", 0, 0, "uncle bob board", new Date(), null, ElementTypes.Board.toString(), null, null, null);
 		this.pot = new ElementEntity("playground_lazar", "1", 0, 0, "uncle bob pot", new Date(), null, ElementTypes.Pot.toString(), null, null, null);
+		
+		//clean data base before anything
+		this.elementService.cleanup();
+		this.userService.cleanup();
+		this.service.cleanUp();
 
 	}
 	
@@ -165,6 +170,7 @@ public class ActivityTest {
 	@Test
 	public void ReadBoardWhenEmpty() throws ElementAlreadyExistException, InvalidRoleException {
 		//Given
+		
 		this.elementService.addNewElement(this.board, this.demo_user_manager.getEmail());
 
 		//When
@@ -173,9 +179,9 @@ public class ActivityTest {
 		ActivityTO activity2 = new ActivityTO("playground_lazar",  "playground_lazar", "1", ActivityTypes.BoardRead.getActivityName()
 				, demo_user_player.getPlayground(), demo_user_player.getEmail(), map2);
 		
-		activity2.setElementId(this.demoEntity.getId());
-		activity2.setElementPlayground(demoEntity.getPlayground());
-		
+		activity2.setElementId(this.board.getId());
+		activity2.setElementPlayground(this.board.getPlayground());
+
 		
 		rest.postForObject( url+"/{userPlayground}/{email}", activity2, ActivityTO.class
 				, demo_user_player.getPlayground(), demo_user_player.getEmail());

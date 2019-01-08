@@ -75,6 +75,11 @@ public class Echo_Tests {
 		
 		
 		this.demoEntity = new ElementEntity("playground_lazar", "1", 0, 0, "postBoard", new Date(), null, "postBoard", null, null, null);
+
+		//clean data base before anything
+		this.elementService.cleanup();
+		this.userService.cleanup();
+		this.service.cleanUp();
 	}
 	
 	@Before

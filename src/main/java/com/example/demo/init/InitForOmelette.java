@@ -8,12 +8,13 @@ import org.springframework.stereotype.Component;
 
 import com.example.demo.element.ElementEntity;
 import com.example.demo.element.ElementService;
+import com.example.demo.element.custom.ElementTypes;
 import com.example.demo.element.custom.Pot;
 import com.example.demo.user.TypesEnumUser;
 import com.example.demo.user.UserEntity;
 import com.example.demo.user.UserService;
 
-//@Component
+@Component
 public class InitForOmelette {
 		private UserService userService;
 		private ElementService elementService;
@@ -48,7 +49,7 @@ public class InitForOmelette {
 				userService.updateUserInfo(manager);
 				
 				//Create Pot with id 1
-				ElementEntity et = new ElementEntity(manager.getPlayground(), "1" , 0 ,  0 , "Uncle Tom's Pot" , new Date() , null , "Pot",
+				ElementEntity et = new ElementEntity(manager.getPlayground(), "1" , 0 ,  0 , "Uncle Tom's Pot" , new Date() , null , ElementTypes.Pot.toString(),
 						null , manager.getPlayground(), manager.getEmail());
 				Pot pot = new Pot(et);
 				elementService.addNewElement(pot, manager.getEmail());

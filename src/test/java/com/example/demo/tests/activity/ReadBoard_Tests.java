@@ -71,6 +71,11 @@ public class ReadBoard_Tests {
 		
 		this.demoEntity = new ElementEntity("playground_lazar", "1", 0, 0, "postBoard", new Date(), null, "postBoard", null, null, null);
 		this.board = new ElementEntity("playground_lazar", "1", 0, 0, "uncle bob board", new Date(), null, ElementTypes.Board.toString(), null, null, null);
+	
+		//clean data base before anything
+		this.elementService.cleanup();
+		this.userService.cleanup();
+		this.service.cleanUp();
 	}
 	
 	@Before

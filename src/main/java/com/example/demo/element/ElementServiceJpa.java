@@ -61,6 +61,7 @@ public class ElementServiceJpa implements ElementService {
 		int newID = ++ID;
 		String key = ElementEntity.createKeyFromIdAndPlayground(newID + "", et.getPlayground());
 		et.setKey(key);
+		System.err.println("add new element key is:" + key);
 
 		if (!this.elementDatabase.existsByKey(key)) {
 			this.elementDatabase.save(et);

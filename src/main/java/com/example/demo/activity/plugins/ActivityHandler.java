@@ -57,10 +57,8 @@ public class ActivityHandler {
 					Long totalPoints = (Long)elementMapping.get(attribute);
 					UserEntity user = this.userService.getUser(playerEmail, playerPlayground);
 					totalPoints += user.getPoints();
-					
-					if(activity.getAttributes().containsKey("points") && activity.getAttributes().get("points") instanceof Long) {
-						totalPoints +=  (Long)activity.getAttributes().get("points");
-					}
+					totalPoints += extractPointsFromAttributes(activity);
+					System.err.println("ActivityHandler: user new points count is:" + totalPoints);
 					user.setPoints(totalPoints);
 					this.userService.updateUserInfo(user);	
 					
@@ -71,6 +69,26 @@ public class ActivityHandler {
 		}
 		
 		throw new InvalidElementForActivityException("cant use activity on this element");		
+	}
+	
+	
+	private Long extractPointsFromAttributes(ActivityEntity activity) {
+		Map<String, Object> attributes = activity.getAttributes();
+		if(attributes.containsKey("points")) {
+			Object pointsValue = attributes.get("points");
+			try {
+				if(pointsValue instanceof Integer) {
+					return new Long((Integer)pointsValue);
+				}
+				else if(pointsValue instanceof String) {
+					return new Long(Long.parseLong((String)pointsValue));
+				}
+			}catch(Exception e) {
+				// do nothing
+			}
+		}
+		
+		return 0L;
 	}
 	
 	
