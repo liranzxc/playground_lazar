@@ -115,7 +115,6 @@ public class ElementServiceJpa implements ElementService {
 			throws ElementNotFoundException, InvalidRoleException, UserNotFoundException {
 		//String role = email; // if gotten to this line email was swapped with type
 		String userRole = userService.getUser(email, "playground_lazar").getRole();
-		System.err.println("in getElement - role is: " + userRole);
 		
 		switch (userRole) {
 		case ("Player"): {
@@ -157,15 +156,12 @@ public class ElementServiceJpa implements ElementService {
 			throws InvalidPageSizeRequestException, InvalidPageRequestException, InvalidRoleException, UserNotFoundException {
 		//String role = email; // if gotten to this line email was swapped with type
 		String userRole = userService.getUser(email, "playground_lazar").getRole();
-		System.err.println("in getElement - role is: " + userRole);
 		
 		switch (userRole) {
 		case ("Player"): {
-			System.err.println("going to getAllElementPlayer");
 			return getAllElementsPlayer(page);
 		}
 		case ("Manager"): {
-			System.err.println("going to getAllElementManager");
 			return getAllElementsManager(page);
 		}
 		}
@@ -180,7 +176,6 @@ public class ElementServiceJpa implements ElementService {
 			throws InvalidDistanceValueException, InvalidRoleException, UserNotFoundException {
 		//String role = email; // if gotten to this line email was swapped with type
 		String userRole = userService.getUser(email, "playground_lazar").getRole();
-		System.err.println("in getElement - role is: " + userRole);
 
 		switch (userRole) {
 		case ("Player"): {
@@ -200,9 +195,8 @@ public class ElementServiceJpa implements ElementService {
 	public List<ElementEntity> getAllElementsByAttributeAndValue(String attribute, String value,@EmailValue String email,
 			Pageable page) throws InvalidAttributeNameException, InvalidPageSizeRequestException,
 			InvalidPageRequestException, InvalidRoleException, UserNotFoundException {
-		//String role = email; // if gotten to this line email was swapped with type
+		
 		String userRole = userService.getUser(email, "playground_lazar").getRole();
-		System.err.println("in getElement - role is: " + userRole);
 		
 		switch (userRole) {
 		case ("Player"): {
