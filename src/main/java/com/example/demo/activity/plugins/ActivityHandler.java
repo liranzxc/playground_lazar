@@ -54,10 +54,17 @@ public class ActivityHandler {
 		for(String attribute: elementMapping.keySet()) {
 			if(attribute.equals(activityType)) {	
 				if(elementMapping.get(attribute) instanceof Long) {
-					Long pointsFromActivity  = (Long)elementMapping.get(attribute);
+					Long totalPoints = (Long)elementMapping.get(attribute);
 					UserEntity user = this.userService.getUser(playerEmail, playerPlayground);
-					user.setPoints(user.getPoints() + pointsFromActivity);
+					totalPoints += user.getPoints();
+					
+					if(activity.getAttributes().containsKey("points") && activity.getAttributes().get("points") instanceof Long) {
+						totalPoints +=  (Long)activity.getAttributes().get("points");
+					}
+					user.setPoints(totalPoints);
 					this.userService.updateUserInfo(user);	
+					
+				
 					return;
 				}
 			}
