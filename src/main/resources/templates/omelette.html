@@ -66,15 +66,16 @@
 
         <form th:object="${ometObject}" class="needs-validation" novalidate>
           <div class="container">
-            <div class="col-md-6 mb-3">
+           
               <label for="username">Map</label>
               <label  type="text"  class="form-control"  th:text="${ometObject.attributes}" id="usernameL" value="" required></label>
-            </div>
+              <img class="img-fluid mb-5 d-block mx-auto" src="img/omelette.JPG" alt="" style="width: 25%">
+            
+           </div>
         </form>
 
-        <div class="container">
-        <img class="img-fluid mb-5 d-block mx-auto" src="img/omelette.JPG" alt="" style="width: 25%">
-        </div>
+        
+        
 
       </div>
     </header>
