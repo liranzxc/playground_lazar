@@ -43,7 +43,6 @@ import com.example.demo.user.exceptions.InvalidRoleException;
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
 public class CookOmelette_Tests {
 
-	//private final long DAY_IN_MS = 24 * 60 * 60 * 1000; 
 	@LocalServerPort
 	private int port;
 	private String url;

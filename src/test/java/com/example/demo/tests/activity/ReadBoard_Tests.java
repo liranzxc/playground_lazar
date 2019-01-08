@@ -1,9 +1,5 @@
 package com.example.demo.tests.activity;
 
-import static org.hamcrest.CoreMatchers.equalTo;
-import static org.junit.Assert.assertThat;
-import static org.junit.Assert.assertTrue;
-
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -19,15 +15,12 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.test.context.junit4.SpringRunner;
-import org.springframework.util.LinkedMultiValueMap;
-import org.springframework.util.MultiValueMap;
+
 import org.springframework.web.client.RestTemplate;
 
 import com.example.demo.activity.ActivityTypes;
 import com.example.demo.activity.ActivityService;
 import com.example.demo.activity.ActivityTO;
-import com.example.demo.activity.ActivityTypes;
-import com.example.demo.activity.exceptions.InvalidActivityTypeException;
 import com.example.demo.element.ElementEntity;
 import com.example.demo.element.ElementServiceJpa;
 import com.example.demo.element.custom.ElementTypes;
@@ -35,11 +28,10 @@ import com.example.demo.element.exceptions.ElementAlreadyExistException;
 import com.example.demo.user.UserEntity;
 import com.example.demo.user.UserService;
 import com.example.demo.user.exceptions.InvalidRoleException;
-import com.example.demo.user.exceptions.UserNotFoundException;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
-public class ActivityTest {
+public class ReadBoard_Tests {
 
 	@LocalServerPort
 	private int port;
@@ -48,7 +40,6 @@ public class ActivityTest {
 	
 	private ElementEntity demoEntity;
 	private ElementEntity board;
-	private ElementEntity pot;
 	
 	
 	RestTemplate rest = new RestTemplate();
@@ -80,8 +71,6 @@ public class ActivityTest {
 		
 		this.demoEntity = new ElementEntity("playground_lazar", "1", 0, 0, "postBoard", new Date(), null, "postBoard", null, null, null);
 		this.board = new ElementEntity("playground_lazar", "1", 0, 0, "uncle bob board", new Date(), null, ElementTypes.Board.toString(), null, null, null);
-		this.pot = new ElementEntity("playground_lazar", "1", 0, 0, "uncle bob pot", new Date(), null, ElementTypes.Pot.toString(), null, null, null);
-
 	}
 	
 	@Before
@@ -122,7 +111,7 @@ public class ActivityTest {
 		activityTo.setElementPlayground(demoEntity.getPlayground());
 		
 
-		ActivityTO result =rest.postForObject( url+"/{userPlayground}/{email}", activityTo, ActivityTO.class
+		rest.postForObject( url+"/{userPlayground}/{email}", activityTo, ActivityTO.class
 				, demo_user_player.getPlayground(), demo_user_player.getEmail());
 		
 		//second message 
@@ -137,7 +126,7 @@ public class ActivityTest {
 		activityTo1.setElementPlayground(demoEntity.getPlayground());
 		
 		
-		ActivityTO result1 =rest.postForObject( url+"/{userPlayground}/{email}", activityTo1, ActivityTO.class
+		rest.postForObject( url+"/{userPlayground}/{email}", activityTo1, ActivityTO.class
 				, demo_user_player.getPlayground(), demo_user_player.getEmail() );
 		
 		
