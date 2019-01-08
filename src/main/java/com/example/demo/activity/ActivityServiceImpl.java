@@ -83,7 +83,6 @@ public class ActivityServiceImpl implements ActivityService {
 			throws ActivityAlreadyExistException, InvalidRoleException, InvalidActivityTypeException,
 			InvalidActivityAtributeException, UserNotFoundException, InvalidEmailException, ElementNotFoundException,
 			InvalidElementForActivityException {
-
 		activityEntity.setKey(ActivityEntity.generateKey("playground_lazar", "" + Id++));
 		String key = activityEntity.getKey();
 		if (!this.dataBase.existsByKey(key)) {
@@ -110,7 +109,7 @@ public class ActivityServiceImpl implements ActivityService {
 					
 					activityEntity.getAttributes().putAll(rvMap);
 					
-					this.handler.handle(activityEntity);
+					//this.handler.handle(activityEntity);
 
 					this.dataBase.save(activityEntity);
 

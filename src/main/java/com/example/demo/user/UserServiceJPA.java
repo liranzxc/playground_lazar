@@ -97,7 +97,7 @@ public class UserServiceJPA implements UserService {
 						"The user with id " + email + " and playground " + playgroundName + " not found.");
 		} else
 			throw new UserNotFoundException(
-					"The user with id " + email + " and playground " + playgroundName + " not found.");
+					"The user with id " + email + " and playground " + playgroundName + " not found");
 	}
 
 	@Override

@@ -29,6 +29,7 @@ import com.example.demo.activity.exceptions.ActivityAlreadyExistException;
 import com.example.demo.activity.exceptions.InvalidActivityAtributeException;
 import com.example.demo.activity.exceptions.InvalidActivityTypeException;
 import com.example.demo.activity.plugins.accessories.Omelette;
+import com.example.demo.activity.plugins.accessories.Omelette.EggSize;
 import com.example.demo.element.ElementEntity;
 import com.example.demo.element.ElementServiceJpa;
 import com.example.demo.element.custom.ElementTypes;
@@ -48,6 +49,7 @@ import com.example.demo.user.exceptions.UserNotFoundException;
 public class clientController {
 
 	private RestTemplate rest;
+	private static int omeletteId = 0;
 	private int port = 8080;
 	private String url = "http://localhost:" + port + "/playground/users";
 	private UserService userService;
@@ -123,7 +125,6 @@ public class clientController {
 
 		try {
 			UserTO userAfterRegister = this.rest.postForObject(this.url + "/", user, UserTO.class);
-
 			model.setViewName("valid");
 			model.addObject("user", userAfterRegister);
 
@@ -166,33 +167,39 @@ public class clientController {
 	public ModelAndView createActivity(@RequestParam(name="Email") String Email) throws EmailAlreadyRegisteredException, InvalidEmailException, InvalidRoleException, ElementAlreadyExistException, ActivityAlreadyExistException, InvalidActivityTypeException, InvalidActivityAtributeException, UserNotFoundException, ElementNotFoundException, InvalidElementForActivityException {
 		ModelAndView model = new ModelAndView();
 		model.setViewName("omelette");
-		model.addObject("ometObject",CreateOmlet());
+		
+		//TAL CODE
+		Omelette oml = (Omelette) activityService.addNewActivity(CreateOmlette(Email).ToEntity(), Email);
+		model.addObject("ometObject" , oml);
+		
+		//LIRAN CODE
+		//model.addObject("ometObject",CreateOmlette());
 		
 		return model;
 
 	}
 
-	private ActivityTO CreateOmlet() throws EmailAlreadyRegisteredException, InvalidEmailException, InvalidRoleException, ElementAlreadyExistException {
-		// TODO Auto-generated method stub
-		UserEntity manager = new UserEntity("demoManager44@gmail.com", "playground_lazar", "mr.manajer", null,
-			"Manager");
-		
-		UserEntity player = new UserEntity("liranplayer@gmail.com", "playground_lazar", "mr.manajer", null,
-				"Player");
-		
+	private ActivityTO CreateOmlette(String email) throws EmailAlreadyRegisteredException, InvalidEmailException, InvalidRoleException, ElementAlreadyExistException {
+//		UserEntity manager = new UserEntity("demoManager44@gmail.com", "playground_lazar", "mr.manajer", null,
+//			"Manager");
+//		
+//		UserEntity player = new UserEntity("liranplayer@gmail.com", "playground_lazar", "mr.manajer", null,
+//				"Player");
+//		
 		//userService.registerNewUser(player);
-		ElementEntity pot = new ElementEntity("playground_lazar", "1", 0, 0, "uncle bob old pot", new Date(), null, ElementTypes.Pot.toString(), null, null, null);
+//		ElementEntity pot = new ElementEntity("playground_lazar", "1", 0, 0, "uncle bob old pot", new Date(), null, ElementTypes.Pot.toString(), null, null, null);
 
 		Map <String,Object> map = new HashMap<String,Object>();
-		map.put("eggSize", "Medium");
+		map.put("eggSize", EggSize.Medium);
 		
 		ActivityTO activityTo = new ActivityTO();
 		activityTo.setType(ActivityTypes.CookOmelette.getActivityName());
-		activityTo.setId("1");
-		activityTo.setElementId(pot.getId());
-		activityTo.setElementPlayground(pot.getPlayground());
-		activityTo.setPlayerEmail(manager.getEmail());
-		activityTo.setPlayerPlayground(manager.getPlayground());
+		activityTo.setPlayerEmail(email);
+		activityTo.setId("" +omeletteId++);
+//		activityTo.setElementId(pot.getId());
+//		activityTo.setElementPlayground(pot.getPlayground());
+//		activityTo.setPlayerEmail(manager.getEmail());
+//		activityTo.setPlayerPlayground(manager.getPlayground());
 		activityTo.setAttributes(map);
 		
 		return activityTo;

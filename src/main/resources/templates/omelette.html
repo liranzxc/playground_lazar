@@ -62,14 +62,18 @@
 
         <h1 class="text-uppercase mb-0">Cooking Time !!!</h1>
 
-        <h3>information of activityEntity</h3>
+        <h3>Look how good you are</h3>
 
         <form th:object="${ometObject}" class="needs-validation" novalidate>
           <div class="container">
             <div class="col-md-6 mb-3">
-              <label for="username">Map</label>
-              <label  type="text"  class="form-control"  th:text="${ometObject.attributes}" id="usernameL" value="" required></label>
+              <label for="username">Omelette</label>
+              <label  type="text"  class="form-control"  th:text="${'Quality: ' + ometObject.quality}" id="usernameL" value="" required></label>
+              <label  type="text"  class="form-control"  th:text="${'Size: ' + ometObject.size}" id="usernameL" value="" required></label>
+              <label  type="text"  class="form-control"  th:text="${'Points: ' + ometObject.points}" id="usernameL" value="" required></label>
+              
             </div>
+            
         </form>
 
         <div class="container">
