@@ -25,6 +25,7 @@ import org.springframework.web.client.RestTemplate;
 import com.example.demo.activity.ActivityService;
 import com.example.demo.activity.ActivityTO;
 import com.example.demo.activity.ActivityTypes;
+import com.example.demo.activity.plugins.accessories.Omelette.EggSize;
 import com.example.demo.element.ElementEntity;
 import com.example.demo.element.ElementServiceJpa;
 import com.example.demo.element.custom.ElementTypes;
@@ -169,6 +170,86 @@ public class CookOmelette_Tests {
 			throw new InvalidElementForActivityException();
 		}
 		
+	}
+	
+	@Test
+	public void CookOmeletteSuccessWithEggsizeSmall() throws ElementAlreadyExistException, InvalidRoleException {
+		//Given
+		this.elementService.addNewElement(this.pot, this.demo_user_manager.getEmail());
+		//When
+		Map <String,Object> map = new HashMap<String,Object>();
+		map.put("eggSize", EggSize.Small);
+		ActivityTO activity = new ActivityTO("playground_lazar",  "playground_lazar", "1", ActivityTypes.CookOmelette.getActivityName()
+				, demo_user_player.getPlayground(), demo_user_player.getEmail(), map);
+				
+				
+		activity.setElementId(this.demoEntity.getId());
+		activity.setElementPlayground(demoEntity.getPlayground());
+				
+				
+		ActivityTO result =rest.postForObject( url+"/{userPlayground}/{email}", activity, ActivityTO.class
+				, demo_user_player.getPlayground(), demo_user_player.getEmail());
+				
+	}
+	
+	@Test
+	public void CookOmeletteSuccessWithEggsizeMedium() throws ElementAlreadyExistException, InvalidRoleException {
+		//Given
+		this.elementService.addNewElement(this.pot, this.demo_user_manager.getEmail());
+		//When
+		Map <String,Object> map = new HashMap<String,Object>();
+		map.put("eggSize", EggSize.Medium);
+		ActivityTO activity = new ActivityTO("playground_lazar",  "playground_lazar", "1", ActivityTypes.CookOmelette.getActivityName()
+				, demo_user_player.getPlayground(), demo_user_player.getEmail(), map);
+				
+				
+		activity.setElementId(this.demoEntity.getId());
+		activity.setElementPlayground(demoEntity.getPlayground());
+				
+				
+		ActivityTO result =rest.postForObject( url+"/{userPlayground}/{email}", activity, ActivityTO.class
+				, demo_user_player.getPlayground(), demo_user_player.getEmail());
+				
+	}
+	
+	@Test
+	public void CookOmeletteSuccessWithEggsizeLarge() throws ElementAlreadyExistException, InvalidRoleException {
+		//Given
+		this.elementService.addNewElement(this.pot, this.demo_user_manager.getEmail());
+		//When
+		Map <String,Object> map = new HashMap<String,Object>();
+		map.put("eggSize", EggSize.Large);
+		ActivityTO activity = new ActivityTO("playground_lazar",  "playground_lazar", "1", ActivityTypes.CookOmelette.getActivityName()
+				, demo_user_player.getPlayground(), demo_user_player.getEmail(), map);
+				
+				
+		activity.setElementId(this.demoEntity.getId());
+		activity.setElementPlayground(demoEntity.getPlayground());
+				
+				
+		ActivityTO result =rest.postForObject( url+"/{userPlayground}/{email}", activity, ActivityTO.class
+				, demo_user_player.getPlayground(), demo_user_player.getEmail());
+				
+	}
+	
+	@Test
+	public void CookOmeletteSuccessWithEggsizeXtraLarge() throws ElementAlreadyExistException, InvalidRoleException {
+		//Given
+		this.elementService.addNewElement(this.pot, this.demo_user_manager.getEmail());
+		//When
+		Map <String,Object> map = new HashMap<String,Object>();
+		map.put("eggSize", EggSize.ExtraLarge);
+		ActivityTO activity = new ActivityTO("playground_lazar",  "playground_lazar", "1", ActivityTypes.CookOmelette.getActivityName()
+				, demo_user_player.getPlayground(), demo_user_player.getEmail(), map);
+				
+				
+		activity.setElementId(this.demoEntity.getId());
+		activity.setElementPlayground(demoEntity.getPlayground());
+				
+				
+		ActivityTO result =rest.postForObject( url+"/{userPlayground}/{email}", activity, ActivityTO.class
+				, demo_user_player.getPlayground(), demo_user_player.getEmail());
+				
 	}
 }
 

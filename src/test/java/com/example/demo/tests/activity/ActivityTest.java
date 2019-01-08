@@ -333,22 +333,6 @@ public class ActivityTest {
 	// s6
 	@Test
 	public void TestCookOmelete() throws ElementAlreadyExistException, InvalidRoleException {
-		//Given
-		this.elementService.addNewElement(this.pot, this.demo_user_manager.getEmail());
-
-		//When
-		Map <String,Object> map = new HashMap<String,Object>();
-		map.put("eggSize", "medium");
-		ActivityTO activity = new ActivityTO("playground_lazar",  "playground_lazar", "1", ActivityTypes.CookOmelette.getActivityName()
-				, demo_user_player.getPlayground(), demo_user_player.getEmail(), map);
-		
-		
-		activity.setElementId(this.demoEntity.getId());
-		activity.setElementPlayground(demoEntity.getPlayground());
-		
-		
-		ActivityTO result =rest.postForObject( url+"/{userPlayground}/{email}", activity, ActivityTO.class
-				, demo_user_player.getPlayground(), demo_user_player.getEmail());
 		
 	}
 	

@@ -79,7 +79,7 @@ public class ActivityServiceImpl implements ActivityService {
 	@Transactional
 	@UserPermission(permissions = { Types.Player })
 	@ToLog
-	public void addNewActivity(ActivityEntity activityEntity, @EmailValue String email)
+	public Object addNewActivity(ActivityEntity activityEntity, @EmailValue String email)
 			throws ActivityAlreadyExistException, InvalidRoleException, InvalidActivityTypeException,
 			InvalidActivityAtributeException, UserNotFoundException, InvalidEmailException, ElementNotFoundException,
 			InvalidElementForActivityException {
@@ -107,15 +107,20 @@ public class ActivityServiceImpl implements ActivityService {
 
 					Map<String, Object> rvMap = this.jackson.readValue(this.jackson.writeValueAsString(activity),
 							Map.class);
+					
 					activityEntity.getAttributes().putAll(rvMap);
+					
+					this.handler.handle(activityEntity);
+
+					this.dataBase.save(activityEntity);
+
+					return activity;
 				} catch (Exception e) {
 					throw new InvalidActivityAtributeException("Invalid attributes");
 				}
-
-				System.err.println("inside activity service type is not empty going to handle");
-				this.handler.handle(activityEntity);
 			}
 			this.dataBase.save(activityEntity);
+			return activityEntity;
 		} else {
 			throw new ActivityAlreadyExistException("Activity already exists");
 		}

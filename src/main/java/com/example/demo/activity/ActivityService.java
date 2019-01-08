@@ -14,7 +14,7 @@ import com.example.demo.user.exceptions.UserNotFoundException;
 
 public interface ActivityService {
 	
-	public void addNewActivity(ActivityEntity entity, String email) throws ActivityAlreadyExistException, InvalidRoleException, InvalidActivityTypeException, InvalidActivityAtributeException, UserNotFoundException, InvalidEmailException, ElementNotFoundException, InvalidElementForActivityException;
+	public Object addNewActivity(ActivityEntity entity, String email) throws ActivityAlreadyExistException, InvalidRoleException, InvalidActivityTypeException, InvalidActivityAtributeException, UserNotFoundException, InvalidEmailException, ElementNotFoundException, InvalidElementForActivityException;
 	public List<ActivityEntity> getAllActivitiesByTypes(String type, Pageable pageable);
 	public void cleanUp();
 }
