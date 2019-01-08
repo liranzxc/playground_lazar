@@ -37,7 +37,7 @@ public class ActivitesController {
 	@RequestMapping(path = "/{userPlayground}/{email}", 
 			method = RequestMethod.POST, 
 			consumes = MediaType.APPLICATION_JSON_VALUE)
-	public Object GoToActivity(@RequestBody ActivityTO activity,
+	public Object CreateActivity(@RequestBody ActivityTO activity,
 			@PathVariable(name = "userPlayground") String userPlayground, 
 			@PathVariable(name = "email") String email) 
 					throws ActivityAlreadyExistException, InvalidRoleException, 
@@ -45,7 +45,7 @@ public class ActivitesController {
 					, InvalidEmailException, ElementNotFoundException, InvalidElementForActivityException {
 		
 		//this.elementVerifyier.verifyElement(activity.getElementPlayground(), activity.getElementId());
-		System.err.println("In activity controller - the email is: " + email);
+		//System.err.println("In activity controller - the email is: " + email);
 		service.addNewActivity(activity.ToEntity(), email);
 		// just return activity for testing - Checked !
 		return activity;
