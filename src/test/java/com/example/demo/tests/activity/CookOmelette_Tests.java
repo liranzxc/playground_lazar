@@ -142,9 +142,9 @@ public class CookOmelette_Tests {
 	
 	
 	@Test(expected=InvalidElementForActivityException.class)
-	public void FailedCookOmeletteWithMssageBoard() throws ElementAlreadyExistException, InvalidRoleException, InvalidElementForActivityException {
+	public void FailedCookOmeletteWithOtherElement() throws ElementAlreadyExistException, InvalidRoleException, InvalidElementForActivityException {
 		
-		this.elementService.addNewElement(this.board, this.demo_user_manager.getEmail());
+		this.elementService.addNewElement(this.demoEntity, this.demo_user_manager.getEmail());
 		
 		Map <String,Object> map = new HashMap<String,Object>();
 		map.put("eggSize", "medium");

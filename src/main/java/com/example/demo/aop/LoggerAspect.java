@@ -21,7 +21,9 @@ public class LoggerAspect {
 	public void log (JoinPoint joinPoint) {
 		String className = joinPoint.getTarget().getClass().getSimpleName();
 		String methodName = joinPoint.getSignature().getName();
-		System.err.println("*****************" + className + "." + methodName + "()");
+		String methodSignature = className + "." + methodName + "()";
+		
+		log.info("\n\nStart - " + methodSignature);
 	}
 	
 	
