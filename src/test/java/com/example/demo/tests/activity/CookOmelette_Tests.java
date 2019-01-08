@@ -148,7 +148,7 @@ public class CookOmelette_Tests {
 		this.elementService.addNewElement(this.demoEntity, this.demo_user_manager.getEmail());
 		
 		Map <String,Object> map = new HashMap<String,Object>();
-		map.put("eggSize", "medium");
+		map.put("eggSize", EggSize.Medium);
 		MultiValueMap<String, String> params= new LinkedMultiValueMap<>();
 		params.add("userPlayground", demo_user_player.getPlayground());
 		params.add("email", demo_user_player.getEmail());
