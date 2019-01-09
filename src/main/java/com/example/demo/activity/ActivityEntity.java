@@ -103,5 +103,14 @@ public class ActivityEntity {
 		public static String generateKey(String playground, String id) {
 			return id +"@@" +playground;
 		}
+
+		@Override
+		public String toString() {
+			return "ActivityEntity [elementPlayground=" + elementPlayground + ", elementId=" + elementId + ", type="
+					+ type + ", playerPlayground=" + playerPlayground + ", playerEmail=" + playerEmail + ", key=" + key
+					+ ", attributes=" + attributes + "]";
+		}
+		
+		
 		
 }

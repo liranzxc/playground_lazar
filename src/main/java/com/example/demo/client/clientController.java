@@ -180,15 +180,16 @@ public class clientController {
 	}
 
 	private ActivityTO CreateOmlette(String email) throws EmailAlreadyRegisteredException, InvalidEmailException, InvalidRoleException, ElementAlreadyExistException {
-//		UserEntity manager = new UserEntity("demoManager44@gmail.com", "playground_lazar", "mr.manajer", null,
-//			"Manager");
-//		
-//		UserEntity player = new UserEntity("liranplayer@gmail.com", "playground_lazar", "mr.manajer", null,
-//				"Player");
-//		
-		//userService.registerNewUser(player);
-//		ElementEntity pot = new ElementEntity("playground_lazar", "1", 0, 0, "uncle bob old pot", new Date(), null, ElementTypes.Pot.toString(), null, null, null);
+	//	UserEntity manager = new UserEntity("demoManager44@gmail.com", "playground_lazar", "mr.manajer", null,
+	//		"Manager");
+		
+	//	UserEntity player = new UserEntity("liranplayer@gmail.com", "playground_lazar", "mr.manajer", null,
+	//			"Player");
+		
+	//	userService.registerNewUser(player);
+	//	ElementEntity pot = new ElementEntity("playground_lazar", "1", 0, 0, "uncle bob old pot", new Date(), null, ElementTypes.Pot.toString(), null, null, null);
 
+		System.err.println("inside createOmelette in clientController, email is: " + email);
 		Map <String,Object> map = new HashMap<String,Object>();
 		map.put("eggSize", EggSize.Medium);
 		
@@ -196,10 +197,12 @@ public class clientController {
 		activityTo.setType(ActivityTypes.CookOmelette.getActivityName());
 		activityTo.setPlayerEmail(email);
 		activityTo.setId("" +omeletteId++);
-//		activityTo.setElementId(pot.getId());
-//		activityTo.setElementPlayground(pot.getPlayground());
-//		activityTo.setPlayerEmail(manager.getEmail());
-//		activityTo.setPlayerPlayground(manager.getPlayground());
+		
+		//TODO change this, currently assume this element is in the system
+		activityTo.setElementId("1");
+		activityTo.setElementPlayground("playground_lazar");
+		activityTo.setPlayerEmail(email);
+		activityTo.setPlayerPlayground("playground_lazar"); //Assume player is in this playground
 		activityTo.setAttributes(map);
 		
 		return activityTo;
