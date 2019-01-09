@@ -13,7 +13,7 @@ import com.example.demo.user.TypesEnumUser;
 import com.example.demo.user.UserEntity;
 import com.example.demo.user.UserService;
 
-//@Component
+@Component
 public class InitForOmelette {
 		private UserService userService;
 		private ElementService elementService;
