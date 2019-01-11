@@ -4,6 +4,7 @@ import java.util.Date;
 import javax.annotation.PostConstruct;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 
 import com.example.demo.element.ElementEntity;
@@ -17,6 +18,7 @@ import com.example.demo.user.exceptions.EmailAlreadyRegisteredException;
 import com.example.demo.user.exceptions.UserNotFoundException;
 
 @Component
+@Profile("Presentation")
 public class DummyInitializer {
 	private UserService userService;
 	private ElementService elementService;
@@ -38,7 +40,7 @@ public class DummyInitializer {
 
 		try {
 			// Create a player user + verify
-			user = new UserEntity("newplayer@gmail.com", "playground_lazar", "Tom the cat", null,
+			user = new UserEntity("newplayer@gmail.com", "playground_lazar", "Eyal Shani", null,
 					TypesEnumUser.Types.Player.getType());
 			userService.registerNewUser(user);
 			user.setCode(null);

@@ -23,6 +23,7 @@ import com.example.demo.activity.plugins.accessories.Omelette.EggSize;
 import com.example.demo.element.exceptions.ElementAlreadyExistException;
 import com.example.demo.element.exceptions.ElementNotFoundException;
 import com.example.demo.element.exceptions.InvalidElementForActivityException;
+import com.example.demo.user.UserEntity;
 import com.example.demo.user.UserService;
 import com.example.demo.user.UserTO;
 import com.example.demo.user.exceptions.EmailAlreadyRegisteredException;
@@ -73,6 +74,11 @@ public class clientController {
 
 		try {
 			UserTO actual = this.rest.getForObject(this.url + "/login/{playground}/{email}", UserTO.class, map);
+			
+			//For showing points on log in we need the entity.
+			UserEntity userEt = userService.getUser(actual.getEmail(), actual.getPlayground());
+			model.addObject("userEt" , userEt);
+			
 			model.addObject("user", actual);
 			model.setViewName("welcomepage");
 			return model;

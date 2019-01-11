@@ -60,14 +60,15 @@
     <header class="masthead bg-primary text-white text-center">
       <div class="container">
         <img class="img-fluid mb-5 d-block mx-auto" src="img/baby.jpg" alt="" style="width: 25%">
-        <h1 class="text-uppercase mb-0">Welcome Back !!!</h1>
-         <h1 class="text-uppercase mb-0" th:text="${user.email}"></h1>
+         <h1 class="text-uppercase mb-0" th:text="${'Welcome Back, ' +user.username +'!'}"></h1>
+         <h1 class="text-uppercase mb-0" th:text="${'Current points: ' +userEt.points}"></h1>
         
         <hr class="star-light">
         <h2 class="font-weight-light mb-0">We miss you ! </h2>
         
         <hr>
         <h3>Options of activities</h3>
+        
         <a class="btn-primary" th:href="@{/createOmlet(Email=${user.email})}"> Cook Omelette Now</a>
 
       </div>
