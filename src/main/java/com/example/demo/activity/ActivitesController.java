@@ -44,10 +44,7 @@ public class ActivitesController {
 					InvalidActivityTypeException, InvalidActivityAtributeException, UserNotFoundException
 					, InvalidEmailException, ElementNotFoundException, InvalidElementForActivityException {
 		
-		//this.elementVerifyier.verifyElement(activity.getElementPlayground(), activity.getElementId());
-		//System.err.println("In activity controller - the email is: " + email);
 		service.addNewActivity(activity.ToEntity(), email);
-		// just return activity for testing - Checked !
 		return activity;
 
 	}

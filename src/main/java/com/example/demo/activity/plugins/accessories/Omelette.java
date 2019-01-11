@@ -6,11 +6,17 @@ import com.example.demo.activity.exceptions.InvalidEggSizeException;
 
 public class Omelette {
 	public enum EggSize{
-		Small, Medium, Large, ExtraLarge;
+		Small, 
+		Medium, 
+		Large, 
+		ExtraLarge;
 	}
 	
 	public enum Quality{
-		Poor, Average, Good, Excellent;
+		Poor, 
+		Average, 
+		Good, 
+		Excellent;
 	}
 	
 	private String quality;

@@ -16,13 +16,12 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 @Entity
 @Document
-//@Table(name = "ELEMENTS")
 public class ElementEntity {
 	
 	public ElementEntity() {
 		super();
 		this.id = -1;
-		this.key = "playground_lazar" + "@@" + this.id; //TODO do we need an empty contructor?
+		this.key = "playground_lazar" + "@@" + this.id; 
 	}
 
 
@@ -38,7 +37,6 @@ public class ElementEntity {
 	protected String creatorPlayground;
 	protected String creatorEmail;
 	
-	//@GeneratedValue(strategy=GenerationType.AUTO)
 	protected int id;
 		
 	

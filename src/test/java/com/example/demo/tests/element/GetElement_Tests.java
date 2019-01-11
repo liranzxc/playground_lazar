@@ -84,14 +84,13 @@ public class GetElement_Tests {
 		this.demo_user_manager = new UserEntity("demoManager@gmail.com", "playground_lazar", "mr.manajer", null, "Manager");
 		this.demo_user_player = new UserEntity("demoPlayer@gmail.com", "playground_lazar", "mr.palayer", null, "Player");
 		
-		
-		//System.err.println(this.url);
 		Location demo_entity_location = new Location(0,1);
 		this.demo_entity = new ElementEntity(
 				"playground_lazar", "1", demo_entity_location.getX(), demo_entity_location.getY()
 				,"demo", new Date(), null, "demo type", null, "Aviv", "demo@gmail.com");
-		
-
+	
+		this.elementService.cleanup();
+		this.userService.cleanup();
 	}
 
 

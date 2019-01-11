@@ -81,13 +81,13 @@ public class UpdateElement_Tests {
 		this.demo_user_manager = new UserEntity("demoManager@gmail.com", "playground_lazar", "mr.manajer", null, "Manager");
 		this.demo_user_player = new UserEntity("demoPlayer@gmail.com", "playground_lazar", "mr.palayer", null, "Player");
 		
-		
-		//System.err.println(this.url);
 		Location demo_entity_location = new Location(0,1);
 		this.demo_entity = new ElementEntity(
 				"playground_lazar", "1", demo_entity_location.getX(), demo_entity_location.getY()
 				,"demo", new Date(), null, "demo type", null, "Aviv", "demo@gmail.com");
-
+	
+		this.elementService.cleanup();
+		this.userService.cleanup();
 	}
 
 
@@ -112,10 +112,6 @@ public class UpdateElement_Tests {
 	}
 
 
-	///////////////
-	// Feature 6 //
-	///////////////
-
 	// Scenario 1: 
 	@Test
 	public void updateElementSuccessfullyByManager() throws ElementAlreadyExistException, InvalidRoleException {
@@ -125,8 +121,6 @@ public class UpdateElement_Tests {
 		
 		String playground = eto.getPlayground();
 		String id = eto.getId();
-
-		System.err.println("id = " + id + " playground = " + playground);
 
 		// when
 		this.restTemplate.put(this.url + "/{userPlayground}/{email}/{playground}/{id}", eto,
@@ -143,8 +137,6 @@ public class UpdateElement_Tests {
 
 		String playground = eto.getPlayground();
 		String id = eto.getId();
-
-		System.err.println("id = " + id + " playground = " + playground);
 
 		boolean isSuccess = false;
 		// when

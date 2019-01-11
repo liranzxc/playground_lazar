@@ -9,38 +9,36 @@ import org.springframework.data.mongodb.core.mapping.Document;
 
 @Entity
 @Document
-//@Table(name = "USERS")
 public class UserEntity {
+	private final long START_POINTS = 0l;
 	private static int ID = 0;
 
 	private String email;
 	
-	//@Value("${playground.name}")
 	private String playground = "playground_lazar";
 
 	private String username;
 	private String avatar;
 	private String role;
-	private Long points = 0l; // new user always starts with 0 points
+	private Long points; 
 	private String id;
 	private String code;
 	
 
-	
 	public UserEntity(String email, String playground, String username, String avatar, String role) {
 		super();
 		this.id = String.valueOf(ID++);
 		this.email = email;
-		//this.playground = playground;
 		this.username = username;
 		this.avatar = avatar;
 		this.role = role;
+		this.points = START_POINTS;
 	}
-	//Constructor which get a NewUserForm and creates a new user from the details.
 
 	public UserEntity() {
 		super();
 		this.id = String.valueOf(ID++);
+		this.points = START_POINTS;
 	}
 	
 	@Id
@@ -86,16 +84,13 @@ public class UserEntity {
 		return this.id;
 	}
 	
-	//empty setter for hiberanate, id should not be able to be change from the outside
 	public void setId(String id) {
-
+		this.id = id;
 	}
 	
 	public String getCode() {
 		return code;
 	}
-
-
 
 	public void setCode(String code) {
 		this.code = code;

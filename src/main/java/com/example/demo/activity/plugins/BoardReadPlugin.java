@@ -2,8 +2,6 @@ package com.example.demo.activity.plugins;
 
 import java.util.stream.Collectors;
 
-import javax.annotation.PostConstruct;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort.Direction;
@@ -12,7 +10,6 @@ import org.springframework.stereotype.Component;
 import com.example.demo.activity.ActivityEntity;
 import com.example.demo.activity.ActivityRepository;
 import com.example.demo.activity.ActivityTypes;
-import com.example.demo.activity.plugins.accessories.BoardMessage;
 import com.example.demo.activity.plugins.accessories.BoardMessagePage;
 import com.example.demo.activity.plugins.accessories.BoardMessagePageable;
 import com.fasterxml.jackson.databind.ObjectMapper;

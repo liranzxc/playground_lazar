@@ -33,7 +33,7 @@ import com.example.demo.user.exceptions.UserNotFoundException;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
-public class UsersTest_full {
+public class User_Tests {
 
 	// TODO must fix the exception test for the correct exceptions~! currently
 	// http500 is invoked everytime.
@@ -204,8 +204,6 @@ public class UsersTest_full {
 		map.put("email", "demo@gmail.com");
 		UserTO user = new UserTO("tal", "demo@gmail.com", "anAvatr", Types.Manager.getType(), true);
 		userService.registerNewUser(user.ToEntity());
-
-		// System.err.println(userServices.getAllUsers(5, 1));
 
 		// When
 		UserEntity actual = this.rest.getForObject(this.url + "/login/{playground}/{email}", UserEntity.class, map);

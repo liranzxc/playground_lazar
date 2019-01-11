@@ -6,9 +6,6 @@ public class InvalidRoleException extends Exception {
 		super();
 	}
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = -2866513624385462225L;
 
 }

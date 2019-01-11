@@ -1,27 +1,17 @@
 package com.example.demo.client;
 
-import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.hibernate.validator.constraints.SafeHtml.Attribute;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.util.LinkedMultiValueMap;
-import org.springframework.util.MultiValueMap;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.servlet.ModelAndView;
 
-import com.example.demo.activity.ActivityEntity;
 import com.example.demo.activity.ActivityService;
 import com.example.demo.activity.ActivityTO;
 import com.example.demo.activity.ActivityTypes;
@@ -30,16 +20,11 @@ import com.example.demo.activity.exceptions.InvalidActivityAtributeException;
 import com.example.demo.activity.exceptions.InvalidActivityTypeException;
 import com.example.demo.activity.plugins.accessories.Omelette;
 import com.example.demo.activity.plugins.accessories.Omelette.EggSize;
-import com.example.demo.element.ElementEntity;
-import com.example.demo.element.ElementServiceJpa;
-import com.example.demo.element.custom.ElementTypes;
 import com.example.demo.element.exceptions.ElementAlreadyExistException;
 import com.example.demo.element.exceptions.ElementNotFoundException;
 import com.example.demo.element.exceptions.InvalidElementForActivityException;
-import com.example.demo.user.UserEntity;
 import com.example.demo.user.UserService;
 import com.example.demo.user.UserTO;
-import com.example.demo.user.TypesEnumUser.Types;
 import com.example.demo.user.exceptions.EmailAlreadyRegisteredException;
 import com.example.demo.user.exceptions.InvalidEmailException;
 import com.example.demo.user.exceptions.InvalidRoleException;
@@ -61,16 +46,7 @@ public class clientController {
 	}
 
 	public clientController() {
-		// TODO Auto-generated constructor stub
-
 		rest = new RestTemplate();
-	}
-
-	private ElementServiceJpa elementService;
-
-	@Autowired
-	public void setElementService(ElementServiceJpa elementService) {
-		this.elementService = elementService;
 	}
 
 	@Autowired
@@ -101,7 +77,6 @@ public class clientController {
 			model.setViewName("welcomepage");
 			return model;
 		} catch (Exception e) {
-			// TODO: handle exception
 			model.addObject("userTo", new UserTO());
 			model.setViewName("index");
 
@@ -131,7 +106,6 @@ public class clientController {
 			return model;
 
 		} catch (Exception e) {
-			// TODO: handle exception
 			model.setViewName("register2");
 			model.addObject("UserTo", new UserTO());
 			return model;
@@ -141,8 +115,6 @@ public class clientController {
 	@RequestMapping(path = "/valid", method = RequestMethod.POST)
 	public ModelAndView validPOST(@ModelAttribute UserTO user) {
 
-		System.err.println(user.getEmail());
-		System.err.println(user.getPlayground());
 		ModelAndView model = new ModelAndView();
 		String code = "";
 		try {
@@ -168,28 +140,14 @@ public class clientController {
 		ModelAndView model = new ModelAndView();
 		model.setViewName("omelette");
 		
-		//TAL CODE
 		Omelette oml = (Omelette) activityService.addNewActivity(CreateOmlette(Email).ToEntity(), Email);
 		model.addObject("ometObject" , oml);
-		
-		//LIRAN CODE
-		//model.addObject("ometObject",CreateOmlette());
 		
 		return model;
 
 	}
 
 	private ActivityTO CreateOmlette(String email) throws EmailAlreadyRegisteredException, InvalidEmailException, InvalidRoleException, ElementAlreadyExistException {
-	//	UserEntity manager = new UserEntity("demoManager44@gmail.com", "playground_lazar", "mr.manajer", null,
-	//		"Manager");
-		
-	//	UserEntity player = new UserEntity("liranplayer@gmail.com", "playground_lazar", "mr.manajer", null,
-	//			"Player");
-		
-	//	userService.registerNewUser(player);
-	//	ElementEntity pot = new ElementEntity("playground_lazar", "1", 0, 0, "uncle bob old pot", new Date(), null, ElementTypes.Pot.toString(), null, null, null);
-
-		System.err.println("inside createOmelette in clientController, email is: " + email);
 		Map <String,Object> map = new HashMap<String,Object>();
 		map.put("eggSize", EggSize.Medium);
 		
@@ -198,11 +156,12 @@ public class clientController {
 		activityTo.setPlayerEmail(email);
 		activityTo.setId("" +omeletteId++);
 		
-		//TODO change this, currently assume this element is in the system
+		
+		//TODO give client 2 boxes to fill in order to get element id and playground
 		activityTo.setElementId("1");
 		activityTo.setElementPlayground("playground_lazar");
 		activityTo.setPlayerEmail(email);
-		activityTo.setPlayerPlayground("playground_lazar"); //Assume player is in this playground
+		activityTo.setPlayerPlayground("playground_lazar");
 		activityTo.setAttributes(map);
 		
 		return activityTo;

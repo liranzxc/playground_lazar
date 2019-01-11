@@ -2,6 +2,7 @@ package com.example.demo.activity;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 import javax.annotation.PostConstruct;
 
@@ -19,14 +20,9 @@ import com.example.demo.activity.plugins.PlaygroundPlugin;
 import com.example.demo.aop.EmailValue;
 import com.example.demo.aop.ToLog;
 import com.example.demo.aop.UserPermission;
-import com.example.demo.element.ElementEntity;
-import com.example.demo.element.ElementRepository;
 import com.example.demo.element.exceptions.ElementNotFoundException;
-import com.example.demo.element.exceptions.InvalidAttributeNameException;
 import com.example.demo.element.exceptions.InvalidElementForActivityException;
 import com.example.demo.user.TypesEnumUser.Types;
-import com.example.demo.user.UserEntity;
-import com.example.demo.user.UserService;
 import com.example.demo.user.exceptions.InvalidEmailException;
 import com.example.demo.user.exceptions.InvalidRoleException;
 import com.example.demo.user.exceptions.UserNotFoundException;
@@ -38,7 +34,6 @@ public class ActivityServiceImpl implements ActivityService {
 	private ActivityRepository dataBase;
 	private ApplicationContext spring;
 	private ObjectMapper jackson;
-	private UserService userService;
 	private static int Id = 0;
 
 	private ActivityHandler handler;
@@ -47,13 +42,6 @@ public class ActivityServiceImpl implements ActivityService {
 	public void setActivityHandler(ActivityHandler handler) {
 		this.handler = handler;
 	}
-
-//	@Autowired
-//	public ActivityServiceImpl(ActivityRepository dataBase, ApplicationContext spring) {
-//		this.dataBase = dataBase;
-//		this.spring = spring;
-//		this.jackson = new ObjectMapper();
-//	}
 
 	@Autowired
 	public void setDataBase(ActivityRepository dataBase) {
@@ -70,11 +58,21 @@ public class ActivityServiceImpl implements ActivityService {
 		this.jackson = jackson;
 	}
 
-	@Autowired
-	public void setUserService(UserService userService) {
-		this.userService = userService;
+	@PostConstruct
+	public void init() {
+		Optional<ActivityEntity> et = this.dataBase.findTopByOrderByKeyDesc();
+		if(et.isPresent()) {
+			String id = et.get().getId();
+			try {
+				Id = Integer.parseInt(id);
+			}
+			catch(NumberFormatException e) {
+				Id = 0;
+			}
+		}		
 	}
-
+	
+	
 	@Override
 	@Transactional
 	@UserPermission(permissions = { Types.Player })
@@ -83,7 +81,7 @@ public class ActivityServiceImpl implements ActivityService {
 			throws ActivityAlreadyExistException, InvalidRoleException, InvalidActivityTypeException,
 			InvalidActivityAtributeException, UserNotFoundException, InvalidEmailException, ElementNotFoundException,
 			InvalidElementForActivityException {
-		activityEntity.setKey(ActivityEntity.generateKey("playground_lazar", "" + Id++));
+		activityEntity.setKey(ActivityEntity.generateKey("playground_lazar", "" + ++Id));
 		String key = activityEntity.getKey();
 		if (!this.dataBase.existsByKey(key)) {
 			if (!activityEntity.getType().isEmpty()) {

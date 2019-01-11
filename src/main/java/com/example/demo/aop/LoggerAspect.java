@@ -1,13 +1,13 @@
 package com.example.demo.aop;
 
-import org.apache.commons.logging.Log;  // for class "Log"
+import org.apache.commons.logging.Log; 
 import org.apache.commons.logging.LogFactory;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
-import org.aspectj.lang.annotation.Aspect;  // @Aspect
+import org.aspectj.lang.annotation.Aspect;  
 import org.aspectj.lang.annotation.Before;
-import org.springframework.stereotype.Component;  // @Component
+import org.springframework.stereotype.Component;  
 
 
 
@@ -23,7 +23,7 @@ public class LoggerAspect {
 		String methodName = joinPoint.getSignature().getName();
 		String methodSignature = className + "." + methodName + "()";
 		
-		log.info("\n\nStart - " + methodSignature);
+		log.info(methodSignature + " - Start");
 	}
 	
 	

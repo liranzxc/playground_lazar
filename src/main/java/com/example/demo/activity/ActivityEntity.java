@@ -37,6 +37,10 @@ public class ActivityEntity {
 			this.playerEmail = playerEmail;
 			this.attributes = attributes;
 		}
+		
+		
+		
+		
 
 		public String getElementPlayground() {
 			return elementPlayground;
@@ -100,6 +104,23 @@ public class ActivityEntity {
 		public void setKey(String key) {
 			this.key = key;
 		}
+		
+		public String getPlayground() {
+			return this.key.split("@@")[1];
+		}
+		
+		public void setPlayground(String playground) {
+			
+		}
+
+		public String getId() {
+			return this.key.split("@@")[0];
+		}
+		
+		public void setId(String id) {
+			
+		}
+		
 		public static String generateKey(String playground, String id) {
 			return id +"@@" +playground;
 		}

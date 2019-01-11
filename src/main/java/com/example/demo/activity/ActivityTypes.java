@@ -3,7 +3,9 @@ package com.example.demo.activity;
 
 public enum ActivityTypes{
 		
-		BoardPost("BoardPost"), BoardRead("BoardRead"), CookOmelette("CookOmelette");
+		BoardPost("BoardPost"),
+		BoardRead("BoardRead"),
+		CookOmelette("CookOmelette");
 		// declaring private variable for getting values
 		private String action;
 

@@ -37,8 +37,6 @@ public class UserServiceJPA implements UserService {
 	@ToLog
 	public void registerNewUser(UserEntity user)
 			throws EmailAlreadyRegisteredException, InvalidEmailException, InvalidRoleException {
-		System.err.println("User Role in Service is: " + user.getRole());
-		System.err.println("User Email in Service is: " + user.getEmail());
 		if (!isValidEmail(user.getEmail()))
 			throw new InvalidEmailException("The email " + user.getEmail() + " is invalid.");
 
@@ -47,12 +45,6 @@ public class UserServiceJPA implements UserService {
 		}
 		if (!dataBase.existsByEmail(user.getEmail())) {
 			user.setCode(generator.generateValidationCode());
-			// System.err.println("Code for " + user.getEmail() + ": " + user.getCode()); //
-			// Prints the code to the
-			// console
-			// generator.stopConsoleForCode(); //Used to halt the system so the code can be
-			// copied.
-
 			dataBase.save(user);
 		} else
 			throw new EmailAlreadyRegisteredException(
@@ -78,20 +70,17 @@ public class UserServiceJPA implements UserService {
 	@ToLog
 	public UserEntity getUser(String email, String playground) throws UserNotFoundException {
 		if (dataBase.existsByEmail(email)) {
-			// UserEntity user = dataBase.findByEmail(email).get();
 			if (playground.equals(playgroundName)) {
-				// return dataBase.findByEmail(email).get();
 
 				UserEntity ue = dataBase.findByEmail(email).get();
 
 				if (ue == null) {
 					throw new UserNotFoundException("The email " + email + " was not found.");
 				}
-				System.err.println("*******" + ue.getEmail());
 				return ue;
 			}
 			if (playground.equals(playgroundName))
-				return dataBase.findByEmail(email).get(); // null
+				return dataBase.findByEmail(email).get(); 
 			else
 				throw new UserNotFoundException(
 						"The user with id " + email + " and playground " + playgroundName + " not found.");

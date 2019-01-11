@@ -2,11 +2,7 @@ package com.example.demo.user.exceptions;
 
 public class UserNotActivatedException extends Exception{
 
-
-
 	private static final long serialVersionUID = 885220268666834512L;
-
-
 
 	public UserNotActivatedException() {
 		super();

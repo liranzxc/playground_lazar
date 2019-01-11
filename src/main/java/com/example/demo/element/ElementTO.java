@@ -39,10 +39,6 @@ public class ElementTO {
 		this.creatorEmail = creatorEmail;
 	}
 
-//	public ElementTO(String string, int i, Location location2, String string2, Date date, Date date2, String string3,
-//			TreeMap<String, Object> treeMap, String string4, String string5) {
-//		// TODO Auto-generated constructor stub
-//	}
 
 	public ElementTO(ElementEntity entity) {
 		
@@ -138,7 +134,6 @@ public class ElementTO {
 		this.creatorEmail = creatorEmail;
 	}
 	
-	// To Entity !!
 	public ElementEntity ToEntity()
 	{
 		return new ElementEntity(playground, id, this.location.getX(), this.location.getY()

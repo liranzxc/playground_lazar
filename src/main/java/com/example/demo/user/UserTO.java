@@ -5,13 +5,14 @@ import org.springframework.stereotype.Component;
 @Component
 public class UserTO {
 
+	private final String DEFAULT_PLAYGROUND = "playground_lazar";
+	
 	private String username;
 	private String email;
 	private String avatar;
 	private String role;
 	
-	//@Value("${playground.name}")
-	private String playground = "playground_lazar";
+	private String playground;
 	
 	private boolean valid;
 
@@ -23,7 +24,7 @@ public class UserTO {
 		this.email = email;
 		this.avatar = avatar;
 		this.role = role;
-		//this.playground = "playground_lazar";
+		this.playground = DEFAULT_PLAYGROUND;
 		this.valid = validated;
 	}
 

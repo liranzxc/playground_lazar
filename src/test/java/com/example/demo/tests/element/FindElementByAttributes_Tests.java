@@ -96,6 +96,9 @@ public class FindElementByAttributes_Tests {
 					demo_entities_locaiton.getY(), "demo", new Date(), null, "demo type", null, "Aviv",
 					"demo@gmail.com");
 		}
+		
+		this.elementService.cleanup();
+		this.userService.cleanup();
 	}
 
 	@Before
@@ -188,9 +191,7 @@ public class FindElementByAttributes_Tests {
 				demo_user_manager.getPlayground(), demo_user_manager.getEmail() , attributeName, value);
 
 		boolean success = false;
-		// System.err.println("Num of elements: " + allElements.length);
-
-		System.err.println(allElements[0]);
+		
 		if (allElements.length == 1 && allElements[0].getName().equals(value))
 			success = true;
 
@@ -218,9 +219,7 @@ public class FindElementByAttributes_Tests {
 				demo_user_manager.getPlayground(), demo_user_manager.getEmail(), attributeName, value);
 
 		boolean success = false;
-		// System.err.println("Num of elements: " + allElements.length);
 
-		System.err.println(allElements[0]);
 		if (allElements.length == 1 && allElements[0].getType().equals(value))
 			success = true;
 
@@ -447,7 +446,6 @@ public class FindElementByAttributes_Tests {
 
 		boolean success = false;
 
-		System.err.println("elements TO got:");
 		for (ElementTO elementTO : allElements) {
 			System.err.println(elementTO);
 		}

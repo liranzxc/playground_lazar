@@ -73,7 +73,6 @@ public class PostMessage_Tests  {
 	public void init() {
 
 		this.url = "http://localhost:" + port + "/playground/activites";
-		//System.err.println(this.url);
 		
 		this.demo_user_manager = new UserEntity("demoManager@gmail.com", "playground_lazar", "mr.manajer", null, "Manager");
 		this.demo_user_player = new UserEntity("demoPlayer@gmail.com", "playground_lazar", "mr.palayer", null, "Player");
@@ -132,10 +131,6 @@ public class PostMessage_Tests  {
 		
 		Long newPoints = this.userService.getUser(this.demo_user_player.getEmail(), this.demo_user_player.getPlayground()).getPoints();
 
-		System.err.println(result.getAttributes());
-		
-		System.err.println("Old points: " + oldPoints);
-		System.err.println("New points: " + newPoints);
 		assertTrue(newPoints != oldPoints);
 	}
 	

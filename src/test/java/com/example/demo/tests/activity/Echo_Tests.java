@@ -68,7 +68,6 @@ public class Echo_Tests {
 	public void init() {
 
 		this.url = "http://localhost:" + port + "/playground/activites";
-		//System.err.println(this.url);
 		
 		this.demo_user_manager = new UserEntity("demoManager@gmail.com", "playground_lazar", "mr.manajer", null, "Manager");
 		this.demo_user_player = new UserEntity("demoPlayer@gmail.com", "playground_lazar", "mr.palayer", null, "Player");

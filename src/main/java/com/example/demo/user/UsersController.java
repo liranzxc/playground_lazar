@@ -2,9 +2,7 @@ package com.example.demo.user;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
-import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -21,7 +19,7 @@ import com.example.demo.user.exceptions.UserNotFoundException;
 @RestController
 @RequestMapping("playground/users")
 public class UsersController {
-	// FOR TEST ONLY!
+
 	private String TEST_CODE = "1234";
 
 	private UserService userService;
@@ -78,7 +76,6 @@ public class UsersController {
 			return (new UserTO(user));
 			
 		} catch (Exception e) {
-			// TODO: handle exception
 			e.printStackTrace();
 			throw new UserNotFoundException();
 		}

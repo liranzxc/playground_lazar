@@ -58,10 +58,9 @@ public class ActivityHandler {
 					UserEntity user = this.userService.getUser(playerEmail, playerPlayground);
 					totalPoints += user.getPoints();
 					totalPoints += extractPointsFromAttributes(activity);
-					System.err.println("ActivityHandler: user new points count is:" + totalPoints);
 					user.setPoints(totalPoints);
 					this.userService.updateUserInfo(user);	
-					
+					System.err.println("user new total points is: " + totalPoints);
 				
 					return;
 				}

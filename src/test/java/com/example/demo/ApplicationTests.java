@@ -25,7 +25,6 @@ public class ApplicationTests {
 	public void init() {
 		
 		this.url = "http://localhost:"+port+"/messages";
-		System.err.println(this.url);
 	}
 
 	@Test

@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import javax.annotation.PostConstruct;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
@@ -34,7 +35,6 @@ import com.example.demo.user.exceptions.UserNotFoundException;
 public class ElementServiceJpa implements ElementService {
 
 	private static int ID = 0;
-	//private ArrayList<String> roleTypes;
 	
 	private ElementRepository elementDatabase;
 	private UserService userService;
@@ -49,6 +49,19 @@ public class ElementServiceJpa implements ElementService {
 		this.userService = userService;
 	}
 	
+	@PostConstruct
+	public void init() {
+		Optional<ElementEntity> et = this.elementDatabase.findTopByOrderByKeyDesc();
+		if(et.isPresent()) {
+			String id = et.get().getId();
+			try {
+				ID = Integer.parseInt(id);
+			}
+			catch(NumberFormatException e) {
+				ID = 0;
+			}
+		}		
+	}
 	
 	
 	@Override
@@ -61,7 +74,6 @@ public class ElementServiceJpa implements ElementService {
 		int newID = ++ID;
 		String key = ElementEntity.createKeyFromIdAndPlayground(newID + "", et.getPlayground());
 		et.setKey(key);
-		System.err.println("add new element key is:" + key);
 
 		if (!this.elementDatabase.existsByKey(key)) {
 			this.elementDatabase.save(et);
@@ -94,8 +106,8 @@ public class ElementServiceJpa implements ElementService {
 		String key = et.getKey();
 		if (this.elementDatabase.existsByKey(key)) {
 			et = setAttributesBasedType(et);
-			this.elementDatabase.deleteByKey(key); // delete not updated element
-			this.elementDatabase.save(et); // save updated element
+			this.elementDatabase.deleteByKey(key); 
+			this.elementDatabase.save(et); 
 		} else {
 			throw new ElementNotFoundException("The searched Element does not exist in database");
 		}
@@ -114,7 +126,6 @@ public class ElementServiceJpa implements ElementService {
 	@Override
 	public ElementEntity getElement(String playground, String id, @EmailValue String email)
 			throws ElementNotFoundException, InvalidRoleException, UserNotFoundException {
-		//String role = email; // if gotten to this line email was swapped with type
 		String userRole = userService.getUser(email, "playground_lazar").getRole();
 		
 		switch (userRole) {
@@ -134,7 +145,7 @@ public class ElementServiceJpa implements ElementService {
 	@ToLog
 	@Override
 	public void deleteElement(String playground, String id, @EmailValue String email) throws InvalidRoleException {
-		String role = email; // if gotten to this line email was swapped with type
+		String role = email; 
 		if (!role.equals("Manager")) {
 			throw new InvalidRoleException("Only manager can delete elements");
 		}
@@ -142,7 +153,7 @@ public class ElementServiceJpa implements ElementService {
 		String key = ElementEntity.createKeyFromIdAndPlayground(id, playground);
 		if (this.elementDatabase.existsByKey(key)) {
 			ElementEntity et = this.elementDatabase.findByKey(key).get();
-			et.setExpireDate(new Date()); // empty constructor give now date
+			et.setExpireDate(new Date()); 
 
 			this.elementDatabase.deleteByKey(key);
 			this.elementDatabase.save(et);
@@ -155,7 +166,6 @@ public class ElementServiceJpa implements ElementService {
 	@Override
 	public List<ElementEntity> getAllElements(Pageable page,@EmailValue String email)
 			throws InvalidPageSizeRequestException, InvalidPageRequestException, InvalidRoleException, UserNotFoundException {
-		//String role = email; // if gotten to this line email was swapped with type
 		String userRole = userService.getUser(email, "playground_lazar").getRole();
 		
 		switch (userRole) {
@@ -175,7 +185,6 @@ public class ElementServiceJpa implements ElementService {
 	@Override
 	public List<ElementEntity> getAllElementsNearBy(double x, double y, double distance,@EmailValue String email, Pageable page)
 			throws InvalidDistanceValueException, InvalidRoleException, UserNotFoundException {
-		//String role = email; // if gotten to this line email was swapped with type
 		String userRole = userService.getUser(email, "playground_lazar").getRole();
 
 		switch (userRole) {

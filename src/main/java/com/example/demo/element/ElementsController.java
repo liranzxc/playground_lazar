@@ -35,9 +35,6 @@ public class ElementsController {
 	}
 	
 
-	/*
-	 * Feature 5:
-	 */
 	@RequestMapping(path = {
 			"/{userPlayground}/{email}" }, method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
 	public ElementTO createElement(@RequestBody ElementTO element,
@@ -51,9 +48,7 @@ public class ElementsController {
 		return element;
 	}
 
-	/*
-	 * Feature 6:
-	 */
+	
 	@RequestMapping(path = {
 			"/{userPlayground}/{email}/{playground}/{id}" }, method = RequestMethod.PUT, consumes = MediaType.APPLICATION_JSON_VALUE)
 	public void updateElement(@RequestBody ElementTO element,
@@ -66,18 +61,13 @@ public class ElementsController {
 		if (element == null) {
 			throw new NullPointerException("cant update element into nothing");
 		}
-		
-		//TODO do we need?
-		element.setCreatorEmail(email);
-		element.setCreatorPlayground(userPlayground);
+
 
 		ElementEntity entity = element.ToEntity();
 		this.elementService.updateElement(entity, email);
 	}
 
-	/*
-	 * Feature 7:
-	 */
+	
 	@RequestMapping(path = {
 			"/{userPlayground}/{email}/{playground}/{id}" }, method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
 	public ElementTO getElement(@PathVariable("userPlayground") String userPlayground,
@@ -87,9 +77,7 @@ public class ElementsController {
 		return new ElementTO(this.elementService.getElement(playground, id, email));
 	}	
 
-	/*
-	 * Feature 8:
-	 */
+	
 	@RequestMapping(path = {
 			"/{userPlayground}/{email}/all" }, method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
 	public ElementTO[] getAllElements(@PathVariable(name = "userPlayground") String userPlayground,
@@ -102,9 +90,6 @@ public class ElementsController {
 		return mylist.stream().map(ElementTO::new).collect(Collectors.toList()).toArray(new ElementTO[0]);
 	}
 
-	/*
-	 * Feature 9:
-	 */
 	@RequestMapping(path = {
 			"/{userPlayground}/{email}/near/{x}/{y}/{distance}" }, method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
 	public ElementTO[] getAllElementsNearToPlayaer(@PathVariable("userPlayground") String userPlayground,
@@ -121,9 +106,6 @@ public class ElementsController {
 	}
 
 
-	/*
-	 * Feature 10:
-	 */
 	@RequestMapping(path = {
 			"/{userPlayground}/{email}/search/{attributeName}/{value}" }, method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
 	public ElementTO[] searchAllElementsWithSameAttributeAndValue(@PathVariable("userPlayground") String userPlayground,

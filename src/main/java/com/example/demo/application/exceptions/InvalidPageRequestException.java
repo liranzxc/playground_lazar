@@ -2,9 +2,7 @@ package com.example.demo.application.exceptions;
 
 public class InvalidPageRequestException extends Exception {
 
-	/**
-	 * 
-	 */
+	
 	private static final long serialVersionUID = 1L;
 	private static final String defaultMessage = "Page must be at least 0";
 
