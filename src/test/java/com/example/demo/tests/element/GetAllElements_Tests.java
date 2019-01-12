@@ -171,7 +171,7 @@ public class GetAllElements_Tests {
 		assertTrue(success);
 	}
 
-	// TODO: change 2 from 5, not 10 from 20
+	
 	//scenario 3
 	@Test
 	public void getAllElementsAsPlayer_GetArrayOfTenElementsWhichIsNotExpired() throws ElementAlreadyExistException, InvalidRoleException {

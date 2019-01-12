@@ -98,7 +98,7 @@ public class ReadBoard_Tests {
 	}
 
 	
-	//s3
+	
 	@Test
 	public void ReadTwoMessages() throws ElementAlreadyExistException, InvalidRoleException {
 		//Given
@@ -172,8 +172,6 @@ public class ReadBoard_Tests {
 		
 		rest.postForObject( url+"/{userPlayground}/{email}", activity2, ActivityTO.class
 				, demo_user_player.getPlayground(), demo_user_player.getEmail());
-		//Then Console prints an empty list.
-		// TODO: check if it's really empty
 	}
 	
 }

@@ -1,7 +1,5 @@
 package com.example.demo.tests.activity;
 
-import static org.hamcrest.CoreMatchers.equalTo;
-import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 
 import java.util.Date;
@@ -19,16 +17,12 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.test.context.junit4.SpringRunner;
-import org.springframework.util.LinkedMultiValueMap;
-import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 
 import com.example.demo.activity.ActivityTypes;
 import com.example.demo.activity.ActivityService;
 import com.example.demo.activity.ActivityTO;
-import com.example.demo.activity.ActivityTypes;
 import com.example.demo.activity.exceptions.InvalidActivityAtributeException;
-import com.example.demo.activity.exceptions.InvalidActivityTypeException;
 import com.example.demo.element.ElementEntity;
 import com.example.demo.element.ElementServiceJpa;
 import com.example.demo.element.custom.ElementTypes;
@@ -126,7 +120,7 @@ public class PostMessage_Tests  {
 		activityTo.setPlayerPlayground(demo_user_player.getPlayground());
 		
 		//When
-		ActivityTO result =rest.postForObject( url+"/{userPlayground}/{email}", activityTo, 
+		rest.postForObject( url+"/{userPlayground}/{email}", activityTo, 
 				ActivityTO.class, demo_user_player.getPlayground(), demo_user_player.getEmail());
 		
 		Long newPoints = this.userService.getUser(this.demo_user_player.getEmail(), this.demo_user_player.getPlayground()).getPoints();
@@ -165,7 +159,6 @@ public class PostMessage_Tests  {
 		//Given
 		
 		this.elementService.addNewElement(this.board, this.demo_user_manager.getEmail());
-		Long oldPoints = this.userService.getUser(this.demo_user_player.getEmail(), this.demo_user_player.getPlayground()).getPoints();
 		Map <String,Object> map = new HashMap<String,Object>();
 		map.put("poster", "Tal");
 		map.put("message", "This is a test");

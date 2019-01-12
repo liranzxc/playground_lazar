@@ -180,7 +180,7 @@ public class GetElementInDistance_Tests {
 			this.restTemplate.getForObject(
 					this.url + "/{userPlayground}/{email}/near/{x}/{y}/{distance}", ElementTO[].class, userPlayground,
 					email, x, y, distance);
-		} catch (Exception e) { // TODO: replace to InvalidDistanceValueException
+		} catch (Exception e) { 
 			success = true;
 		}
 
@@ -210,10 +210,10 @@ public class GetElementInDistance_Tests {
 		assertTrue(success);
 	}
 	
-	// TODO
+	
 	// scenario 4 (pagination)
 	@Test
-	public void GetTheFirstTenResultsFromTwentyElementsInDisanceOneOrLower()
+	public void GetTheFirstTwoResultsFromFiveElementsInDisanceOneOrLower()
 			throws ElementAlreadyExistException, InvalidDistanceValueException, InvalidRoleException {
 
 		for (ElementEntity e : this.demo_entities) {
@@ -248,10 +248,10 @@ public class GetElementInDistance_Tests {
 		assertTrue(success);
 	}
 	
-	// TODO
+
 	// scenario 5 
 	@Test
-	public void getAllElementNearByTenAsPlayer() throws ElementAlreadyExistException, InvalidRoleException {
+	public void getAllTwoElementsNearByTenAsPlayerWhichNotExpired() throws ElementAlreadyExistException, InvalidRoleException {
 
 		for (ElementEntity e : this.demo_entities) {
 			if (Integer.parseInt(e.getId()) % 2 == 1) {
@@ -263,7 +263,7 @@ public class GetElementInDistance_Tests {
 			}
 		}
 
-		// Given: 20 elements in distance 1 or lower
+		// Given: 5 elements in distance 1 or lower
 		for (ElementEntity e : this.demo_entities) {
 			this.elementService.addNewElement(e, this.demo_user_manager.getEmail());
 		}
@@ -275,7 +275,7 @@ public class GetElementInDistance_Tests {
 		ElementTO[] allElements;
 		boolean success = false;
 
-		//default size = 10, page = 0;
+
 		allElements = this.restTemplate.getForObject(this.url + "/{userPlayground}/{email}/near/{x}/{y}/{distance}",
 				ElementTO[].class, demo_user_player.getPlayground(), demo_user_player.getEmail(), x, y, distance);
 

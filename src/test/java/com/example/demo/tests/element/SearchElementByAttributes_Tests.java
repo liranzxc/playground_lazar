@@ -34,7 +34,7 @@ import com.example.demo.user.exceptions.InvalidRoleException;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
-public class FindElementByAttributes_Tests {
+public class SearchElementByAttributes_Tests {
 
 	private int numOfEntities = 5;
 	private ElementEntity[] demo_entities;
@@ -124,19 +124,19 @@ public class FindElementByAttributes_Tests {
 
 	// scenario 1 - NAME\Manager
 	@Test
-	public void findOneElementWithHisNameByManagerSuccessfulyInDatabaseWithOneElement() throws ElementAlreadyExistException, InvalidRoleException {
+	public void searchOneElementWithHisNameByManagerSuccessfulyInDatabaseWithOneElement() throws ElementAlreadyExistException, InvalidRoleException {
 		assertTrue(scenario1("name", this.demo_entity.getName()));
 	}
 
-	// scenario 1 - TYPE\Manager
+	// scenario 2 - TYPE\Manager
 	@Test
-	public void findOneElementWithHisTypeByManagerSuccessfullyInDatabaseWithOneElement() throws ElementAlreadyExistException, InvalidRoleException {
+	public void searchOneElementWithHisTypeByManagerSuccessfullyInDatabaseWithOneElement() throws ElementAlreadyExistException, InvalidRoleException {
 		assertTrue(scenario1("type", this.demo_entity.getType()));
 	}
 	
-	// scenario 1 - TYPE\player  // TODO: Not working
+	// scenario 3 - TYPE\player 
 	@Test
-	public void findOneExpiredElementWithHisTypeByPlayer_Failed()
+	public void searchOneExpiredElementWithHisTypeByPlayer_Failed()
 			throws ElementAlreadyExistException, InterruptedException, InvalidRoleException {
 		// Given:
 		demo_entity.setExpireDate(new Date(0));
@@ -170,10 +170,10 @@ public class FindElementByAttributes_Tests {
 		return isSuccess;
 	}
 
-	// scenario 2 - NAME
+	// scenario 4 - NAME
 	@Test
-	public void findElementByNameSuccessfulyInDatabaseWithTwentyElement() throws ElementAlreadyExistException, InvalidRoleException {
-		// Given: 20 element entities in database (and one is the target)
+	public void searchElementByNameSuccessfulyInDatabaseWithTwentyElement() throws ElementAlreadyExistException, InvalidRoleException {
+		// Given: 5 element entities in database (and one is the target)
 		for (ElementEntity e : this.demo_entities) {
 			if (Integer.parseInt(e.getId()) == 2) {
 				e.setName("demo_target"); // the test
@@ -198,10 +198,10 @@ public class FindElementByAttributes_Tests {
 		assertTrue(success);
 	}
 
-	// scenario 2 - TYPE
+	// scenario 5 - TYPE
 	@Test
-	public void findElementByTypeSuccessfulyInDatabaseWithTwentyElements() throws ElementAlreadyExistException, InvalidRoleException {
-		// Given: 20 element entities in database (and one is the target)
+	public void searchElementByTypeSuccessfulyInDatabaseWithTwentyElements() throws ElementAlreadyExistException, InvalidRoleException {
+		// Given: 5 element entities in database (and one is the target)
 		for (ElementEntity e : this.demo_entities) {
 			if (Integer.parseInt(e.getId()) == 2) {
 				e.setType("demo_target"); // the test
@@ -226,11 +226,11 @@ public class FindElementByAttributes_Tests {
 		assertTrue(success);
 	}
 
-	// TODO: change find 2 from 5, not 5 from 20
-	// scenario 3 - NAME
+	
+	// scenario 6 - NAME
 	@Test
-	public void findFiveElementsByNameSuccessfulyInDatabaseWithTwentyElement() throws ElementAlreadyExistException, InvalidRoleException {
-		// Given: 20 element entities in database (which 5 of them are the targets)
+	public void searchTwoElementsByNameSuccessfulyInDatabaseWithFiveElements() throws ElementAlreadyExistException, InvalidRoleException {
+		// Given:
 
 		for (int i = 0; i < this.demo_entities.length; i++) {
 			if (i < 2) {
@@ -262,11 +262,11 @@ public class FindElementByAttributes_Tests {
 		assertTrue(success);
 	}
 
-	// TODO: change find 2 from 5, not 5 from 20
-	// scenario 3 - TYPE
+
+	// scenario 7 - TYPE
 	@Test
-	public void findFiveElementsByTypeSuccessfulyInDatabaseWithTwentyElements() throws ElementAlreadyExistException, InvalidRoleException {
-		// Given: 10 element entities in database (which 5 of them are the targets)
+	public void searchTwoElementsByTypeSuccessfulyInDatabaseWithFiveElements() throws ElementAlreadyExistException, InvalidRoleException {
+		// Given: 
 
 		for (int i = 0; i < this.demo_entities.length; i++) {
 			if (i < 2) {
@@ -299,9 +299,9 @@ public class FindElementByAttributes_Tests {
 		assertTrue(success);
 	}
 
-	// scenario 4
+	// scenario 8
 	@Test
-	public void findElementFailedByInvalidAttributeNameInDatabaseWithOneElement() throws ElementAlreadyExistException, InvalidRoleException {
+	public void searchElementFailedByInvalidAttributeNameInDatabaseWithOneElement() throws ElementAlreadyExistException, InvalidRoleException {
 		// Given:
 		this.elementService.addNewElement(this.demo_entity, this.demo_user_manager.getEmail());
 
@@ -323,16 +323,16 @@ public class FindElementByAttributes_Tests {
 		assertTrue(success);
 	}
 
-	// TODO: change to 5, not 20
-	// scenario 5 - Name
+	
+	// scenario 9 - Name
 	@Test
-	public void findNoElementByNameInDatabaseWithTwentyElements() throws ElementAlreadyExistException, InvalidRoleException {
+	public void searchNoElementByNameInDatabaseWithFiveElements() throws ElementAlreadyExistException, InvalidRoleException {
 		assertTrue(scenario5("name", "no demo name"));
 	}
 
-	// scenario 5 - Type
+	// scenario 10 - Type
 	@Test
-	public void findNoElementByTypeInDatabaseWithTwentyElements() throws ElementAlreadyExistException, InvalidRoleException {
+	public void searchNoElementByTypeInDatabaseWithFiveElements() throws ElementAlreadyExistException, InvalidRoleException {
 		assertTrue(scenario5("type", "no demo type"));
 	}
 
@@ -362,16 +362,16 @@ public class FindElementByAttributes_Tests {
 		return success;
 	}
 
-	// scenario 6 - Name
+	// scenario 11 - Name
 	@Test
-	public void CheckDefaultPagination_findTenElementsByNameSuccessfulyInDatabaseWithTwentyElements()
+	public void CheckDefaultPagination_searchTenElementsByNameSuccessfulyInDatabaseWithTwentyElements()
 			throws ElementAlreadyExistException, InvalidRoleException {
 		assertTrue(scenario6("name", "demo"));
 	}
 
-	// scenario 6 - Type
+	// scenario 12 - Type
 	@Test
-	public void CheckDefaultPagination_findTenElementsByTypeSuccessfulyInDatabaseWithTwentyElements()
+	public void CheckDefaultPagination_searchTenElementsByTypeSuccessfulyInDatabaseWithTwentyElements()
 			throws ElementAlreadyExistException, InvalidRoleException {
 		assertTrue(scenario6("type", "demo type"));
 	}
@@ -407,16 +407,16 @@ public class FindElementByAttributes_Tests {
 		return success;
 	}
 
-	// scenario 7 - Name
+	// scenario 13 - Name
 	@Test
-	public void CheckPagination_findSevenElementsInPageOneByNameSuccessfulyInDatabase()
+	public void CheckPagination_searchSevenElementsInPageOneByNameSuccessfulyInDatabase()
 			throws ElementAlreadyExistException, InvalidRoleException {
 		assertTrue(scenario7("name", "demo"));
 	}
 	
-	// scenario 7 - Type
+	// scenario 14 - Type
 		@Test
-		public void CheckPagination_findSevenElementsInPageOneByTypeSuccessfulyInDatabase()
+		public void CheckPagination_searchSevenElementsInPageOneByTypeSuccessfulyInDatabase()
 				throws ElementAlreadyExistException, InvalidRoleException {
 			assertTrue(scenario7("type", "demo type"));
 		}
