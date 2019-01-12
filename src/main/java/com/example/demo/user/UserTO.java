@@ -89,6 +89,7 @@ public class UserTO {
 	// new method !! Liran Nachman
 	public UserEntity ToEntity()
 	{
+		this.playground = DEFAULT_PLAYGROUND;
 		UserEntity user = new UserEntity(this.email, this.playground, this.username, this.avatar, role);
 		if (this.valid == true) {
 			user.setCode(null);

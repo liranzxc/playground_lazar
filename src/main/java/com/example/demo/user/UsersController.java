@@ -21,6 +21,7 @@ import com.example.demo.user.exceptions.UserNotFoundException;
 public class UsersController {
 
 	private String TEST_CODE = "1234";
+	private String playgroundName = "playground_lazar";
 
 	private UserService userService;
 	
@@ -36,10 +37,11 @@ public class UsersController {
 
 	// 1. Register a new user.
 	@RequestMapping(value = "/", method = RequestMethod.POST,consumes=MediaType.APPLICATION_JSON_UTF8_VALUE)
-	public UserTO registerFromForm(@RequestBody UserTO userForm, Model model)
+	public UserTO registerFromForm(@RequestBody UserTO userForm)
 			throws EmailAlreadyRegisteredException, InvalidEmailException, InvalidRoleException, UserNotFoundException {
 
 		this.userService.registerNewUser(userForm.ToEntity());
+		userForm.setPlayground(playgroundName);
 		return userForm;
 
 		

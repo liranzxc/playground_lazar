@@ -86,6 +86,15 @@
                       <div class="col-md-5 mb-3">
                           <label for="role">Role</label>
                           <label type="text" class="form-control" th:text="${user.role}" th:field="*{role}" id="role" ></label>
+                          <input type="hidden"  class="form-control"  th:value="${user.role}"  th:field="*{role}" id="role"required>
+
+                        </div>
+                        
+                        
+                      <div class="col-md-5 mb-3">
+                          <label for="role">PlayGround</label>
+                          <label type="text" class="form-control" th:text="${user.playground}" th:field="*{playground}" id="playground" ></label>
+                          <input type="hidden"  class="form-control"  th:value="${user.playground}"  th:field="*{playground}" id="playground" required>
 
                         </div>
 

@@ -106,6 +106,7 @@ public class clientController {
 
 		try {
 			UserTO userAfterRegister = this.rest.postForObject(this.url + "/", user, UserTO.class);
+			
 			model.setViewName("valid");
 			model.addObject("user", userAfterRegister);
 
@@ -123,6 +124,8 @@ public class clientController {
 
 		ModelAndView model = new ModelAndView();
 		String code = "";
+		System.err.println(user.getEmail());
+		System.err.println(user.getPlayground()); // print playground
 		try {
 			code = userService.getUser(user.getEmail(), user.getPlayground()).getCode();
 		} catch (UserNotFoundException e) {
@@ -132,6 +135,8 @@ public class clientController {
 		map.put("playground", user.getPlayground());
 		map.put("email", user.getEmail());
 		map.put("code", code);
+		
+		System.err.println("here test "); // liran test
 
 		this.rest.getForObject(this.url + "/confirm/{playground}/{email}/{code}", UserTO.class, map);
 
